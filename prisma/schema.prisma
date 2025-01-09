@@ -18,8 +18,8 @@ model User {
   name       String
   email      String   @unique
   password   String
-  bio        String?
-  profileImg String?
+  bio        String?  @default("")
+  profileImg String?  @default("")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
