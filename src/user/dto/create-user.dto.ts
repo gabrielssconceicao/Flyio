@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUrl,
   MaxLength,
@@ -59,6 +60,9 @@ export class CreateUserDto {
     maxLength: 255,
     required: false,
   })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
   bio?: string;
 
   @ApiProperty({
@@ -66,6 +70,7 @@ export class CreateUserDto {
     description: 'User profile image URL',
     required: false,
   })
+  @IsOptional()
   @IsString()
   @IsUrl()
   profileImg?: string;
