@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { appEnvValidationSchema } from './config/app-env';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -16,6 +18,12 @@ import { UserModule } from 'src/user/user.module';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
