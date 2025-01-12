@@ -1,0 +1,17 @@
+@baseUrl=http://localhost:3000
+
+
+###
+
+
+
+// /# User Routes #/
+POST {{baseUrl}}/user/register
+Content-Type: application/json
+
+{
+  "name": "Jonh Doe",
+  "username": "jDoe42",
+  "email":"Jdoe@email.com",
+  "password": "123456"
+}

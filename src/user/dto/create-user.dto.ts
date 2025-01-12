@@ -8,6 +8,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import {
+  dtoErrorMessages,
+  DtoErrorType,
+} from 'src/common/utils/dto-error-messages';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -16,10 +20,14 @@ export class CreateUserDto {
     minLength: 3,
     maxLength: 100,
   })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(100)
+  @IsNotEmpty({ message: dtoErrorMessages('Name', DtoErrorType.REQUIRED) })
+  @IsString({ message: dtoErrorMessages('Name', DtoErrorType.IS_STRING) })
+  @MinLength(3, {
+    message: dtoErrorMessages('Name', DtoErrorType.MIN_LENGTH, 3),
+  })
+  @MaxLength(100, {
+    message: dtoErrorMessages('Name', DtoErrorType.MAX_LENGTH, 100),
+  })
   name: string;
 
   @ApiProperty({
@@ -28,10 +36,14 @@ export class CreateUserDto {
     minLength: 3,
     maxLength: 100,
   })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(100)
+  @IsNotEmpty({ message: dtoErrorMessages('Username', DtoErrorType.REQUIRED) })
+  @IsString({ message: dtoErrorMessages('Username', DtoErrorType.IS_STRING) })
+  @MinLength(3, {
+    message: dtoErrorMessages('Username', DtoErrorType.MIN_LENGTH, 3),
+  })
+  @MaxLength(100, {
+    message: dtoErrorMessages('Username', DtoErrorType.MAX_LENGTH, 100),
+  })
   username: string;
 
   @ApiProperty({
@@ -39,7 +51,7 @@ export class CreateUserDto {
     description: 'User email',
   })
   @IsEmail()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: dtoErrorMessages('Email', DtoErrorType.REQUIRED) })
   email: string;
 
   @ApiProperty({
@@ -48,10 +60,14 @@ export class CreateUserDto {
     minLength: 6,
     maxLength: 100,
   })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(6)
-  @MaxLength(100)
+  @IsNotEmpty({ message: dtoErrorMessages('Password', DtoErrorType.REQUIRED) })
+  @IsString({ message: dtoErrorMessages('Password', DtoErrorType.IS_STRING) })
+  @MinLength(6, {
+    message: dtoErrorMessages('Password', DtoErrorType.MIN_LENGTH, 6),
+  })
+  @MaxLength(100, {
+    message: dtoErrorMessages('Password', DtoErrorType.MAX_LENGTH, 100),
+  })
   password: string; // change prisma to passwordHash
 
   @ApiProperty({
@@ -61,8 +77,10 @@ export class CreateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
+  @IsString({ message: dtoErrorMessages('Bio', DtoErrorType.IS_STRING) })
+  @MaxLength(255, {
+    message: dtoErrorMessages('Bio', DtoErrorType.MAX_LENGTH, 255),
+  })
   bio?: string;
 
   @ApiProperty({
@@ -71,7 +89,9 @@ export class CreateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsString({
+    message: dtoErrorMessages('Profile image', DtoErrorType.IS_STRING),
+  })
   @IsUrl()
   profileImg?: string;
 }
