@@ -9,3 +9,13 @@ exports[`<UserService /> <Create /> should create a user successfully 1`] = `
   "username": "jDoe453",
 }
 `;
+
+exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
+{
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "name": "John Doe",
+  "profileImg": "https://example.com/profile.jpg",
+  "username": "jDoe453",
+}
+`;

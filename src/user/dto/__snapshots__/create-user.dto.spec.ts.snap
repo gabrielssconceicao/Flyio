@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreateUserDto> <Property: Bio> should validate a DTO if bio too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Bio must be at most 255 characters long",
+    },
+    "property": "bio",
+    "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Email> should fail if email is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isEmail": "email must be an email",
+      "isNotEmpty": "Email is required",
+    },
+    "property": "email",
+    "value": null,
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Email> should fail if email is not valid 1`] = `
+[
+  {
+    "constraints": {
+      "isEmail": "email must be an email",
+    },
+    "property": "email",
+    "value": "jdoe@me",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Name> should fail if name is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Name is required",
+      "minLength": "Name must be at least 3 characters long",
+    },
+    "property": "name",
+    "value": "",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Name> should fail if name is too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Name must be at most 100 characters long",
+    },
+    "property": "name",
+    "value": "JonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonh",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Name> should fail if name is too short 1`] = `
+[
+  {
+    "constraints": {
+      "minLength": "Name must be at least 3 characters long",
+    },
+    "property": "name",
+    "value": "Jo",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Password> should fail if password is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Password is required",
+      "isString": "Password must be a string",
+      "maxLength": "Password must be at most 100 characters long",
+      "minLength": "Password must be at least 6 characters long",
+    },
+    "property": "password",
+    "value": null,
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Password> should fail if password is too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Password must be at most 100 characters long",
+    },
+    "property": "password",
+    "value": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Password> should fail if password is too short 1`] = `
+[
+  {
+    "constraints": {
+      "minLength": "Password must be at least 6 characters long",
+    },
+    "property": "password",
+    "value": "12345",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: ProfileImg> should validate a DTO if profileImg is not a url 1`] = `
+[
+  {
+    "constraints": {
+      "isUrl": "profileImg must be a URL address",
+    },
+    "property": "profileImg",
+    "value": "invalid-url",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Username> should fail if username is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Username is required",
+      "isString": "Username must be a string",
+      "maxLength": "Username must be at most 100 characters long",
+      "minLength": "Username must be at least 3 characters long",
+    },
+    "property": "username",
+    "value": null,
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Username> should fail if username is too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Username must be at most 100 characters long",
+    },
+    "property": "username",
+    "value": "jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42",
+  },
+]
+`;
+
+exports[`<CreateUserDto> <Property: Username> should fail if username is too short 1`] = `
+[
+  {
+    "constraints": {
+      "minLength": "Username must be at least 3 characters long",
+    },
+    "property": "username",
+    "value": "jD",
+  },
+]
+`;

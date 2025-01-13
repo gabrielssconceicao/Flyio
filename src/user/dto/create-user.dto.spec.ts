@@ -1,6 +1,12 @@
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
-
+function formatErrors(errors: ValidationError[]) {
+  return errors.map((error) => ({
+    property: error.property,
+    constraints: error.constraints,
+    value: error.value,
+  }));
+}
 describe('<CreateUserDto>', () => {
   let dto: CreateUserDto;
 
@@ -25,16 +31,22 @@ describe('<CreateUserDto>', () => {
       dto.name = '';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('name');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if name is too short', async () => {
       dto.name = 'Jo';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('name');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if name is too long', async () => {
       dto.name = 'Jonh'.repeat(100);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('name');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
 
@@ -43,16 +55,22 @@ describe('<CreateUserDto>', () => {
       dto.username = null;
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('username');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if username is too short', async () => {
       dto.username = 'jD';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('username');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if username is too long', async () => {
       dto.username = 'jDoe42'.repeat(100);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('username');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
 
@@ -62,12 +80,16 @@ describe('<CreateUserDto>', () => {
 
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('email');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if email is not valid', async () => {
       dto.email = 'jdoe@me';
 
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('email');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
 
@@ -76,16 +98,22 @@ describe('<CreateUserDto>', () => {
       dto.password = null;
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('password');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if password is too short', async () => {
       dto.password = '12345';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('password');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if password is too long', async () => {
       dto.password = '1'.repeat(101);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('password');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
 
@@ -99,6 +127,8 @@ describe('<CreateUserDto>', () => {
       dto.bio = 'b'.repeat(256);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('bio');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
   describe('<Property: ProfileImg>', () => {
@@ -111,6 +141,8 @@ describe('<CreateUserDto>', () => {
       dto.profileImg = 'invalid-url';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
+      expect(errors[0].property).toBe('profileImg');
+      expect(formatErrors(errors)).toMatchSnapshot();
     });
   });
 });
