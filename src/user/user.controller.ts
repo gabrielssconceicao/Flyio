@@ -66,9 +66,27 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user by username' })
+  @ApiResponse({
+    status: 200,
+    description: 'User found successfully.',
+    type: User,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found.',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User not found.',
+        error: 'Not Found',
+      },
+    },
+  })
+  @Get(':username')
+  findOne(@Param('username') username: string) {
+    return this.userService.findOne(username);
   }
 
   @Patch(':id')
