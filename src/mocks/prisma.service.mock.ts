@@ -1,6 +1,7 @@
 export const userPrismaService = {
   user: {
     create: jest.fn(),
+    findFirst: jest.fn(),
   },
 };
 

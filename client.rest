@@ -15,3 +15,7 @@ Content-Type: application/json
   "email":"Jdoe2@email.com",
   "password": "123456"
 }
+
+###
+// For development
+GET {{baseUrl}}/user

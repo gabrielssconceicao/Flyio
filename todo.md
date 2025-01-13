@@ -59,3 +59,5 @@
 - [ ] comments
 
 - [ ] follow
+
+- [ ] apagar comentarios
