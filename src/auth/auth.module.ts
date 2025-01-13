@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { BcryptService } from './bcrypt.service';
 import { HashingServiceProtocol } from './hashing/hashing.service';
+
+@Global()
 @Module({
   imports: [],
   providers: [

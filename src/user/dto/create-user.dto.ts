@@ -11,7 +11,7 @@ import {
 import {
   dtoErrorMessages,
   DtoErrorType,
-} from 'src/common/utils/dto-error-messages';
+} from '../../common/utils/dto-error-messages';
 
 export class CreateUserDto {
   @ApiProperty({
