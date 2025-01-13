@@ -7,11 +7,12 @@ import {
   userPrismaService,
 } from '../mocks/prisma.service.mock';
 import { hashingServiceMock } from '../mocks/hashing.service.mock';
-import { createUserDtoMock } from '../mocks/user.mock';
+import { createMockUser, createUserDtoMock } from '../mocks/user.mock';
 import { User } from './entities/user.entity';
 import {
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 
 describe('<UserService />', () => {
@@ -52,13 +53,7 @@ describe('<UserService />', () => {
   describe('<Create />', () => {
     it('should create a user successfully', async () => {
       const passwordHash = 'HASH_PASSWORD';
-      const newUser: User = {
-        name: createUserDtoMock.name,
-        username: createUserDtoMock.username,
-        email: createUserDtoMock.email,
-        profileImg: createUserDtoMock.profileImg,
-        bio: createUserDtoMock.bio,
-      };
+      const newUser: User = createMockUser();
       jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
       jest
@@ -80,6 +75,7 @@ describe('<UserService />', () => {
       });
 
       expect(result).toEqual(newUser);
+      expect(result).toMatchSnapshot();
     });
 
     it('should throw an ConflictException if user already exists', async () => {
@@ -98,6 +94,33 @@ describe('<UserService />', () => {
       await expect(service.create({} as any)).rejects.toThrow(
         InternalServerErrorException,
       );
+    });
+  });
+
+  describe('<FindOne />', () => {
+    it('should return a user successfully', async () => {
+      const username = createUserDtoMock.username;
+      const user: User = createMockUser();
+
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+
+      const result = await service.findOne(username);
+
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { username },
+        select: selectUserFieldsMock,
+      });
+
+      expect(result).toEqual(result);
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an NotFoundException', async () => {
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
+
+      await expect(service.findOne('jD')).rejects.toThrow(NotFoundException);
     });
   });
 });

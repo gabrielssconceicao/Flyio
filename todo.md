@@ -13,8 +13,9 @@
 - [ ] swagger
   - [ ] user routes
     - [ ] get all
-    - [ ] get one
-    - [ ] post 
+      - [ ] filter by name or username
+    - [x] get one
+    - [x] create 
     - [ ] patch
     - [ ] delete
   - [ ] post routes
@@ -61,3 +62,4 @@
 - [ ] follow
 
 - [ ] apagar comentarios
+- [ ] desativar rota
