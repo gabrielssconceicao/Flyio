@@ -21,20 +21,6 @@ import { User } from './entities/user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  /*
-  @ApiOperation({ summary: 'Criar um novo recado' }) // Descrição da operação
-  @ApiResponse({
-    status: 201,
-    description: 'Recado criado com sucesso.',
-    type: ResponseRecadoDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Dados inválidos.',
-    type: BadRequestException,
-    example: new BadRequestException('Error Message').getResponse(),
-  })
-  */
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
@@ -89,9 +75,12 @@ export class UserController {
     return this.userService.findOne(username);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch(':username')
+  update(
+    @Param('username') username: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(username, updateUserDto);
   }
 
   @Delete(':id')

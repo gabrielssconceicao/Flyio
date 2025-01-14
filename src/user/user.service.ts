@@ -74,8 +74,34 @@ export class UserService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(username: string, updateUserDto: UpdateUserDto) {
+    const personDto = {
+      name: updateUserDto?.name,
+      email: updateUserDto?.email,
+      profileImg: updateUserDto?.profileImg,
+      bio: updateUserDto?.bio,
+    };
+
+    const userExists = await this.userExists(personDto.email, username);
+
+    if (!userExists) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (updateUserDto?.password) {
+      const passwordHash = await this.hashingService.hash(
+        updateUserDto.password,
+      );
+      personDto['password'] = passwordHash;
+    }
+
+    const updatedUser = await this.prismaService.user.update({
+      where: { username },
+      data: { ...personDto },
+      select: this.selectUserFields,
+    });
+
+    return updatedUser;
   }
 
   remove(id: number) {
