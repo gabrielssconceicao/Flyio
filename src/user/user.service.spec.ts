@@ -134,23 +134,14 @@ describe('<UserService />', () => {
       };
       const username = createUserDtoMock.username;
 
-      const user = {
-        id: createUserDtoMock.id,
-        name: createUserDtoMock.name,
-        username: createUserDtoMock.username,
-        email: createUserDtoMock.email,
-        profileImg: createUserDtoMock.profileImg,
-        bio: createUserDtoMock.bio,
-      };
+      const user = createMockUser();
       const passwordHash = 'HASH_PASSWORD';
       jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
 
       jest.spyOn(prismaService.user, 'update').mockResolvedValue({
         ...updateUserDto,
-        username,
-        id: createUserDtoMock.id,
-        email: createUserDtoMock.email,
+        ...user,
       } as any);
 
       const result = await service.update(username, updateUserDto);
@@ -165,8 +156,8 @@ describe('<UserService />', () => {
         select: selectUserFieldsMock,
       });
       expect(result).toEqual({
-        ...user,
         ...updateUserDto,
+        ...user,
       });
 
       expect(result).toMatchSnapshot();

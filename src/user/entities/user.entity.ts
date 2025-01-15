@@ -5,4 +5,5 @@ export class User {
   email: string;
   profileImg: string;
   bio: string;
+  active: boolean;
 }

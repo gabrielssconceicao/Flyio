@@ -16,8 +16,9 @@
       - [ ] filter by name or username
     - [x] get one
     - [x] create 
-    - [ ] patch
+    - [x] patch
     - [ ] delete
+    - [ ] 
   - [ ] post routes
     - [ ] get all
     - [ ] get one

@@ -23,6 +23,7 @@ export class UserService {
     email: true,
     profileImg: true,
     bio: true,
+    active: true,
   };
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -102,7 +103,6 @@ export class UserService {
         updateUserDto.password,
       );
       personDto['password'] = passwordHash;
-      console.log(personDto);
     }
 
     const updatedUser = await this.prismaService.user.update({

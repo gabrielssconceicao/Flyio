@@ -2,6 +2,7 @@
 
 exports[`<UserService /> <Create /> should create a user successfully 1`] = `
 {
+  "active": true,
   "bio": "This is my bio",
   "email": "jdoe@me.com",
   "id": "42-d-f-df4",
@@ -13,6 +14,7 @@ exports[`<UserService /> <Create /> should create a user successfully 1`] = `
 
 exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 {
+  "active": true,
   "bio": "This is my bio",
   "email": "jdoe@me.com",
   "id": "42-d-f-df4",
@@ -24,12 +26,13 @@ exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 
 exports[`<UserService /> <Update /> should update a user successfully 1`] = `
 {
-  "bio": "new bio",
+  "active": true,
+  "bio": "This is my bio",
   "email": "jdoe@me.com",
   "id": "42-d-f-df4",
-  "name": "new name",
+  "name": "John Doe",
   "password": "new_password",
-  "profileImg": "http://newprofileImg.com",
+  "profileImg": "https://example.com/profile.jpg",
   "username": "jDoe453",
 }
 `;

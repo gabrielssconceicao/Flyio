@@ -26,8 +26,7 @@ PATCH {{baseUrl}}/user/{{username}}
 Content-Type: application/json
 
 {
-  "name": "Jonny",
- 
+  "name": "Jonny"
 }
 ###
 // For development

@@ -6,6 +6,7 @@ export const createUserDtoMock = {
   password: '123456',
   profileImg: 'https://example.com/profile.jpg',
   bio: 'This is my bio',
+  active: true,
 };
 
 export const createMockUser = () => {
@@ -16,5 +17,6 @@ export const createMockUser = () => {
     email: createUserDtoMock.email,
     profileImg: createUserDtoMock.profileImg,
     bio: createUserDtoMock.bio,
+    active: createUserDtoMock.active,
   };
 };
