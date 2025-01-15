@@ -3,10 +3,12 @@ export const userPrismaService = {
     create: jest.fn(),
     findFirst: jest.fn(),
     findUnique: jest.fn(),
+    update: jest.fn(),
   },
 };
 
 export const selectUserFieldsMock = {
+  id: true,
   name: true,
   username: true,
   email: true,

@@ -123,4 +123,89 @@ describe('<UserService />', () => {
       await expect(service.findOne('jD')).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('<Update />', () => {
+    it('should update a user successfully', async () => {
+      const updateUserDto = {
+        name: 'new name',
+        password: 'new_password',
+        profileImg: 'http://newprofileImg.com',
+        bio: 'new bio',
+      };
+      const username = createUserDtoMock.username;
+
+      const user = {
+        id: createUserDtoMock.id,
+        name: createUserDtoMock.name,
+        username: createUserDtoMock.username,
+        email: createUserDtoMock.email,
+        profileImg: createUserDtoMock.profileImg,
+        bio: createUserDtoMock.bio,
+      };
+      const passwordHash = 'HASH_PASSWORD';
+      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+
+      jest.spyOn(prismaService.user, 'update').mockResolvedValue({
+        ...updateUserDto,
+        username,
+        id: createUserDtoMock.id,
+        email: createUserDtoMock.email,
+      } as any);
+
+      const result = await service.update(username, updateUserDto);
+      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { username },
+        data: {
+          ...updateUserDto,
+          password: passwordHash,
+        },
+        select: selectUserFieldsMock,
+      });
+      expect(result).toEqual({
+        ...user,
+        ...updateUserDto,
+      });
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an error if user not found', async () => {
+      jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
+
+      await expect(service.update('jDoe', {} as any)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw an error if email is already in use', async () => {
+      const updateUserDto = {
+        email: 'newemail@example.com',
+      };
+
+      const existingUserMock = {
+        id: 1,
+        username: 'jDoe2',
+        email: 'johndoe@example.com',
+      };
+
+      const conflictingUserMock = {
+        id: 2,
+        username: 'otherUser',
+        email: 'newemail@example.com',
+      };
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(existingUserMock as any);
+
+      jest
+        .spyOn(prismaService.user, 'findFirst')
+        .mockResolvedValue(conflictingUserMock as any);
+
+      await expect(service.update('jDoe2', updateUserDto)).rejects.toThrow(
+        ConflictException,
+      );
+    });
+  });
 });

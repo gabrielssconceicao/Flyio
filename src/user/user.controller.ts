@@ -13,7 +13,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 
 @ApiTags('User')
@@ -54,6 +54,11 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'User username',
+    example: 'jDoe45',
+  })
   @ApiResponse({
     status: 200,
     description: 'User found successfully.',
@@ -75,6 +80,40 @@ export class UserController {
     return this.userService.findOne(username);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update user by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'User username',
+    example: 'jDoe45',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User updated successfully.',
+    type: User,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found.',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User not found.',
+        error: 'Not Found',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Email already in use',
+    schema: {
+      example: {
+        statusCode: 409,
+        message: 'Email is already associated with an existing account',
+        error: 'Conflict',
+      },
+    },
+  })
   @Patch(':username')
   update(
     @Param('username') username: string,

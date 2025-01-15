@@ -21,5 +21,14 @@ Content-Type: application/json
 GET {{baseUrl}}/user/{{username}}
 
 ###
+
+PATCH {{baseUrl}}/user/{{username}}
+Content-Type: application/json
+
+{
+  "name": "Jonny",
+ 
+}
+###
 // For development
 GET {{baseUrl}}/user

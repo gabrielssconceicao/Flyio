@@ -17,6 +17,7 @@ export class UserService {
   ) {}
 
   private selectUserFields = {
+    id: true,
     name: true,
     username: true,
     email: true,
@@ -74,21 +75,17 @@ export class UserService {
     return user;
   }
 
-  async update(username: string, updateUserDto: UpdateUserDto) {
+  async update(username: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(username);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    if (updateUserDto?.email !== user.email) {
+    if (updateUserDto?.email && updateUserDto.email !== user.email) {
       const emailIsTaken = await this.prismaService.user.findFirst({
-        where: { email: updateUserDto?.email, NOT: { username } },
+        where: { email: updateUserDto?.email, NOT: { id: user.id } },
       });
 
       if (emailIsTaken) {
         throw new ConflictException(
-          'This email is already associated with an existing account',
+          'Email is already associated with an existing account',
         );
       }
     }
@@ -100,17 +97,12 @@ export class UserService {
       bio: updateUserDto?.bio,
     };
 
-    const userExists = await this.userExists(personDto.email, username);
-
-    if (!userExists) {
-      throw new NotFoundException('User not found');
-    }
-
     if (updateUserDto?.password) {
       const passwordHash = await this.hashingService.hash(
         updateUserDto.password,
       );
       personDto['password'] = passwordHash;
+      console.log(personDto);
     }
 
     const updatedUser = await this.prismaService.user.update({
