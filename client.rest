@@ -1,6 +1,6 @@
 @baseUrl=http://localhost:3000
 @username=jDoe42
-@userId=d9cca408-11fc-4cb1-aaf7-459b43d6088a
+@userId=55671551-5f48-4ea2-9017-4eddf729a99d
 ###
 
 
@@ -10,9 +10,9 @@ POST {{baseUrl}}/user/register
 Content-Type: application/json
 
 {
-  "name": "Jonh Doe",
-  "username": "jDoe3",
-  "email":"Jdoe3@email.com",
+  "name": "Jane Doe",
+  "username": "jDoe4",
+  "email":"Jdoe4@email.com",
   "password": "123456"
 }
 

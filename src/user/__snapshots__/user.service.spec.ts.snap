@@ -12,6 +12,12 @@ exports[`<UserService /> <Create /> should create a user successfully 1`] = `
 }
 `;
 
+exports[`<UserService /> <Delete /> should delete a user successfully 1`] = `
+{
+  "message": "User deleted successfully",
+}
+`;
+
 exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 {
   "active": true,

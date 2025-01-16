@@ -199,4 +199,33 @@ describe('<UserService />', () => {
       );
     });
   });
+
+  describe('<Delete />', () => {
+    it('should delete a user successfully', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue({ active: true } as any);
+      jest
+        .spyOn(prismaService.user, 'update')
+        .mockResolvedValue({ active: false } as any);
+
+      const result = await service.remove(createUserDtoMock.id);
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: createUserDtoMock.id },
+      });
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: createUserDtoMock.id },
+        data: { active: false },
+      });
+      expect(result).toEqual({ message: 'User deleted successfully' });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw a NotFoundException if user not found', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue({ active: false } as any);
+      await expect(service.remove('jD')).rejects.toThrow(NotFoundException);
+    });
+  });
 });
