@@ -43,7 +43,6 @@ export class UserController {
     },
   })
   create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.userService.create(createUserDto);
   }
 
@@ -119,11 +118,38 @@ export class UserController {
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    // change to id
     return this.userService.update(username, updateUserDto);
   }
 
+  @ApiOperation({ summary: 'Delete user by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'User id',
+    example: '42-d-f-df4',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User not found.',
+    schema: {
+      example: {
+        message: 'User deleted successfully.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found.',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User not found.',
+        error: 'Not Found',
+      },
+    },
+  })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

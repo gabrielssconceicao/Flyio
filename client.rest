@@ -1,6 +1,6 @@
 @baseUrl=http://localhost:3000
 @username=jDoe42
-
+@userId=d9cca408-11fc-4cb1-aaf7-459b43d6088a
 ###
 
 
@@ -11,8 +11,8 @@ Content-Type: application/json
 
 {
   "name": "Jonh Doe",
-  "username": "jDoe2",
-  "email":"Jdoe2@email.com",
+  "username": "jDoe3",
+  "email":"Jdoe3@email.com",
   "password": "123456"
 }
 
@@ -28,6 +28,10 @@ Content-Type: application/json
 {
   "name": "Jonny"
 }
+###
+
+DELETE {{baseUrl}}/user/{{userId}}
+
 ###
 // For development
 GET {{baseUrl}}/user
