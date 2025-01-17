@@ -8,13 +8,21 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
-  ConflictException,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { QueryParamDto } from './dto/query-param.dto';
+import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -46,9 +54,39 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all users by name or username' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of users and the total count',
+    type: FindAllUsersResponseDto,
+  })
+  @ApiQuery({
+    name: 'search',
+    description: 'Filter by user name or username',
+    required: false,
+    type: String,
+    example: 'John',
+  })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Number of users to return per page',
+    required: false,
+    type: Number,
+    minimum: 1,
+    maximum: 50,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'offset',
+    description: 'Number of users to skip for pagination',
+    required: false,
+    type: Number,
+    example: 0,
+  })
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() query: QueryParamDto) {
+    return this.userService.findAll(query);
   }
 
   @HttpCode(HttpStatus.OK)

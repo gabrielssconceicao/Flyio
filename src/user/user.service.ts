@@ -8,6 +8,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from './entities/user.entity';
+import { QueryParamDto } from './dto/query-param.dto';
+import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 
 @Injectable()
 export class UserService {
@@ -47,11 +49,26 @@ export class UserService {
     return createdUser;
   }
 
-  // For testing
-  findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany({
-      select: this.selectUserFields,
+  async findAll(query: QueryParamDto): Promise<FindAllUsersResponseDto> {
+    const { limit = 1, offset = 0, search = '' } = query;
+    const where = search
+      ? {
+          OR: [{ name: { contains: search } }, { email: { contains: search } }],
+        }
+      : {};
+    const users = await this.prismaService.user.findMany({
+      where: where,
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        profileImg: true,
+      },
+      take: limit,
+      skip: offset,
     });
+    const count = await this.prismaService.user.count();
+    return { count, users };
   }
 
   private async userExists(email: string, username: string): Promise<boolean> {

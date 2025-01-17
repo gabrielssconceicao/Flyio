@@ -17,8 +17,7 @@
     - [x] get one
     - [x] create 
     - [x] patch
-    - [ ] delete
-    - [ ] 
+    - [x] delete 
   - [ ] post routes
     - [ ] get all
     - [ ] get one

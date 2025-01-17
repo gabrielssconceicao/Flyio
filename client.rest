@@ -35,3 +35,6 @@ DELETE {{baseUrl}}/user/{{userId}}
 ###
 // For development
 GET {{baseUrl}}/user
+?search=D
+&limit=10
+&offset=0
