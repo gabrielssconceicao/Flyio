@@ -12,12 +12,22 @@
 
 - [ ] swagger
   - [ ] user routes
-    - [ ] get all
-      - [ ] filter by name or username
+    - [x]get all
+      - [x] filter by name or username
+      - [x] test service
+      - [ ] test controller
     - [x] get one
+      - [x] test service
+      - [ ] test controller
     - [x] create 
+      - [x] test service
+      - [ ] test controller
     - [x] patch
-    - [x] delete 
+      - [x] test service
+      - [ ] test controller
+    - [x] delete
+      - [x] test service
+      - [ ] test controller 
   - [ ] post routes
     - [ ] get all
     - [ ] get one

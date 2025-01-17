@@ -228,4 +228,31 @@ describe('<UserService />', () => {
       await expect(service.remove('jD')).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('<FindAll />', () => {
+    it('should search for a list of users ', async () => {
+      const query = {
+        search: 'jD',
+        limit: 1,
+        offset: 0,
+      };
+      jest.spyOn(prismaService.user, 'findMany').mockResolvedValue([
+        {
+          id: 'f-3wds',
+          name: 'John Doe',
+          username: 'jD',
+          profileImg: 'http://profileImg.com',
+        },
+      ] as any);
+      jest.spyOn(prismaService.user, 'count').mockResolvedValue(1);
+
+      const result = await service.findAll(query);
+
+      expect(prismaService.user.findMany).toHaveBeenCalled();
+      expect(prismaService.user.count).toHaveBeenCalled();
+      expect(result.count).toBe(1);
+      expect(result.users.length).toBe(1);
+      expect(result).toMatchSnapshot();
+    });
+  });
 });

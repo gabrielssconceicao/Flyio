@@ -18,6 +18,20 @@ exports[`<UserService /> <Delete /> should delete a user successfully 1`] = `
 }
 `;
 
+exports[`<UserService /> <FindAll /> should search for a list of users  1`] = `
+{
+  "count": 1,
+  "users": [
+    {
+      "id": "f-3wds",
+      "name": "John Doe",
+      "profileImg": "http://profileImg.com",
+      "username": "jD",
+    },
+  ],
+}
+`;
+
 exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 {
   "active": true,
