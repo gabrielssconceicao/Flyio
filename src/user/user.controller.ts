@@ -9,6 +9,8 @@ import {
   HttpStatus,
   HttpCode,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,14 +25,13 @@ import {
 import { User } from './entities/user.entity';
 import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @HttpCode(HttpStatus.CREATED)
-  @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
     status: 201,
@@ -50,7 +51,21 @@ export class UserController {
       },
     },
   })
-  create(@Body() createUserDto: CreateUserDto) {
+  @HttpCode(HttpStatus.CREATED)
+  @Post('register')
+  @UseInterceptors(
+    FileInterceptor('profileImg', {
+      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+    }),
+  )
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() profileImg: Express.Multer.File,
+  ) {
+    if (profileImg) {
+      console.log(profileImg);
+    }
+    console.log(createUserDto);
     return this.userService.create(createUserDto);
   }
 

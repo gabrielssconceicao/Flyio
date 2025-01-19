@@ -8,6 +8,7 @@ import { UserModule } from 'src/user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { AuthModule } from '../auth/auth.module';
+import { ImageModule } from 'src/image/image.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from '../auth/auth.module';
     PrismaModule,
     AuthModule,
     UserModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [

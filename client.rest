@@ -7,14 +7,41 @@
 
 // /# User Routes #/
 POST {{baseUrl}}/users/register
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=----HttpBoundary
 
-{
-  "name": "Jane Doe",
-  "username": "jDoe4",
-  "email":"Jdoe4@email.com",
-  "password": "123456"
-}
+----HttpBoundary
+Content-Disposition: form-data; name="name"
+
+< JaneDoe
+----HttpBoundary
+Content-Disposition: form-data; name="username"
+
+jDoe
+----HttpBoundary
+Content-Disposition: form-data; name="email"
+
+Jdoe4@email.com
+----HttpBoundary
+Content-Disposition: form-data; name="password"
+
+123456
+----HttpBoundary
+Content-Disposition: form-data; name="bio"
+
+This is my bio
+----HttpBoundary
+Content-Disposition: form-data; name="profileImg"; filename="woman.jpg"
+Content-Type: image/jpeg
+
+< ./images/woman.jpg
+
+------HttpBoundary--
+# {
+#   "name": "Jane Doe",
+#   "username": "jDoe4",
+#   "email":"Jdoe4@email.com",
+#   "password": "123456"
+# }
 
 ###
 

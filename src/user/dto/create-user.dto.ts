@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -82,16 +81,4 @@ export class CreateUserDto {
     message: dtoErrorMessages('Bio', DtoErrorType.MAX_LENGTH, 255),
   })
   bio?: string;
-
-  @ApiProperty({
-    example: 'https://example.com/profile.jpg',
-    description: 'User profile image URL',
-    required: false,
-  })
-  @IsOptional()
-  @IsString({
-    message: dtoErrorMessages('Profile image', DtoErrorType.IS_STRING),
-  })
-  @IsUrl()
-  profileImg?: string;
 }

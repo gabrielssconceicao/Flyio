@@ -111,7 +111,6 @@ export class UserService {
     const personDto = {
       name: updateUserDto?.name,
       email: updateUserDto?.email,
-      profileImg: updateUserDto?.profileImg,
       bio: updateUserDto?.bio,
     };
 

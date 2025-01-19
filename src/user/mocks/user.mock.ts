@@ -15,7 +15,6 @@ const userMock = {
 
 export const generateCreateUserDtoMock = (
   bio: boolean = false,
-  profileImg: boolean = false,
 ): CreateUserDto => {
   const dto: CreateUserDto = {
     name: userMock.name,
@@ -25,7 +24,6 @@ export const generateCreateUserDtoMock = (
   };
 
   if (bio) dto.bio = userMock.bio;
-  if (profileImg) dto.profileImg = userMock.profileImg;
   return dto;
 };
 
