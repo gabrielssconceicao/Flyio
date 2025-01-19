@@ -10,12 +10,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { User } from './entities/user.entity';
 import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly hashingService: HashingServiceProtocol,
     private readonly prismaService: PrismaService,
+    private readonly fileService: FileService,
   ) {}
 
   private selectUserFields = {
@@ -28,13 +30,18 @@ export class UserService {
     active: true,
   };
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(
+    createUserDto: CreateUserDto,
+    profileImg: Express.Multer.File,
+  ): Promise<User> {
     const { password, ...rest } = createUserDto;
 
     const userExists = await this.userExists(
       createUserDto.email,
       createUserDto.username,
     );
+    const profileImgUrl =
+      await this.fileService.uploadProfilePicture(profileImg);
     if (userExists) {
       throw new ConflictException(
         'This email or username is already associated with an existing account',

@@ -62,11 +62,8 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
     @UploadedFile() profileImg: Express.Multer.File,
   ) {
-    if (profileImg) {
-      console.log(profileImg);
-    }
-    console.log(createUserDto);
-    return this.userService.create(createUserDto);
+    console.log(profileImg);
+    return this.userService.create(createUserDto, profileImg);
   }
 
   @HttpCode(HttpStatus.OK)
