@@ -51,9 +51,9 @@
     
 - [ ] users
   - [ ] create
-    - [ ] createUserDto
-    - [ ] test CreateUserDto
-    - [ ] password hash
+    - [x] createUserDto
+    - [x] test CreateUserDto
+    - [x] password hash
     - [ ] profile image upload
   - [ ] delete
   - [ ] get one

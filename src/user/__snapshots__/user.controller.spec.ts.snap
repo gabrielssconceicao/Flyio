@@ -27,10 +27,10 @@ exports[`UserController <FindAll /> should return an array of users 1`] = `
   "count": 1,
   "users": [
     {
-      "id": "f-3wds",
+      "id": "42-d-f-df4",
       "name": "John Doe",
-      "profileImg": "http://profileImg.com",
-      "username": "jD",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
     },
   ],
 }

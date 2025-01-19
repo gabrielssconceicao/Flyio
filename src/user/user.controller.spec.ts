@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { User } from './entities/user.entity';
-import { createMockUser, createUserDtoMock } from 'src/mocks/user.mock';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
+import {
+  generateCreateUserDtoMock,
+  generateFindAllUsersResponseDtoMock,
+  generateUserMock,
+} from './mocks/user.mock';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -40,23 +41,18 @@ describe('UserController', () => {
 
   describe('<Create/ >', () => {
     it('should create a user', async () => {
-      const { id, active, ...rest } = createUserDtoMock;
-      const createdUser: User = createMockUser();
+      const createUserDto = generateCreateUserDtoMock(true, true);
+      const user = generateUserMock();
 
-      jest.spyOn(userServiceMock, 'create').mockResolvedValue(createdUser);
+      jest.spyOn(userServiceMock, 'create').mockResolvedValue(user);
 
-      const result = await controller.create(rest);
-      expect(userServiceMock.create).toHaveBeenCalledWith(rest);
-      expect(result).toEqual(createdUser);
+      const result = await controller.create(createUserDto);
+      expect(userServiceMock.create).toHaveBeenCalledWith(createUserDto);
+      expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
     it('should throw ConflictException when email is already in use', async () => {
-      const dto: CreateUserDto = {
-        name: 'John',
-        email: 'john@example.com',
-        username: 'john_doe',
-        password: 'password',
-      };
+      const dto = generateCreateUserDtoMock();
 
       userServiceMock.create.mockRejectedValue(
         new ConflictException(
@@ -71,17 +67,7 @@ describe('UserController', () => {
 
   describe('<FindAll />', () => {
     it('should return an array of users', async () => {
-      const users: FindAllUsersResponseDto = {
-        count: 1,
-        users: [
-          {
-            id: 'f-3wds',
-            name: 'John Doe',
-            username: 'jD',
-            profileImg: 'http://profileImg.com',
-          },
-        ],
-      };
+      const users = generateFindAllUsersResponseDtoMock();
       const query = {
         search: 'jD',
         limit: 1,
@@ -99,8 +85,8 @@ describe('UserController', () => {
 
   describe('<FindOne />', () => {
     it('should return a user successfully', async () => {
-      const username = createUserDtoMock.username;
-      const user: User = createMockUser();
+      const username = 'jDoe';
+      const user = generateUserMock();
       jest.spyOn(userServiceMock, 'findOne').mockResolvedValue(user);
       const result = await controller.findOne(username);
       expect(userServiceMock.findOne).toHaveBeenCalledWith(username);
@@ -108,7 +94,7 @@ describe('UserController', () => {
       expect(result).toMatchSnapshot();
     });
     it('should throw an NotFoundException', async () => {
-      const username = createUserDtoMock.username;
+      const username = 'jDoe';
       jest
         .spyOn(userServiceMock, 'findOne')
         .mockRejectedValue(new NotFoundException('User not found'));
@@ -128,13 +114,13 @@ describe('UserController', () => {
         bio: 'Update bio',
       };
 
-      jest
-        .spyOn(userServiceMock, 'update')
-        .mockResolvedValue({ ...createMockUser(), ...updateUserDto });
+      const updatedUser = { ...generateUserMock(), ...updateUserDto };
+
+      jest.spyOn(userServiceMock, 'update').mockResolvedValue(updatedUser);
       const result = await controller.update(id, updateUserDto);
 
       expect(userServiceMock.update).toHaveBeenCalledWith(id, updateUserDto);
-      expect(result).toEqual({ ...createMockUser(), ...updateUserDto });
+      expect(result).toEqual(updatedUser);
       expect(result).toMatchSnapshot();
     });
     it('should throw an NotFoundException', async () => {

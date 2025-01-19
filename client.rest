@@ -6,7 +6,7 @@
 
 
 // /# User Routes #/
-POST {{baseUrl}}/user/register
+POST {{baseUrl}}/users/register
 Content-Type: application/json
 
 {
@@ -18,11 +18,11 @@ Content-Type: application/json
 
 ###
 
-GET {{baseUrl}}/user/{{username}}
+GET {{baseUrl}}/users/{{username}}
 
 ###
 
-PATCH {{baseUrl}}/user/{{username}}
+PATCH {{baseUrl}}/users/{{username}}
 Content-Type: application/json
 
 {
@@ -30,10 +30,9 @@ Content-Type: application/json
 }
 ###
 
-DELETE {{baseUrl}}/user/{{userId}}
+DELETE {{baseUrl}}/users/{{userId}}
 
 ###
-// For development
 GET {{baseUrl}}/user
 ?search=D
 &limit=10

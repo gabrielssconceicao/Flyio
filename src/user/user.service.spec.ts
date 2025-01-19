@@ -7,13 +7,16 @@ import {
   userPrismaService,
 } from '../mocks/prisma.service.mock';
 import { hashingServiceMock } from '../mocks/hashing.service.mock';
-import { createMockUser, createUserDtoMock } from '../mocks/user.mock';
-import { User } from './entities/user.entity';
 import {
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  generateCreateUserDtoMock,
+  generateFindAllUsersResponseDtoMock,
+  generateUserMock,
+} from './mocks/user.mock';
 
 describe('<UserService />', () => {
   let service: UserService;
@@ -53,22 +56,21 @@ describe('<UserService />', () => {
   describe('<Create />', () => {
     it('should create a user successfully', async () => {
       const passwordHash = 'HASH_PASSWORD';
-      const newUser: User = createMockUser();
+      const newUser = generateUserMock();
+      const createUserDto = generateCreateUserDtoMock(true, true);
       jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
       jest
         .spyOn(prismaService.user, 'create')
         .mockResolvedValue(newUser as any);
 
-      const result = await service.create(createUserDtoMock);
+      const result = await service.create(createUserDto);
 
-      expect(hashingService.hash).toHaveBeenCalledWith(
-        createUserDtoMock.password,
-      );
+      expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
 
       expect(prismaService.user.create).toHaveBeenCalledWith({
         data: {
-          ...createUserDtoMock,
+          ...createUserDto,
           password: passwordHash,
         },
         select: selectUserFieldsMock,
@@ -85,6 +87,7 @@ describe('<UserService />', () => {
         ConflictException,
       );
     });
+
     it('should throw an InternalServerErrorException ', async () => {
       jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
       jest
@@ -99,8 +102,8 @@ describe('<UserService />', () => {
 
   describe('<FindOne />', () => {
     it('should return a user successfully', async () => {
-      const username = createUserDtoMock.username;
-      const user: User = createMockUser();
+      const username = generateCreateUserDtoMock().username;
+      const user = generateUserMock();
 
       jest
         .spyOn(prismaService.user, 'findUnique')
@@ -132,9 +135,9 @@ describe('<UserService />', () => {
         profileImg: 'http://newprofileImg.com',
         bio: 'new bio',
       };
-      const username = createUserDtoMock.username;
+      const username = generateCreateUserDtoMock().username;
 
-      const user = createMockUser();
+      const user = generateUserMock();
       const passwordHash = 'HASH_PASSWORD';
       jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
@@ -209,12 +212,14 @@ describe('<UserService />', () => {
         .spyOn(prismaService.user, 'update')
         .mockResolvedValue({ active: false } as any);
 
-      const result = await service.remove(createUserDtoMock.id);
+      const id = generateUserMock().id;
+
+      const result = await service.remove(id);
       expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-        where: { id: createUserDtoMock.id },
+        where: { id: id },
       });
       expect(prismaService.user.update).toHaveBeenCalledWith({
-        where: { id: createUserDtoMock.id },
+        where: { id: id },
         data: { active: false },
       });
       expect(result).toEqual({ message: 'User deleted successfully' });
@@ -236,15 +241,13 @@ describe('<UserService />', () => {
         limit: 1,
         offset: 0,
       };
-      jest.spyOn(prismaService.user, 'findMany').mockResolvedValue([
-        {
-          id: 'f-3wds',
-          name: 'John Doe',
-          username: 'jD',
-          profileImg: 'http://profileImg.com',
-        },
-      ] as any);
-      jest.spyOn(prismaService.user, 'count').mockResolvedValue(1);
+      const findAllResponse = generateFindAllUsersResponseDtoMock();
+      jest
+        .spyOn(prismaService.user, 'findMany')
+        .mockResolvedValue(findAllResponse.users as any);
+      jest
+        .spyOn(prismaService.user, 'count')
+        .mockResolvedValue(findAllResponse.count);
 
       const result = await service.findAll(query);
 
@@ -252,6 +255,7 @@ describe('<UserService />', () => {
       expect(prismaService.user.count).toHaveBeenCalled();
       expect(result.count).toBe(1);
       expect(result.users.length).toBe(1);
+      expect(result).toEqual(findAllResponse);
       expect(result).toMatchSnapshot();
     });
   });
