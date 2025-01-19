@@ -11,23 +11,23 @@
   
 
 - [ ] swagger
-  - [ ] user routes
+  - [x] user routes
     - [x]get all
       - [x] filter by name or username
       - [x] test service
-      - [ ] test controller
+      - [x] test controller
     - [x] get one
       - [x] test service
-      - [ ] test controller
+      - [x] test controller
     - [x] create 
       - [x] test service
-      - [ ] test controller
+      - [x] test controller
     - [x] patch
       - [x] test service
-      - [ ] test controller
+      - [x] test controller
     - [x] delete
       - [x] test service
-      - [ ] test controller 
+      - [x] test controller 
   - [ ] post routes
     - [ ] get all
     - [ ] get one
@@ -56,7 +56,7 @@
     - [x] password hash
     - [ ] profile image upload
   - [ ] delete
-  - [ ] get one
+  - [x] get one
   - [ ] update
   - [ ] delete
 
