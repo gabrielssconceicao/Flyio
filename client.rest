@@ -36,7 +36,7 @@ Content-Type: image/jpeg
 
 ###
 
-GET {{baseUrl}}/users/jDoe42
+GET {{baseUrl}}/users/jDoe4
 
 ###
 
@@ -51,7 +51,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/users/13325
 
 ###
-GET {{baseUrl}}/user
-?search=D
+GET {{baseUrl}}/users
+?search=J
 &limit=10
 &offset=0

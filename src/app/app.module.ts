@@ -18,8 +18,8 @@ import { FileModule } from '../file/file.module';
     }),
     PrismaModule,
     AuthModule,
-    UserModule,
     FileModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [

@@ -10,14 +10,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { User } from './entities/user.entity';
 import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-import { FileService } from 'src/file/file.service';
+import { CloudinaryService } from 'src/file/cloudinary.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly hashingService: HashingServiceProtocol,
     private readonly prismaService: PrismaService,
-    private readonly fileService: FileService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   private selectUserFields = {
@@ -40,17 +40,21 @@ export class UserService {
       createUserDto.email,
       createUserDto.username,
     );
-    const profileImgUrl =
-      await this.fileService.uploadProfilePicture(profileImg);
     if (userExists) {
       throw new ConflictException(
         'This email or username is already associated with an existing account',
       );
     }
 
+    let profileImgUrl = null;
+    if (profileImg) {
+      console.log({ profileImg });
+      profileImgUrl =
+        await this.cloudinaryService.uploadProfilePicture(profileImg);
+    }
     const hashedPassword = await this.hashingService.hash(password);
     const createdUser = await this.prismaService.user.create({
-      data: { ...rest, password: hashedPassword },
+      data: { ...rest, password: hashedPassword, profileImg: profileImgUrl },
       select: this.selectUserFields,
     });
     return createdUser;
@@ -74,7 +78,7 @@ export class UserService {
       take: limit,
       skip: offset,
     });
-    const count = await this.prismaService.user.count();
+    const count = await this.prismaService.user.count({ where });
     return { count, users };
   }
 
