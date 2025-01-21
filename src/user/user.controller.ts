@@ -163,12 +163,18 @@ export class UserController {
     },
   })
   @Patch(':username')
+  @UseInterceptors(
+    FileInterceptor('profileImg', {
+      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+    }),
+  )
   update(
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() profileImg: Express.Multer.File,
   ) {
     // change to id
-    return this.userService.update(username, updateUserDto);
+    return this.userService.update(username, updateUserDto, profileImg);
   }
 
   @ApiOperation({ summary: 'Delete user by id' })

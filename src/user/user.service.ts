@@ -36,19 +36,17 @@ export class UserService {
   ): Promise<User> {
     const { password, ...rest } = createUserDto;
 
-    const userExists = await this.userExists(
-      createUserDto.email,
-      createUserDto.username,
-    );
-    if (userExists) {
+    const userExists = await this.prismaService.user.findFirst({
+      where: { OR: [{ email: rest.email }, { username: rest.username }] },
+    });
+    if (!!userExists) {
       throw new ConflictException(
         'This email or username is already associated with an existing account',
       );
     }
 
     let profileImgUrl = null;
-    if (profileImg) {
-      console.log({ profileImg });
+    if (!!profileImg) {
       profileImgUrl =
         await this.cloudinaryService.uploadProfilePicture(profileImg);
     }
@@ -82,16 +80,6 @@ export class UserService {
     return { count, users };
   }
 
-  private async userExists(email: string, username: string): Promise<boolean> {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        OR: [{ email }, { username }],
-      },
-    });
-
-    return !!user;
-  }
-
   async findOne(username: string): Promise<User> {
     const user = await this.prismaService.user.findUnique({
       where: { username },
@@ -104,7 +92,11 @@ export class UserService {
     return user;
   }
 
-  async update(username: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    username: string,
+    updateUserDto: UpdateUserDto,
+    profileImg: Express.Multer.File,
+  ): Promise<User> {
     const user = await this.findOne(username);
 
     if (updateUserDto?.email && updateUserDto.email !== user.email) {
@@ -130,6 +122,11 @@ export class UserService {
         updateUserDto.password,
       );
       personDto['password'] = passwordHash;
+    }
+
+    if (!!profileImg) {
+      personDto['profileImg'] =
+        await this.cloudinaryService.uploadProfilePicture(profileImg);
     }
 
     const updatedUser = await this.prismaService.user.update({
