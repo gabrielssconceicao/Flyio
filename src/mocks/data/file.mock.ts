@@ -1,7 +1,7 @@
 export const generateFileMock = () => {
   return {
     mimetype: 'image/jpeg',
-    size: 1024,
+    size: 10 * 1024,
     originalname: 'image.jpg',
     buffer: Buffer.from('test'),
   } as Express.Multer.File;

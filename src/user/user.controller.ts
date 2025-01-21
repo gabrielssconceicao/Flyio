@@ -27,6 +27,7 @@ import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
+import { ProfileImageValidatorPipe } from 'src/common/pipes/profile-image-validator.pipe';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -60,7 +61,7 @@ export class UserController {
   )
   async create(
     @Body() createUserDto: CreateUserDto,
-    @UploadedFile() profileImg: Express.Multer.File,
+    @UploadedFile(ProfileImageValidatorPipe) profileImg: Express.Multer.File,
   ) {
     return this.userService.create(createUserDto, profileImg);
   }
