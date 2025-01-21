@@ -13,7 +13,7 @@ import {
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
 } from './mocks/user.mock';
-import { CloudinaryService } from '../file/cloudinary.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { cloudinaryServiceMock } from '../mocks/services/cloudinary.service.mock';
 import {
   generatedProfilePictureMock,

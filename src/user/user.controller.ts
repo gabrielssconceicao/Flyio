@@ -53,7 +53,7 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('register')
+  @Post()
   @UseInterceptors(
     FileInterceptor('profileImg', {
       storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
