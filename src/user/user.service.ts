@@ -59,7 +59,7 @@ export class UserService {
   }
 
   async findAll(query: QueryParamDto): Promise<FindAllUsersResponseDto> {
-    const { limit = 1, offset = 0, search = '' } = query;
+    const { limit = 50, offset = 0, search = '' } = query;
     const where = search
       ? {
           OR: [{ name: { contains: search } }, { email: { contains: search } }],

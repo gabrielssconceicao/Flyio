@@ -52,6 +52,6 @@ DELETE {{baseUrl}}/users/13325
 
 ###
 GET {{baseUrl}}/users
-?search=J
-&limit=10
-&offset=0
+#?search=J
+#&limit=10
+#&offset=0
