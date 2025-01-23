@@ -54,7 +54,7 @@
     - [x] createUserDto
     - [x] test CreateUserDto
     - [x] password hash
-    - [ ] profile image upload
+    - [x] profile image upload
   - [ ] delete
   - [x] get one
   - [ ] update

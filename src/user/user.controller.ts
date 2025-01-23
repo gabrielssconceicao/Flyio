@@ -172,7 +172,7 @@ export class UserController {
   update(
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() profileImg: Express.Multer.File,
+    @UploadedFile(ProfileImageValidatorPipe) profileImg: Express.Multer.File,
   ) {
     // change to id
     return this.userService.update(username, updateUserDto, profileImg);

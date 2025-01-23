@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
+
 @Injectable()
 export class CloudinaryService {
   constructor() {
@@ -11,19 +12,10 @@ export class CloudinaryService {
     });
   }
 
-  private renameFile(filename: string): string {
-    const extension = filename.split('.').pop();
-    const timestamp = Date.now();
-    return `file_${timestamp}.${extension}`;
-  }
-
-  async uploadProfilePicture(file: Express.Multer.File): Promise<string> {
-    const { originalname, buffer } = file;
-
-    // Realizar as verificações de tamanho e tipo de mime
-
-    const renamedFile = this.renameFile(originalname);
-
+  private uploadToCloudinary(
+    buffer: Buffer,
+    uploadConfig: any,
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
         // Create a Readable stream from the buffer
@@ -31,15 +23,13 @@ export class CloudinaryService {
 
         // Upload config to Cloudinary
         const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            resource_type: 'image',
-            folder: 'profile-pictures',
-            public_id: renamedFile,
-          },
+          uploadConfig,
           (error, result) => {
             if (error) {
               reject(
-                new BadRequestException('Error uploading profile picture.'),
+                new BadRequestException(
+                  'Error uploading/updating profile picture.',
+                ),
               );
             } else {
               // Retornar a URL segura da imagem após o upload
@@ -51,8 +41,48 @@ export class CloudinaryService {
         // Passar o stream para o upload
         bufferStream.pipe(uploadStream);
       } catch {
-        reject(new BadRequestException('Error uploading profile picture.'));
+        reject(
+          new BadRequestException('Error uploading/updating profile picture.'),
+        );
       }
+    });
+  }
+
+  private getPublicIdFromUrl(url: string): string {
+    const urlParts = url.split('/');
+    const filenameWithExtension = urlParts[urlParts.length - 1];
+
+    const filenameParts = filenameWithExtension.split('.');
+    const filename = filenameParts[0];
+
+    return filename;
+  }
+
+  async uploadProfilePicture(file: Express.Multer.File): Promise<string> {
+    const { buffer } = file;
+
+    const renamedFile = `file_${Date.now()}`;
+
+    return this.uploadToCloudinary(buffer, {
+      resource_type: 'image',
+      folder: 'profile-pictures',
+      public_id: renamedFile,
+    });
+  }
+
+  async updateProfilePicture(
+    file: Express.Multer.File,
+    prevImgUrl: string,
+  ): Promise<string> {
+    const { buffer } = file;
+
+    const publicId = this.getPublicIdFromUrl(prevImgUrl);
+
+    return this.uploadToCloudinary(buffer, {
+      resource_type: 'image',
+      folder: 'profile-pictures',
+      public_id: publicId,
+      overwrite: true,
     });
   }
 

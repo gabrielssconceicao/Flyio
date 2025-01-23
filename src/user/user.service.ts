@@ -125,8 +125,16 @@ export class UserService {
     }
 
     if (!!profileImg) {
-      personDto['profileImg'] =
-        await this.cloudinaryService.uploadProfilePicture(profileImg);
+      if (user.profileImg) {
+        personDto['profileImg'] =
+          await this.cloudinaryService.updateProfilePicture(
+            profileImg,
+            user.profileImg,
+          );
+      } else {
+        personDto['profileImg'] =
+          await this.cloudinaryService.uploadProfilePicture(profileImg);
+      }
     }
 
     const updatedUser = await this.prismaService.user.update({
