@@ -165,7 +165,7 @@ describe('<UserService />', () => {
   });
 
   describe('<Update />', () => {
-    it('should update a user successfully with profile picture', async () => {
+    it('should update a user successfully without profile picture', async () => {
       const updateUserDto = {
         name: 'new name',
         password: 'new_password',
@@ -174,6 +174,7 @@ describe('<UserService />', () => {
       const username = generateCreateUserDtoMock().username;
 
       const user = generateUserMock();
+      user.profileImg = null;
       const imageFile = generateFileMock();
       const passwordHash = 'HASH_PASSWORD';
       jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
@@ -191,6 +192,50 @@ describe('<UserService />', () => {
       expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
       expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(
         imageFile,
+      );
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { username },
+        data: {
+          ...updateUserDto,
+          password: passwordHash,
+          profileImg: generatedProfilePictureMock,
+        },
+        select: selectUserFieldsMock,
+      });
+      expect(result).toEqual({
+        ...updateUserDto,
+        ...user,
+      });
+
+      expect(result).toMatchSnapshot();
+    });
+    it('should update a user successfully with profile picture', async () => {
+      const updateUserDto = {
+        name: 'new name',
+        password: 'new_password',
+        bio: 'new bio',
+      };
+      const username = generateCreateUserDtoMock().username;
+
+      const user = generateUserMock();
+      const imageFile = generateFileMock();
+      const passwordHash = 'HASH_PASSWORD';
+      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+      jest
+        .spyOn(cloudinaryService, 'updateProfilePicture')
+        .mockResolvedValue(generatedProfilePictureMock);
+      jest.spyOn(prismaService.user, 'update').mockResolvedValue({
+        ...updateUserDto,
+        ...user,
+      } as any);
+
+      const result = await service.update(username, updateUserDto, imageFile);
+      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
+      expect(cloudinaryService.updateProfilePicture).toHaveBeenCalledWith(
+        imageFile,
+        user.profileImg,
       );
       expect(prismaService.user.update).toHaveBeenCalledWith({
         where: { username },

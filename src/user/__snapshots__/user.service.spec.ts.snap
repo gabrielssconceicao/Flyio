@@ -68,3 +68,16 @@ exports[`<UserService /> <Update /> should update a user successfully with profi
   "username": "jDoe453",
 }
 `;
+
+exports[`<UserService /> <Update /> should update a user successfully without profile picture 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "password": "new_password",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;
