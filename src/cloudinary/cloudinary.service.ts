@@ -12,6 +12,8 @@ export class CloudinaryService {
     });
   }
 
+  private readonly profileImageFolder = 'profile-pictures';
+
   private uploadToCloudinary(
     buffer: Buffer,
     uploadConfig: any,
@@ -65,7 +67,7 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImageFolder,
       public_id: renamedFile,
     });
   }
@@ -80,10 +82,32 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImageFolder,
       public_id: publicId,
       overwrite: true,
     });
+  }
+
+  async deleteProfilePicture(profileImgUrl: string): Promise<void> {
+    const publicId = this.getPublicIdFromUrl(profileImgUrl);
+    console.log({ profileImgUrl });
+    console.log({ publicId });
+    cloudinary.uploader.destroy(
+      `${this.profileImageFolder}/${publicId}`,
+      {
+        resource_type: 'image',
+        invalidate: true,
+      },
+      (error, result) => {
+        console.log(result);
+        console.log(error);
+        if (error) {
+          throw new BadRequestException('Error deleting profile picture.');
+        } else {
+          return;
+        }
+      },
+    );
   }
 
   async uploadPostImage(file: Express.Multer.File): Promise<string> {

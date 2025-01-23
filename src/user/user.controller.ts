@@ -40,6 +40,28 @@ export class UserController {
     type: User,
   })
   @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to invalid file type.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'Invalid file type',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to size limit.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'File too small or too large',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
     status: 409,
     description:
       'This email or username is already associated with an existing account.',
@@ -142,6 +164,28 @@ export class UserController {
     type: User,
   })
   @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to invalid file type.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'Invalid file type',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to size limit.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'File too small or too large',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found.',
     schema: {
@@ -207,5 +251,34 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @ApiOperation({ summary: 'Delete user profile picture by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'User username',
+    example: 'jDoe45',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile picture deleted successfully.',
+    schema: {
+      example: {
+        message: 'Profile picture deleted successfully.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'No profile picture to delete.',
+    schema: {
+      example: {
+        message: 'No profile picture to delete.',
+      },
+    },
+  })
+  @Delete(':username/profile-img')
+  removeProfileImg(@Param('username') username: string) {
+    return this.userService.removeProfilePicture(username);
   }
 }
