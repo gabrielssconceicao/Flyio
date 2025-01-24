@@ -7,7 +7,11 @@ import {
   userPrismaService,
 } from '../mocks/services/prisma.service.mock';
 import { hashingServiceMock } from '../mocks/services/hashing.service.mock';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
@@ -345,6 +349,67 @@ describe('<UserService />', () => {
       expect(result.users.length).toBe(1);
       expect(result).toEqual(findAllResponse);
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<RemoveProfilePicture />', () => {
+    it('should not remove profile picture if user does not have one', async () => {
+      const username = generateCreateUserDtoMock().username;
+      const user = { ...generateUserMock(), profileImg: null };
+      jest.spyOn(service, 'findOne').mockResolvedValue(user);
+      const result = await service.removeProfilePicture(username);
+
+      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(result).toEqual(user);
+      expect(result).toMatchSnapshot();
+    });
+    it('should remove profile picture successfully', async () => {
+      const username = generateCreateUserDtoMock().username;
+      const user = generateUserMock();
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(user);
+      jest
+        .spyOn(prismaService.user, 'update')
+        .mockResolvedValue({ ...user, profileImg: null } as any);
+      jest
+        .spyOn(cloudinaryService, 'deleteProfilePicture')
+        .mockResolvedValue(null);
+
+      const result = await service.removeProfilePicture(username);
+
+      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(cloudinaryService.deleteProfilePicture).toHaveBeenCalledWith(
+        user.profileImg,
+      );
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: user.id },
+        data: { profileImg: null },
+        select: selectUserFieldsMock,
+      });
+      expect(result).toEqual({ ...user, profileImg: null });
+      expect(result).toMatchSnapshot();
+    });
+    it('should throw an BadRequestException on cloudinary error', async () => {
+      const username = generateCreateUserDtoMock().username;
+      const user = generateUserMock();
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(user);
+
+      jest
+        .spyOn(cloudinaryService, 'deleteProfilePicture')
+        .mockRejectedValue(
+          new BadRequestException('Error deleting profile picture.'),
+        );
+
+      await expect(service.removeProfilePicture(username)).rejects.toThrow(
+        BadRequestException,
+      );
+
+      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(cloudinaryService.deleteProfilePicture).toHaveBeenCalledWith(
+        user.profileImg,
+      );
+      expect(prismaService.user.update).not.toHaveBeenCalled();
     });
   });
 });

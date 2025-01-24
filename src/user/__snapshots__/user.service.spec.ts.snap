@@ -56,6 +56,30 @@ exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 }
 `;
 
+exports[`<UserService /> <RemoveProfilePicture /> should not remove profile picture if user does not have one 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;
+
+exports[`<UserService /> <RemoveProfilePicture /> should remove profile picture successfully 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;
+
 exports[`<UserService /> <Update /> should update a user successfully with profile picture 1`] = `
 {
   "active": true,

@@ -161,24 +161,24 @@ export class UserService {
     return { message: 'User deleted successfully' };
   }
 
-  async removeProfilePicture(username: string) {
+  async removeProfilePicture(username: string): Promise<User> {
     const user = await this.findOne(username);
 
     if (user.profileImg) {
       try {
         await this.cloudinaryService.deleteProfilePicture(user.profileImg);
-        await this.prismaService.user.update({
+        const userWithoutProfile = await this.prismaService.user.update({
           where: { id: user.id },
           data: {
             profileImg: null,
           },
+          select: this.selectUserFields,
         });
+        return userWithoutProfile;
       } catch (error) {
-        console.log('Dentro do catch');
         throw error;
       }
-      return { message: 'Profile picture deleted successfully' };
     }
-    return { message: 'No profile picture to delete' };
+    return user;
   }
 }
