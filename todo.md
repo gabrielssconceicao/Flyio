@@ -60,6 +60,7 @@
     - [x] profile image upload
   - [ ] delete
     - [ ] is logged in
+  - [ ] reactivate
   - [x] get one
   - [ ] update
     - [x] update user
@@ -67,6 +68,7 @@
     - [ ] is logged in
   - [ ] delete profile image
     - [ ] is logged
+  - 
 
 - [ ] login
   - [ ] auth
