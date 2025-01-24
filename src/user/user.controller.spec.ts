@@ -53,14 +53,16 @@ describe('UserController', () => {
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
-    it('should throw ConflictException when email is already in use', async () => {
+    it('should throw ConflictException when email or username is already in use', async () => {
       const dto = generateCreateUserDtoMock();
 
-      userServiceMock.create.mockRejectedValue(
-        new ConflictException(
-          'This email or username is already associated with an existing account',
-        ),
-      );
+      jest
+        .spyOn(userServiceMock, 'create')
+        .mockRejectedValue(
+          new ConflictException(
+            'This email or username is already associated with an existing account',
+          ),
+        );
 
       await expect(controller.create(dto, undefined)).rejects.toThrow(
         ConflictException,

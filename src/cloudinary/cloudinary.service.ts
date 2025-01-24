@@ -107,13 +107,4 @@ export class CloudinaryService {
       );
     });
   }
-
-  async uploadPostImage(file: Express.Multer.File): Promise<string> {
-    const { mimetype, size, filename } = file;
-
-    // this.checkSize(size, 10 * 1024, 15 * 1024 * 1024);
-    // this.validateMimeType(mimetype, ['image/jpeg', 'image/png', 'image/gif']);
-
-    return `Post image uploaded: ${filename}`;
-  }
 }

@@ -262,20 +262,12 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Profile picture deleted successfully.',
-    schema: {
-      example: {
-        message: 'Profile picture deleted successfully.',
-      },
-    },
+    type: User, //field profileImg
   })
   @ApiResponse({
     status: 200,
     description: 'No profile picture to delete.',
-    schema: {
-      example: {
-        message: 'No profile picture to delete.',
-      },
-    },
+    type: User,
   })
   @ApiResponse({
     status: 400,
