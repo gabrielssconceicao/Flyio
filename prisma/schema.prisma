@@ -14,12 +14,23 @@ datasource db {
 }
 
 model User {
+<<<<<<< HEAD
   id         Int      @id @default(autoincrement())
   name       String
   email      String   @unique
   password   String
   bio        String?  @default("")
   profileImg String?  @default("")
+=======
+  id         String   @id @default(uuid())
+  name       String
+  username   String   @unique
+  email      String   @unique
+  password   String
+  bio        String?
+  profileImg String?
+  active     Boolean  @default(true)
+>>>>>>> images
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

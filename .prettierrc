@@ -1,7 +1,13 @@
 {
   "singleQuote": true,
+<<<<<<< HEAD
   "trailingComma": "all",
   "semi": true,
   "tabWidth": 2,
+=======
+  "semi": true,
+  "tabWidth": 2,
+  "trailingComma":"all",
+>>>>>>> images
   "endOfLine": "lf"
 }
