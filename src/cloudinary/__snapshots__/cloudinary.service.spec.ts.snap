@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CloudinaryService /> <UploadProfilePicture /> should upload profile picture and return the secure URL 1`] = `"https://mocked.cloudinary.com/image/upload/v1/profile-pictures/file_12345.jpg"`;
+exports[`<CloudinaryService /> <DeleteProfilePicture /> should delete profile picture 1`] = `null`;
+
+exports[`<CloudinaryService /> <UpdateProfilePicture /> should update profile picture and return the secure URL 1`] = `"https://mock.cloudinary.com/image/profile_12345.jpg"`;
+
+exports[`<CloudinaryService /> <UploadProfilePicture /> should upload profile picture and return the secure URL 1`] = `"https://mock.cloudinary.com/image/profile_12345.jpg"`;

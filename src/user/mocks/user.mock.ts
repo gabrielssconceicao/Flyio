@@ -1,6 +1,6 @@
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { FindAllUsersResponseDto } from 'src/user/dto/find-all-users.dto';
-import { User } from 'src/user/entities/user.entity';
+import { CreateUserDto } from '../../user/dto/create-user.dto';
+import { FindAllUsersResponseDto } from '../../user/dto/find-all-users.dto';
+import { User } from '../../user/entities/user.entity';
 
 const userMock = {
   id: '42-d-f-df4',

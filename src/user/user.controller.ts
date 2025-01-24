@@ -27,7 +27,7 @@ import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import { ProfileImageValidatorPipe } from 'src/common/pipes/profile-image-validator.pipe';
+import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -274,6 +274,15 @@ export class UserController {
     schema: {
       example: {
         message: 'No profile picture to delete.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error deleting profile picture.',
+    schema: {
+      example: {
+        message: 'Error deleting profile picture.',
       },
     },
   })
