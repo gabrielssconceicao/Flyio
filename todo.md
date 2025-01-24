@@ -50,7 +50,8 @@
     - [ ] patch
     - [ ] delete
   - [ ] auth routes
-    - [ ] post 
+    - [ ] login
+    - [ ] logout 
     
 - [ ] users
   - [x] create
