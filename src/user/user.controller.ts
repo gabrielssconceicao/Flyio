@@ -9,6 +9,8 @@ import {
   HttpStatus,
   HttpCode,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,19 +25,41 @@ import {
 import { User } from './entities/user.entity';
 import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer';
+import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @HttpCode(HttpStatus.CREATED)
-  @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
     status: 201,
     description: 'User created successfully.',
     type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to invalid file type.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'Invalid file type',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to size limit.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'File too small or too large',
+        error: 'Bad Request',
+      },
+    },
   })
   @ApiResponse({
     status: 409,
@@ -50,8 +74,18 @@ export class UserController {
       },
     },
   })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  @UseInterceptors(
+    FileInterceptor('profileImg', {
+      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+    }),
+  )
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile(ProfileImageValidatorPipe) profileImg: Express.Multer.File,
+  ) {
+    return this.userService.create(createUserDto, profileImg);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -130,6 +164,28 @@ export class UserController {
     type: User,
   })
   @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to invalid file type.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'Invalid file type',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'File upload failed due to size limit.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'File too small or too large',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found.',
     schema: {
@@ -152,12 +208,18 @@ export class UserController {
     },
   })
   @Patch(':username')
+  @UseInterceptors(
+    FileInterceptor('profileImg', {
+      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+    }),
+  )
   update(
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile(ProfileImageValidatorPipe) profileImg: Express.Multer.File,
   ) {
     // change to id
-    return this.userService.update(username, updateUserDto);
+    return this.userService.update(username, updateUserDto, profileImg);
   }
 
   @ApiOperation({ summary: 'Delete user by id' })
@@ -189,5 +251,35 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @ApiOperation({ summary: 'Delete user profile picture by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'User username',
+    example: 'jDoe45',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile picture deleted successfully.',
+    type: User, //field profileImg
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'No profile picture to delete.',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error deleting profile picture.',
+    schema: {
+      example: {
+        message: 'Error deleting profile picture.',
+      },
+    },
+  })
+  @Delete(':username/profile-img')
+  removeProfileImg(@Param('username') username: string) {
+    return this.userService.removeProfilePicture(username);
   }
 }

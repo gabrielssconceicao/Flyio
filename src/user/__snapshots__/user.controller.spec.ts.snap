@@ -12,7 +12,7 @@ exports[`UserController <Create/ > should create a user 1`] = `
 }
 `;
 
-exports[`UserController <Create/ > should throw ConflictException when email is already in use 1`] = `[ConflictException: This email or username is already associated with an existing account]`;
+exports[`UserController <Create/ > should throw ConflictException when email or username is already in use 1`] = `[ConflictException: This email or username is already associated with an existing account]`;
 
 exports[`UserController <Delete /> should delete a user successfully 1`] = `
 {

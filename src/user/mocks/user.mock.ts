@@ -1,6 +1,6 @@
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { FindAllUsersResponseDto } from 'src/user/dto/find-all-users.dto';
-import { User } from 'src/user/entities/user.entity';
+import { CreateUserDto } from '../../user/dto/create-user.dto';
+import { FindAllUsersResponseDto } from '../../user/dto/find-all-users.dto';
+import { User } from '../../user/entities/user.entity';
 
 const userMock = {
   id: '42-d-f-df4',
@@ -15,7 +15,6 @@ const userMock = {
 
 export const generateCreateUserDtoMock = (
   bio: boolean = false,
-  profileImg: boolean = false,
 ): CreateUserDto => {
   const dto: CreateUserDto = {
     name: userMock.name,
@@ -25,7 +24,6 @@ export const generateCreateUserDtoMock = (
   };
 
   if (bio) dto.bio = userMock.bio;
-  if (profileImg) dto.profileImg = userMock.profileImg;
   return dto;
 };
 

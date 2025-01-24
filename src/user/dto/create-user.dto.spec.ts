@@ -18,7 +18,6 @@ describe('<CreateUserDto>', () => {
     dto.email = 'jdoe@me.com';
     dto.password = 'exampl3P@ssw0rd';
     dto.bio = 'This is my bio';
-    dto.profileImg = 'https://example.com/profile.jpg';
   });
 
   it('should validate a DTO', async () => {
@@ -128,20 +127,6 @@ describe('<CreateUserDto>', () => {
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
       expect(errors[0].property).toBe('bio');
-      expect(formatErrors(errors)).toMatchSnapshot();
-    });
-  });
-  describe('<Property: ProfileImg>', () => {
-    it('should validate a DTO if profileImg is not send', async () => {
-      dto.profileImg = undefined;
-      const errors = await validate(dto);
-      expect(errors.length).toBe(0);
-    });
-    it('should validate a DTO if profileImg is not a url', async () => {
-      dto.profileImg = 'invalid-url';
-      const errors = await validate(dto);
-      expect(errors.length).toBe(1);
-      expect(errors[0].property).toBe('profileImg');
       expect(formatErrors(errors)).toMatchSnapshot();
     });
   });

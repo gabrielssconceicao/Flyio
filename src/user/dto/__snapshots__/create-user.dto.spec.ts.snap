@@ -113,18 +113,6 @@ exports[`<CreateUserDto> <Property: Password> should fail if password is too sho
 ]
 `;
 
-exports[`<CreateUserDto> <Property: ProfileImg> should validate a DTO if profileImg is not a url 1`] = `
-[
-  {
-    "constraints": {
-      "isUrl": "profileImg must be a URL address",
-    },
-    "property": "profileImg",
-    "value": "invalid-url",
-  },
-]
-`;
-
 exports[`<CreateUserDto> <Property: Username> should fail if username is empty 1`] = `
 [
   {

@@ -3,7 +3,7 @@ export class User {
   name: string;
   username: string;
   email: string;
-  profileImg: string;
-  bio: string;
+  profileImg: string | null;
+  bio: string | null;
   active: boolean;
 }

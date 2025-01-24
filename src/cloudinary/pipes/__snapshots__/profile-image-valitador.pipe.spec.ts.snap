@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProfileImageValidatorPipe/ > should return null if the file is null 1`] = `null`;
+
+exports[`<ProfileImageValidatorPipe/ > should return the file 1`] = `
+{
+  "buffer": {
+    "data": [
+      116,
+      101,
+      115,
+      116,
+    ],
+    "type": "Buffer",
+  },
+  "mimetype": "image/jpeg",
+  "originalname": "image.jpg",
+  "size": 10240,
+}
+`;

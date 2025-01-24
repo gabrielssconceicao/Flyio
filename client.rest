@@ -1,28 +1,46 @@
 @baseUrl=http://localhost:3000
-@username=jDoe42
-@userId=55671551-5f48-4ea2-9017-4eddf729a99d
 ###
-
-
 
 // /# User Routes #/
+#via postman client
 POST {{baseUrl}}/users/register
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-{
-  "name": "Jane Doe",
-  "username": "jDoe4",
-  "email":"Jdoe4@email.com",
-  "password": "123456"
-}
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data;name="name"
+
+< JaneDoe
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="username"
+
+jDoe
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email"
+
+Jdoe4@email.com
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="password"
+
+123456
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="bio"
+
+This is my bio
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profileImg"; filename="woman.jpg"
+Content-Type: image/jpeg
+
+< ./images/woman.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 
 ###
 
-GET {{baseUrl}}/users/{{username}}
+GET {{baseUrl}}/users/jDoe4
 
 ###
 
-PATCH {{baseUrl}}/users/{{username}}
+PATCH {{baseUrl}}/users/jDoe42
 Content-Type: application/json
 
 {
@@ -30,10 +48,10 @@ Content-Type: application/json
 }
 ###
 
-DELETE {{baseUrl}}/users/{{userId}}
+DELETE {{baseUrl}}/users/13325
 
 ###
-GET {{baseUrl}}/user
-?search=D
-&limit=10
-&offset=0
+GET {{baseUrl}}/users
+#?search=J
+#&limit=10
+#&offset=0

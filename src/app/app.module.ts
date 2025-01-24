@@ -3,11 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { appEnvValidationSchema } from './config/app-env';
-import { PrismaModule } from 'src/prisma/prisma.module';
-import { UserModule } from 'src/user/user.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { UserModule } from '../user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { AuthModule } from '../auth/auth.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from '../auth/auth.module';
     }),
     PrismaModule,
     AuthModule,
+    CloudinaryModule,
     UserModule,
   ],
   controllers: [AppController],

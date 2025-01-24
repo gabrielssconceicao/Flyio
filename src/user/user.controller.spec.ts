@@ -7,6 +7,7 @@ import {
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
 } from './mocks/user.mock';
+import { generateFileMock } from '../mocks/data/file.mock';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -41,27 +42,32 @@ describe('UserController', () => {
 
   describe('<Create/ >', () => {
     it('should create a user', async () => {
-      const createUserDto = generateCreateUserDtoMock(true, true);
+      const createUserDto = generateCreateUserDtoMock(true);
       const user = generateUserMock();
+      const file = generateFileMock();
 
       jest.spyOn(userServiceMock, 'create').mockResolvedValue(user);
 
-      const result = await controller.create(createUserDto);
-      expect(userServiceMock.create).toHaveBeenCalledWith(createUserDto);
+      const result = await controller.create(createUserDto, file);
+      expect(userServiceMock.create).toHaveBeenCalledWith(createUserDto, file);
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
-    it('should throw ConflictException when email is already in use', async () => {
+    it('should throw ConflictException when email or username is already in use', async () => {
       const dto = generateCreateUserDtoMock();
 
-      userServiceMock.create.mockRejectedValue(
-        new ConflictException(
-          'This email or username is already associated with an existing account',
-        ),
-      );
+      jest
+        .spyOn(userServiceMock, 'create')
+        .mockRejectedValue(
+          new ConflictException(
+            'This email or username is already associated with an existing account',
+          ),
+        );
 
-      await expect(controller.create(dto)).rejects.toThrow(ConflictException);
-      await expect(controller.create(dto)).rejects.toMatchSnapshot();
+      await expect(controller.create(dto, undefined)).rejects.toThrow(
+        ConflictException,
+      );
+      await expect(controller.create(dto, undefined)).rejects.toMatchSnapshot();
     });
   });
 
@@ -115,11 +121,15 @@ describe('UserController', () => {
       };
 
       const updatedUser = { ...generateUserMock(), ...updateUserDto };
-
+      const file = generateFileMock();
       jest.spyOn(userServiceMock, 'update').mockResolvedValue(updatedUser);
-      const result = await controller.update(id, updateUserDto);
+      const result = await controller.update(id, updateUserDto, file);
 
-      expect(userServiceMock.update).toHaveBeenCalledWith(id, updateUserDto);
+      expect(userServiceMock.update).toHaveBeenCalledWith(
+        id,
+        updateUserDto,
+        file,
+      );
       expect(result).toEqual(updatedUser);
       expect(result).toMatchSnapshot();
     });
@@ -128,10 +138,12 @@ describe('UserController', () => {
       jest
         .spyOn(userServiceMock, 'update')
         .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(controller.update(id, {})).rejects.toThrow(
+      await expect(controller.update(id, {}, undefined)).rejects.toThrow(
         NotFoundException,
       );
-      await expect(controller.update(id, {})).rejects.toMatchSnapshot();
+      await expect(
+        controller.update(id, {}, undefined),
+      ).rejects.toMatchSnapshot();
     });
     it('should throw an ConflictException', async () => {
       const id = 'f-3wds';
@@ -145,14 +157,15 @@ describe('UserController', () => {
             'Email is already associated with an existing account',
           ),
         );
-      await expect(controller.update(id, updateUserDto)).rejects.toThrow(
-        ConflictException,
-      );
       await expect(
-        controller.update(id, updateUserDto),
+        controller.update(id, updateUserDto, undefined),
+      ).rejects.toThrow(ConflictException);
+      await expect(
+        controller.update(id, updateUserDto, undefined),
       ).rejects.toMatchSnapshot();
     });
   });
+
   describe('<Delete />', () => {
     it('should delete a user successfully', async () => {
       const id = 'f-3wds';

@@ -28,6 +28,9 @@
     - [x] delete
       - [x] test service
       - [x] test controller 
+    - [ ] delete profile image
+      - [ ] test service
+      - [ ] test controller
   - [ ] post routes
     - [ ] get all
     - [ ] get one
@@ -50,15 +53,22 @@
     - [ ] post 
     
 - [ ] users
-  - [ ] create
+  - [x] create
     - [x] createUserDto
     - [x] test CreateUserDto
     - [x] password hash
-    - [ ] profile image upload
+    - [x] profile image upload
   - [ ] delete
+    - [ ] is logged in
+  - [ ] reactivate
   - [x] get one
   - [ ] update
-  - [ ] delete
+    - [x] update user
+    - [x] update profile image
+    - [ ] is logged in
+  - [ ] delete profile image
+    - [ ] is logged
+  - 
 
 - [ ] login
   - [ ] auth

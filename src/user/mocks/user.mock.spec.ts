@@ -5,7 +5,7 @@ import {
 } from './user.mock';
 
 describe('<User Mocks/ >', () => {
-  it('should generate a valid CreateUserDto mock without bio and profileImg', () => {
+  it('should generate a valid CreateUserDto mock without bio', () => {
     const dto = generateCreateUserDtoMock();
 
     expect(dto).toEqual({
@@ -16,8 +16,8 @@ describe('<User Mocks/ >', () => {
     });
   });
 
-  it('should generate a valid CreateUserDto mock with bio and profileImg', () => {
-    const dto = generateCreateUserDtoMock(true, true);
+  it('should generate a valid CreateUserDto mock with bio', () => {
+    const dto = generateCreateUserDtoMock(true);
 
     expect(dto).toEqual({
       name: 'John Doe',
@@ -25,7 +25,6 @@ describe('<User Mocks/ >', () => {
       email: 'jdoe@me.com',
       password: '123456',
       bio: 'This is my bio',
-      profileImg: 'https://example.com/profile.jpg',
     });
   });
 
