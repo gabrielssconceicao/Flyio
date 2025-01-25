@@ -28,9 +28,25 @@
     - [x] delete
       - [x] test service
       - [x] test controller 
-    - [ ] delete profile image
-      - [ ] test service
-      - [ ] test controller
+    - [x] delete profile image
+      - [x] test service
+      - [x] test controller
+  - [ ] auth routes
+    - [ ] login
+      - [ ] jwt
+      - [ ] create auth guard
+      - [ ] validate user
+    - [ ] logout 
+    - [ ] protect routes
+      - [ ] user
+        - [ ] update
+        - [ ] delete
+        - [ ] delete profile
+    - [ ] tests
+      - [ ] hash service
+      - [ ] auth service
+      - [ ] auth controller
+      - [ ] user protected routes
   - [ ] post routes
     - [ ] get all
     - [ ] get one
@@ -49,9 +65,6 @@
     - [ ] post 
     - [ ] patch
     - [ ] delete
-  - [ ] auth routes
-    - [ ] login
-    - [ ] logout 
     
 - [ ] users
   - [x] create
@@ -73,6 +86,7 @@
 
 - [ ] login
   - [ ] auth
+  - [ ] 
 
 - [ ] posts
 
