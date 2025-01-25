@@ -98,3 +98,4 @@
 
 - [ ] apagar comentarios
 - [ ] desativar rota
+- [ ] mudar o swagger de user's com files para multpart

@@ -1,12 +1,6 @@
-import { validate, ValidationError } from 'class-validator';
+import { validate } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
-function formatErrors(errors: ValidationError[]) {
-  return errors.map((error) => ({
-    property: error.property,
-    constraints: error.constraints,
-    value: error.value,
-  }));
-}
+import { formatErrors } from '../../common/utils/dto-format.errors';
 describe('<CreateUserDto>', () => {
   let dto: CreateUserDto;
 
