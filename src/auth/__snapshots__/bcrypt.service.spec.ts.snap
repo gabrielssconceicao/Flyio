@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BcryptService <Compare /> should return false if passwords do not match: securePassword 1`] = `false`;
+
+exports[`BcryptService <Compare /> should return true if passwords match: securePassword 1`] = `true`;
+
+exports[`BcryptService <Hash /> should generate a hashed password: securePassword 1`] = `"hashedSecurePassword"`;
