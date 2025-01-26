@@ -7,7 +7,7 @@ import {
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
 } from './mocks/user.mock';
-import { generateFileMock } from '../mocks/data/file.mock';
+import { generateFileMock } from '../cloudinary/mock/file.mock';
 
 describe('UserController', () => {
   let controller: UserController;

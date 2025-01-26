@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserMocks/ > should generate a valid CreateUserDto mock with bio 1`] = `
+{
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "name": "John Doe",
+  "password": "123456",
+  "username": "jDoe453",
+}
+`;
+
+exports[`<UserMocks/ > should generate a valid CreateUserDto mock without bio 1`] = `
+{
+  "email": "jdoe@me.com",
+  "name": "John Doe",
+  "password": "123456",
+  "username": "jDoe453",
+}
+`;
+
+exports[`<UserMocks/ > should generate a valid FindAllUsersResponseDto mock 1`] = `
+{
+  "count": 1,
+  "users": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
+}
+`;
+
+exports[`<UserMocks/ > should generate a valid User mock 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": "https://example.com/profile.jpg",
+  "username": "jDoe453",
+}
+`;

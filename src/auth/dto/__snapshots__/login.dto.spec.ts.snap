@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<LoginDto> <Property: login> should fail if is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Username or email is required",
+    },
+    "property": "login",
+    "value": "",
+  },
+]
+`;
+
 exports[`<LoginDto> <Property: password> should fail if is empty 1`] = `
 [
   {
@@ -7,18 +19,6 @@ exports[`<LoginDto> <Property: password> should fail if is empty 1`] = `
       "isNotEmpty": "Password is required",
     },
     "property": "password",
-    "value": "",
-  },
-]
-`;
-
-exports[`<LoginDto> <Property: usernameOrEmail> should fail if is empty 1`] = `
-[
-  {
-    "constraints": {
-      "isNotEmpty": "Username or email is required",
-    },
-    "property": "usernameOrEmail",
     "value": "",
   },
 ]

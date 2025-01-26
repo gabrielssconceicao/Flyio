@@ -6,22 +6,21 @@ describe('<LoginDto>', () => {
   let dto: LoginDto;
   beforeEach(() => {
     dto = new LoginDto();
-    dto.usernameOrEmail = generateLoginDtoMock().usernameOrEmail;
+    dto.login = generateLoginDtoMock().login;
     dto.password = generateLoginDtoMock().password;
   });
 
   it('should validate a DTO', async () => {
     const errors = await validate(dto);
-    console.log({ errors });
     expect(errors.length).toBe(0);
   });
 
-  describe('<Property: usernameOrEmail>', () => {
+  describe('<Property: login>', () => {
     it('should fail if is empty', async () => {
-      dto.usernameOrEmail = '';
+      dto.login = '';
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
-      expect(errors[0].property).toBe('usernameOrEmail');
+      expect(errors[0].property).toBe('login');
       expect(formatErrors(errors)).toMatchSnapshot();
     });
   });

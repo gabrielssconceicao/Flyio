@@ -2,7 +2,7 @@ import { LoginDto } from '../dto/login.dto';
 
 export const generateLoginDtoMock = (): LoginDto => {
   return {
-    usernameOrEmail: 'usernameOrEmail',
+    login: 'login',
     password: '123456',
   };
 };

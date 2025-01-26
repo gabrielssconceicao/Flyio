@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   selectUserFieldsMock,
   userPrismaService,
-} from '../mocks/services/prisma.service.mock';
-import { hashingServiceMock } from '../mocks/services/hashing.service.mock';
+} from '../prisma/mock/prisma.service.mock';
+import { hashingServiceMock } from '../auth/mocks/hashing.service.mock';
 import {
   BadRequestException,
   ConflictException,
@@ -18,11 +18,11 @@ import {
   generateUserMock,
 } from './mocks/user.mock';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { cloudinaryServiceMock } from '../mocks/services/cloudinary.service.mock';
+import { cloudinaryServiceMock } from '../cloudinary/mock/cloudinary.service.mock';
 import {
   generatedProfilePictureMock,
   generateFileMock,
-} from '../mocks/data/file.mock';
+} from '../cloudinary/mock/file.mock';
 
 describe('<UserService />', () => {
   let service: UserService;

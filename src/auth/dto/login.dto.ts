@@ -8,7 +8,7 @@ export class LoginDto {
     message: dtoErrorMessages('Username or email', DtoErrorType.REQUIRED),
   })
   @IsString()
-  usernameOrEmail: string;
+  login: string;
 
   @IsNotEmpty({ message: dtoErrorMessages('Password', DtoErrorType.REQUIRED) })
   @IsString()
