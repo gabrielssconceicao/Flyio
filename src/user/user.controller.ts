@@ -16,6 +16,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -34,6 +36,26 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Create a new user' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Create user',
+    schema: {
+      type: 'object',
+      properties: {
+        profileImg: {
+          type: 'string',
+          format: 'binary',
+          description: 'Profile image file (PNG or JPEG)',
+        },
+        name: { type: 'string', description: 'Name of the user' },
+        email: { type: 'string', description: 'Email of the user' },
+        password: { type: 'string', description: 'Password of the user' },
+        username: { type: 'string', description: 'Username of the user' },
+        bio: { type: 'string', description: 'Bio of the user' },
+      },
+      required: ['name', 'email', 'password', 'username'],
+    },
+  })
   @ApiResponse({
     status: 201,
     description: 'User created successfully.',
@@ -152,6 +174,24 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Update user',
+    schema: {
+      type: 'object',
+      properties: {
+        profileImg: {
+          type: 'string',
+          format: 'binary',
+          description: 'Profile image file (PNG or JPEG)',
+        },
+        name: { type: 'string', description: 'Name of the user' },
+        email: { type: 'string', description: 'Email of the user' },
+        password: { type: 'string', description: 'Password of the user' },
+        bio: { type: 'string', description: 'Bio of the user' },
+      },
+    },
+  })
   @ApiOperation({ summary: 'Update user by username' })
   @ApiParam({
     name: 'username',
