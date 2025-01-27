@@ -39,9 +39,6 @@ export class AuthService {
 
   private async createToken(user): Promise<string> {
     const payload = { username: user.username, sub: user.id };
-    return this.jwtService.signAsync(payload, {
-      expiresIn: this.jwtConfiguration.jwtTtl,
-      secret: this.jwtConfiguration.secret,
-    });
+    return this.jwtService.signAsync(payload, this.jwtConfiguration);
   }
 }

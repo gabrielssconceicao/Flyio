@@ -26,6 +26,8 @@ DELETE {{baseUrl}}/users/13325
 
 ###
 GET {{baseUrl}}/users
+Authorization: Bearer {{accessToken}}
+
 ?search=J
 &limit=10
 &offset=0
