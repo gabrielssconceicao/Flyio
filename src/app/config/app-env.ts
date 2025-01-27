@@ -8,5 +8,7 @@ export const appEnvValidationSchema = () => {
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
     CLOUDINARY_API_SECRET: Joi.string().required(),
+    JWT_SECRET: Joi.string().required(),
+    JTW_TTL: Joi.string().required(),
   });
 };
