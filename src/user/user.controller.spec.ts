@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
@@ -17,6 +22,8 @@ describe('UserController', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
+    removeProfilePicture: jest.fn(),
+    reactivate: jest.fn(),
   };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -183,6 +190,58 @@ describe('UserController', () => {
         .mockRejectedValue(new NotFoundException('User not found'));
       await expect(controller.remove(id)).rejects.toThrow(NotFoundException);
       await expect(controller.remove(id)).rejects.toMatchSnapshot();
+    });
+  });
+
+  describe('<RemoveProfilePicture />', () => {
+    it('should remove profile picture successfully', async () => {
+      const username = 'jDoe';
+      const user = { ...generateUserMock(), profileImg: null };
+      jest
+        .spyOn(userServiceMock, 'removeProfilePicture')
+        .mockResolvedValue(user);
+      const result = await controller.removeProfileImg(username);
+      expect(userServiceMock.removeProfilePicture).toHaveBeenCalledWith(
+        username,
+      );
+      expect(result).toEqual(user);
+      expect(result).toMatchSnapshot();
+    });
+    it('should throw an BadRequestException if an error occurs', async () => {
+      const username = 'jDoe';
+      jest
+        .spyOn(userServiceMock, 'removeProfilePicture')
+        .mockRejectedValue(new BadRequestException());
+      await expect(controller.removeProfileImg(username)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  });
+
+  describe('<Reactivate />', () => {
+    it('should reactivate a user successfully', async () => {
+      const reactivateUserDto = {
+        token: 'token',
+      };
+      const message = 'User reactivated successfully';
+      jest.spyOn(userServiceMock, 'reactivate').mockResolvedValue({ message });
+      const result = await controller.reactivate(reactivateUserDto);
+      expect(userServiceMock.reactivate).toHaveBeenCalledWith(
+        reactivateUserDto,
+      );
+      expect(result).toEqual({ message });
+      expect(result).toMatchSnapshot();
+    });
+    it('should thow an UnauthorizedException if token is invalid or expired', async () => {
+      const reactivateUserDto = {
+        token: 'expired-token',
+      };
+      jest
+        .spyOn(userServiceMock, 'reactivate')
+        .mockRejectedValue(new UnauthorizedException());
+      await expect(controller.reactivate(reactivateUserDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

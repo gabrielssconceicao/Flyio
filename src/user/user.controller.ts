@@ -304,7 +304,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Profile picture deleted successfully.',
-    type: User, //field profileImg
+    type: User,
   })
   @ApiResponse({
     status: 200,

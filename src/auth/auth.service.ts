@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HashingServiceProtocol } from './hashing/hashing.service';
@@ -41,7 +46,7 @@ export class AuthService {
         },
         { expiresIn: '15m' },
       );
-      throw new UnauthorizedException({
+      throw new ForbiddenException({
         message: 'User not active',
         reactiveToken,
       });

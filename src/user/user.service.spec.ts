@@ -11,6 +11,7 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   generateCreateUserDtoMock,
@@ -23,13 +24,15 @@ import {
   generatedProfilePictureMock,
   generateFileMock,
 } from '../cloudinary/mock/file.mock';
+import { jwtServiceMock } from '../auth/mocks/jwt.service.mock';
+import { JwtService } from '@nestjs/jwt';
 
 describe('<UserService />', () => {
   let service: UserService;
   let hashingService: HashingServiceProtocol;
   let prismaService: PrismaService;
   let cloudinaryService: CloudinaryService;
-
+  let jwtService: JwtService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -46,6 +49,10 @@ describe('<UserService />', () => {
           provide: CloudinaryService,
           useValue: cloudinaryServiceMock,
         },
+        {
+          provide: JwtService,
+          useValue: jwtServiceMock,
+        },
       ],
     }).compile();
 
@@ -53,6 +60,7 @@ describe('<UserService />', () => {
     hashingService = module.get<HashingServiceProtocol>(HashingServiceProtocol);
     prismaService = module.get<PrismaService>(PrismaService);
     cloudinaryService = module.get<CloudinaryService>(CloudinaryService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterEach(() => {
@@ -64,6 +72,7 @@ describe('<UserService />', () => {
     expect(hashingService).toBeDefined();
     expect(prismaService).toBeDefined();
     expect(cloudinaryService).toBeDefined();
+    expect(jwtService).toBeDefined();
   });
 
   describe('<Create />', () => {
@@ -410,6 +419,38 @@ describe('<UserService />', () => {
         user.profileImg,
       );
       expect(prismaService.user.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('<Reactivate />', () => {
+    it('should reactivate a user successfully', async () => {
+      const reactivateUserDto = {
+        token: 'token',
+      };
+      jest.spyOn(jwtService, 'verify').mockReturnValue({ sub: 1 });
+      jest.spyOn(prismaService.user, 'update').mockResolvedValue({} as any);
+
+      const result = await service.reactivate(reactivateUserDto);
+      expect(jwtService.verify).toHaveBeenCalledWith(reactivateUserDto.token);
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { active: true },
+      });
+      expect(result).toEqual({ message: 'Account reactivated successfully' });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an UnauthorizedException if token is invalid', async () => {
+      const reactivateUserDto = {
+        token: 'token',
+      };
+      jest.spyOn(jwtService, 'verify').mockImplementation(() => {
+        throw new UnauthorizedException();
+      });
+
+      await expect(service.reactivate(reactivateUserDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

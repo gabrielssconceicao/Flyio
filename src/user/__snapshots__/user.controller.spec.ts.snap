@@ -50,6 +50,24 @@ exports[`UserController <FindOne /> should return a user successfully 1`] = `
 
 exports[`UserController <FindOne /> should throw an NotFoundException 1`] = `[NotFoundException: User not found]`;
 
+exports[`UserController <Reactivate /> should reactivate a user successfully 1`] = `
+{
+  "message": "User reactivated successfully",
+}
+`;
+
+exports[`UserController <RemoveProfilePicture /> should remove profile picture successfully 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "email": "jdoe@me.com",
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;
+
 exports[`UserController <Update /> should throw an ConflictException 1`] = `[ConflictException: Email is already associated with an existing account]`;
 
 exports[`UserController <Update /> should throw an NotFoundException 1`] = `[NotFoundException: User not found]`;
