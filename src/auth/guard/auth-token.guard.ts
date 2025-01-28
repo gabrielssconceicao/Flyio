@@ -32,6 +32,7 @@ export class AuthTokenGuard implements CanActivate {
       );
       request[REQUEST_TOKEN_PAYLOAD_KEY] = payload;
     } catch (error) {
+      console.log(error);
       this.throwUnauthorizedError(error.message);
     }
     return true;

@@ -86,7 +86,9 @@
 
 - [ ] login
   - [ ] auth
-  - [ ] 
+  - [ ] logout
+    - [ ] blacklist
+  - [ ] refreshtoken
 
 - [ ] posts
 

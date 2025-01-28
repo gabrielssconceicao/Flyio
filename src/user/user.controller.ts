@@ -30,6 +30,7 @@ import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
+import { ReactivateUserDto } from './dto/reactivate-user.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -110,7 +111,6 @@ export class UserController {
     return this.userService.create(createUserDto, profileImg);
   }
 
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all users by name or username' })
   @ApiResponse({
     status: 200,
@@ -140,12 +140,12 @@ export class UserController {
     type: Number,
     example: 0,
   })
+  @HttpCode(HttpStatus.OK)
   @Get()
   findAll(@Query() query: QueryParamDto) {
     return this.userService.findAll(query);
   }
 
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user by username' })
   @ApiParam({
     name: 'username',
@@ -168,12 +168,12 @@ export class UserController {
       },
     },
   })
+  @HttpCode(HttpStatus.OK)
   @Get(':username')
   findOne(@Param('username') username: string) {
     return this.userService.findOne(username);
   }
 
-  @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Update user',
@@ -247,6 +247,7 @@ export class UserController {
       },
     },
   })
+  @HttpCode(HttpStatus.OK)
   @Patch(':username')
   @UseInterceptors(
     FileInterceptor('profileImg', {
@@ -288,6 +289,7 @@ export class UserController {
       },
     },
   })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
@@ -318,8 +320,38 @@ export class UserController {
       },
     },
   })
+  @HttpCode(HttpStatus.OK)
   @Delete(':username/profile-img')
   removeProfileImg(@Param('username') username: string) {
     return this.userService.removeProfilePicture(username);
+  }
+
+  @ApiOperation({ summary: 'Reactivate user by token' })
+  @ApiBody({
+    type: ReactivateUserDto,
+    description: 'Reactivate user by token',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Account reactivated successfully.',
+    schema: {
+      example: {
+        message: 'Account reactivated successfully',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid or expired token.',
+    schema: {
+      example: {
+        message: 'Invalid or expired token',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post('reactivate')
+  reactivate(@Body() reactivateUserDto: ReactivateUserDto) {
+    return this.userService.reactivate(reactivateUserDto);
   }
 }

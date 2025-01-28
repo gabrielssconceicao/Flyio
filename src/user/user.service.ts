@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,6 +12,8 @@ import { User } from './entities/user.entity';
 import { QueryParamDto } from './dto/query-param.dto';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { ReactivateUserDto } from './dto/reactivate-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -18,6 +21,7 @@ export class UserService {
     private readonly hashingService: HashingServiceProtocol,
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly jwtService: JwtService,
   ) {}
 
   private selectUserFields = {
@@ -180,5 +184,18 @@ export class UserService {
       }
     }
     return user;
+  }
+
+  async reactivate(reactivateUserDto: ReactivateUserDto) {
+    try {
+      const { sub } = this.jwtService.verify(reactivateUserDto.token);
+      await this.prismaService.user.update({
+        where: { id: sub },
+        data: { active: true },
+      });
+      return { message: 'Account reactivated successfully' };
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }

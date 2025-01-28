@@ -1,5 +1,6 @@
-@baseUrl=http://localhost:3000
+@baseUrl=http://localhost:3001
 @accessToken={{authenticate.response.body.accessToken}}
+@reactiveToken={{authenticate.response.body.reactiveToken}}
 ###
 
 
@@ -10,7 +11,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "login": "b0b3_5",
+  "login": "jonny@email.com",
   "password": "123456"
 }
 
@@ -31,3 +32,12 @@ Authorization: Bearer {{accessToken}}
 ?search=J
 &limit=10
 &offset=0
+
+###
+
+POST {{baseUrl}}/users/reactivate
+Content-Type: application/json
+
+{
+  "token": "{{reactiveToken}}"
+}

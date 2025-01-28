@@ -33,6 +33,19 @@ export class AuthService {
     if (!isPasswordValid) {
       this.throwUnauthorizedError();
     }
+    if (!user.active) {
+      // generate a token to active the user
+      const reactiveToken = this.jwtService.sign(
+        {
+          sub: user.id,
+        },
+        { expiresIn: '15m' },
+      );
+      throw new UnauthorizedException({
+        message: 'User not active',
+        reactiveToken,
+      });
+    }
     const accessToken = await this.createToken(user);
     return { accessToken };
   }
