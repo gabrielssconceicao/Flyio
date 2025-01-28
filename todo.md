@@ -33,7 +33,7 @@
       - [x] test controller
   - [ ] auth routes
     - [ ] login
-      - [ ] jwt
+      - [x] jwt
       - [ ] create auth guard
       - [ ] validate user
     - [ ] logout 
@@ -85,7 +85,7 @@
   - 
 
 - [ ] login
-  - [ ] auth
+  - [x] auth
   - [ ] logout
     - [ ] blacklist
   - [ ] refreshtoken

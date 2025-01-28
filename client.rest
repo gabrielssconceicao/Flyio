@@ -1,4 +1,4 @@
-@baseUrl=http://localhost:3001
+@baseUrl=http://localhost:3000
 @accessToken={{authenticate.response.body.accessToken}}
 @reactiveToken={{authenticate.response.body.reactiveToken}}
 ###
@@ -35,9 +35,4 @@ Authorization: Bearer {{accessToken}}
 
 ###
 
-POST {{baseUrl}}/users/reactivate
-Content-Type: application/json
-
-{
-  "token": "{{reactiveToken}}"
-}
+POST {{baseUrl}}/users/reactivate/{{reactiveToken}}

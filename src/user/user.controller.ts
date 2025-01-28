@@ -350,8 +350,8 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('reactivate')
-  reactivate(@Body() reactivateUserDto: ReactivateUserDto) {
+  @Post('reactivate/:token')
+  reactivate(@Param() reactivateUserDto: ReactivateUserDto) {
     return this.userService.reactivate(reactivateUserDto);
   }
 }
