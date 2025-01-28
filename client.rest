@@ -1,5 +1,7 @@
 @baseUrl=http://localhost:3000
 @accessToken={{authenticate.response.body.accessToken}}
+@accessToken={{refreshAccessToken.response.body.accessToken}}
+@refreshToken={{authenticate.response.body.refreshToken}}
 @reactiveToken={{authenticate.response.body.reactiveToken}}
 ###
 
@@ -17,6 +19,14 @@ Content-Type: application/json
 
 ###
 
+# @name refreshAccessToken
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+###
 // /# User Routes #/
 # create and update via postman
 GET {{baseUrl}}/users/jDoe4
@@ -27,11 +37,11 @@ DELETE {{baseUrl}}/users/13325
 
 ###
 GET {{baseUrl}}/users
-Authorization: Bearer {{accessToken}}
-
 ?search=J
 &limit=10
 &offset=0
+Authorization: Bearer {{accessToken}}
+
 
 ###
 

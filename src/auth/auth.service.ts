@@ -10,6 +10,7 @@ import { HashingServiceProtocol } from './hashing/hashing.service';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigType } from '@nestjs/config';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -51,12 +52,40 @@ export class AuthService {
         reactiveToken,
       });
     }
-    const accessToken = await this.createToken(user);
-    return { accessToken };
+    const payload = { username: user.username, sub: user.id };
+
+    return this.createToken(payload);
   }
 
-  private async createToken(user): Promise<string> {
-    const payload = { username: user.username, sub: user.id };
-    return this.jwtService.signAsync(payload, this.jwtConfiguration);
+  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub, username } = this.jwtService.verify(
+        refreshTokenDto.refreshToken,
+        this.jwtConfiguration,
+      );
+      const { accessToken } = await this.createToken({ sub, username });
+      return { accessToken };
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        console.log(error);
+        throw new ForbiddenException('Token expired');
+      }
+    }
+  }
+
+  private async createToken(payload) {
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: this.jwtConfiguration.secret,
+      audience: this.jwtConfiguration.audience,
+      issuer: this.jwtConfiguration.issuer,
+      expiresIn: this.jwtConfiguration.accessTokenExpiresIn,
+    });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: this.jwtConfiguration.secret,
+      audience: this.jwtConfiguration.audience,
+      issuer: this.jwtConfiguration.issuer,
+      expiresIn: this.jwtConfiguration.refreshTokenExpiresIn,
+    });
+    return { accessToken, refreshToken };
   }
 }

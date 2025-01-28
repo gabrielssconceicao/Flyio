@@ -11,6 +11,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -31,6 +32,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
 import { ReactivateUserDto } from './dto/reactivate-user.dto';
+import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -141,6 +143,7 @@ export class UserController {
     example: 0,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthTokenGuard)
   @Get()
   findAll(@Query() query: QueryParamDto) {
     return this.userService.findAll(query);

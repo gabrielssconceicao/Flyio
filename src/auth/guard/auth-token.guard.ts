@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -21,18 +22,21 @@ export class AuthTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
-
     if (!token) {
       throw new UnauthorizedException('Login required');
     }
     try {
-      const payload = await this.jwtService.verifyAsync(
-        token,
-        this.jwtConfiguration,
-      );
+      const payload = await this.jwtService.verify(token, {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+      });
+      console.log({ payload });
       request[REQUEST_TOKEN_PAYLOAD_KEY] = payload;
     } catch (error) {
-      console.log(error);
+      if (error.name === 'TokenExpiredError') {
+        throw new ForbiddenException('Token expired');
+      }
       this.throwUnauthorizedError(error.message);
     }
     return true;
