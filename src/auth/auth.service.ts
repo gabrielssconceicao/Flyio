@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +24,7 @@ export class AuthService {
   private throwUnauthorizedError() {
     throw new UnauthorizedException('User or password invalid');
   }
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     const user = await this.prismaService.user.findFirst({
       where: {
         OR: [{ username: loginDto.login }, { email: loginDto.login }],
@@ -57,7 +58,9 @@ export class AuthService {
     return this.createToken(payload);
   }
 
-  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+  async refreshToken(
+    refreshTokenDto: RefreshTokenDto,
+  ): Promise<Pick<LoginResponseDto, 'accessToken'>> {
     try {
       const { sub, username } = this.jwtService.verify(
         refreshTokenDto.refreshToken,
