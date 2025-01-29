@@ -9,7 +9,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { jwtConfigurationMock } from '../mocks/jwt.configuration.mock';
-describe('AuthTokenGuard', () => {
+describe('<AuthTokenGuard />', () => {
   let authTokenGuard: AuthTokenGuard;
   let jwtService: JwtService;
   let jwtConfiguration: ConfigType<typeof jwtConfig>;
