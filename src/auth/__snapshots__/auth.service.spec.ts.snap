@@ -6,3 +6,9 @@ exports[`<AuthService /> <Login /> should realize login 1`] = `
   "refreshToken": "refresh-token",
 }
 `;
+
+exports[`<AuthService /> <RefreshToken /> should generate a new access token with a valid refresh token 1`] = `
+{
+  "accessToken": "access-token",
+}
+`;

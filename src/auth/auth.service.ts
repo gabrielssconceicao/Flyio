@@ -67,13 +67,12 @@ export class AuthService {
       return { accessToken };
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        console.log(error);
         throw new ForbiddenException('Token expired');
       }
     }
   }
 
-  private async createToken(payload) {
+  private async createToken(payload: { username: string; sub: string }) {
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.jwtConfiguration.secret,
       audience: this.jwtConfiguration.audience,

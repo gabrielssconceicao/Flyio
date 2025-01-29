@@ -58,6 +58,10 @@ describe('<AuthService />', () => {
     expect(jwtConfiguration).toBeDefined();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('<Login />', () => {
     it('should realize login', async () => {
       jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue({
@@ -125,6 +129,34 @@ describe('<AuthService />', () => {
           expiresIn: jwtConfigurationMock.accessTokenExpiresIn,
         },
       );
+    });
+  });
+
+  describe('<RefreshToken />', () => {
+    it('should generate a new access token with a valid refresh token', async () => {
+      const payload = { sub: 'id-1', username: 'jDoe' };
+      jest.spyOn(jwtService, 'verify').mockReturnValue(payload);
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue('access-token');
+
+      const result = await service.refreshToken({
+        refreshToken: 'refresh-token',
+      });
+      expect(jwtService.verify).toHaveBeenCalled();
+      expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
+
+      expect(result).toEqual({
+        accessToken: 'access-token',
+      });
+      expect(result).toMatchSnapshot();
+    });
+    it('should throw an ForbiddenException if refresh token is expitred', async () => {
+      jest.spyOn(jwtService, 'verify').mockImplementation(() => {
+        throw { name: 'TokenExpiredError' };
+      });
+
+      await expect(
+        service.refreshToken({ refreshToken: 'refresh-token' }),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });
