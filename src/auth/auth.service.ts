@@ -30,7 +30,7 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new this.throwUnauthorizedError();
+      this.throwUnauthorizedError();
     }
     const isPasswordValid = await this.hashingService.compare(
       loginDto.password,
@@ -45,7 +45,7 @@ export class AuthService {
         {
           sub: user.id,
         },
-        { expiresIn: '15m' },
+        { expiresIn: this.jwtConfiguration.accessTokenExpiresIn },
       );
       throw new ForbiddenException({
         message: 'User not active',

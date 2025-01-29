@@ -3,7 +3,7 @@ import { BcryptService } from './bcrypt.service';
 
 jest.mock('bcryptjs');
 
-describe('BcryptService', () => {
+describe('<BcryptService />', () => {
   let bcryptService: BcryptService;
 
   beforeEach(() => {
