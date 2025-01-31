@@ -23,7 +23,7 @@ export class AuthTokenGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      this.throwUnauthorizedError('Login required');
+      throw new UnauthorizedException('Login required');
     }
     try {
       const payload = await this.jwtService.verify(token, {
@@ -37,7 +37,7 @@ export class AuthTokenGuard implements CanActivate {
       if (error.name === 'TokenExpiredError') {
         throw new ForbiddenException('Token expired');
       }
-      this.throwUnauthorizedError(error.message);
+      throw new UnauthorizedException('Invalid token');
     }
     return true;
   }
@@ -48,9 +48,5 @@ export class AuthTokenGuard implements CanActivate {
       return undefined;
     }
     return authorization.split(' ')[1];
-  }
-
-  private throwUnauthorizedError(msg: string) {
-    throw new UnauthorizedException(msg);
   }
 }

@@ -151,7 +151,7 @@ describe('<AuthService />', () => {
     });
     it('should throw an ForbiddenException if refresh token is expitred', async () => {
       jest.spyOn(jwtService, 'verify').mockImplementation(() => {
-        throw { name: 'TokenExpiredError' };
+        throw new Error();
       });
 
       await expect(

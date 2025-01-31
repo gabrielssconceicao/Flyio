@@ -32,10 +32,10 @@
       - [x] test service
       - [x] test controller
   - [ ] auth routes
-    - [ ] login
+    - [x] login
       - [x] jwt
-      - [ ] create auth guard
-      - [ ] validate user
+      - [x] create auth guard
+      - [xx] validate user
     - [ ] logout 
     - [ ] protect routes
       - [ ] user

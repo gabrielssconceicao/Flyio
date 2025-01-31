@@ -68,10 +68,8 @@ export class AuthService {
       );
       const { accessToken } = await this.createToken({ sub, username });
       return { accessToken };
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new ForbiddenException('Token expired');
-      }
+    } catch {
+      throw new ForbiddenException('Token expired');
     }
   }
 
