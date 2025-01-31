@@ -70,7 +70,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('refresh-token')
-  refresh(@Body() refreshTokendto: RefreshTokenDto) {
+  refreshToken(@Body() refreshTokendto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokendto);
   }
 }
