@@ -13,30 +13,52 @@ import {
   generateUserMock,
 } from './mocks/user.mock';
 import { generateFileMock } from '../cloudinary/mock/file.mock';
+import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
+import { JwtService } from '@nestjs/jwt';
+import { jwtServiceMock } from 'src/auth/mocks/jwt.service.mock';
+import jwtConfig from 'src/auth/config/jwt.config';
+import { jwtConfigurationMock } from 'src/auth/mocks/jwt.configuration.mock';
 
 describe('UserController', () => {
   let controller: UserController;
-  const userServiceMock = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
-    removeProfilePicture: jest.fn(),
-    reactivate: jest.fn(),
-  };
+  let authTokenGuard: AuthTokenGuard;
+  let userServiceMock: UserService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
         {
           provide: UserService,
-          useValue: userServiceMock,
+          useValue: {
+            create: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+            removeProfilePicture: jest.fn(),
+            reactivate: jest.fn(),
+          },
+        },
+        {
+          provide: AuthTokenGuard,
+          useValue: {
+            canActivate: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: jwtServiceMock,
+        },
+        {
+          provide: jwtConfig.KEY,
+          useValue: jwtConfigurationMock,
         },
       ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
+    userServiceMock = module.get<UserService>(UserService);
+    authTokenGuard = module.get<AuthTokenGuard>(AuthTokenGuard);
   });
 
   afterEach(() => {
@@ -45,6 +67,8 @@ describe('UserController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(userServiceMock).toBeDefined();
+    expect(authTokenGuard).toBeDefined();
   });
 
   describe('<Create/ >', () => {
