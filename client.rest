@@ -1,6 +1,6 @@
 @baseUrl=http://localhost:3000
 @accessToken={{authenticate.response.body.accessToken}}
-@accessToken={{refreshAccessToken.response.body.accessToken}}
+#@accessToken={{refreshAccessToken.response.body.accessToken}}
 @refreshToken={{authenticate.response.body.refreshToken}}
 @reactiveToken={{authenticate.response.body.reactiveToken}}
 ###
@@ -29,19 +29,24 @@ Content-Type: application/json
 ###
 // /# User Routes #/
 # create and update via postman
-GET {{baseUrl}}/users/jDoe4
-
+GET {{baseUrl}}/users/t0nny@14
+Authorization: Bearer {{accessToken}}
 ###
 
 DELETE {{baseUrl}}/users/13325
+Authorization: Bearer {{accessToken}}
 
 ###
 GET {{baseUrl}}/users
-?search=J
+?search=
 &limit=10
 &offset=0
 Authorization: Bearer {{accessToken}}
 
+###
+
+DELETE {{baseUrl}}/users/t0nny@14/profile-image
+Authorization: Bearer {{accessToken}}
 
 ###
 

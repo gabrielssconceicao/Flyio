@@ -17,6 +17,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -60,39 +61,39 @@ export class UserController {
     },
   })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'User created successfully.',
     type: User,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'File upload failed due to invalid file type.',
     schema: {
       example: {
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'Invalid file type',
         error: 'Bad Request',
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'File upload failed due to size limit.',
     schema: {
       example: {
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'File too small or too large',
         error: 'Bad Request',
       },
     },
   })
   @ApiResponse({
-    status: 409,
+    status: HttpStatus.CONFLICT,
     description:
       'This email or username is already associated with an existing account.',
     schema: {
       example: {
-        statusCode: 409,
+        statusCode: HttpStatus.CONFLICT,
         message:
           'This email or username is already associated with an existing account',
         error: 'Conflict',
@@ -115,9 +116,42 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get all users by name or username' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'List of users and the total count',
     type: FindAllUsersResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Token invalid or missing',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid token',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Login Required',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Login required',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - Token expired',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Token expired',
+        error: 'Forbidden',
+      },
+    },
   })
   @ApiQuery({
     name: 'search',
@@ -142,6 +176,7 @@ export class UserController {
     type: Number,
     example: 0,
   })
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthTokenGuard)
   @Get()
@@ -171,6 +206,41 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Token invalid or missing',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid token',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Login Required',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Login required',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - Token expired',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Token expired',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Get(':username')
   findOne(@Param('username') username: string) {
@@ -250,6 +320,41 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Token invalid or missing',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid token',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Login Required',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Login required',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - Token expired',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Token expired',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':username')
   @UseInterceptors(
@@ -292,6 +397,41 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Token invalid or missing',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid token',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Login Required',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Login required',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - Token expired',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Token expired',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   remove(@Param('id') id: string) {
@@ -323,8 +463,43 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Token invalid or missing',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid token',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized - Login Required',
+    schema: {
+      example: {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Login required',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - Token expired',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Token expired',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
-  @Delete(':username/profile-img')
+  @Delete(':username/profile-image')
   removeProfileImg(@Param('username') username: string) {
     return this.userService.removeProfilePicture(username);
   }
