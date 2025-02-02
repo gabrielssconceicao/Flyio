@@ -34,6 +34,8 @@ import * as multer from 'multer';
 import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
 import { ReactivateUserDto } from './dto/reactivate-user.dto';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
+import { TokenPayloadParam } from '../auth/params/token-payload.param';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -353,6 +355,17 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - You do not have permission',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'You do not have permission',
+        error: 'Forbidden',
+      },
+    },
+  })
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -366,9 +379,14 @@ export class UserController {
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile(ProfileImageValidatorPipe) profileImg: Express.Multer.File,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
-    // change to id
-    return this.userService.update(username, updateUserDto, profileImg);
+    return this.userService.update(
+      username,
+      updateUserDto,
+      profileImg,
+      tokenPayload,
+    );
   }
 
   @ApiOperation({ summary: 'Delete user by id' })
@@ -430,12 +448,26 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - You do not have permission',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'You do not have permission',
+        error: 'Forbidden',
+      },
+    },
+  })
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  @Delete(':username')
+  remove(
+    @Param('username') username: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.userService.remove(username, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Delete user profile picture by username' })
@@ -496,12 +528,37 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - You do not have permission',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'You do not have permission',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - You do not have permission',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'You do not have permission',
+        error: 'Forbidden',
+      },
+    },
+  })
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':username/profile-image')
-  removeProfileImg(@Param('username') username: string) {
-    return this.userService.removeProfilePicture(username);
+  removeProfileImg(
+    @Param('username') username: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.userService.removeProfilePicture(username, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Reactivate user by token' })

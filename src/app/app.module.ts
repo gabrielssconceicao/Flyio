@@ -9,6 +9,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { AuthModule } from '../auth/auth.module';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
+import { PermissionModule } from '../permission/permission.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
     PrismaModule,
     AuthModule,
     CloudinaryModule,
+    PermissionModule,
     UserModule,
   ],
   controllers: [AppController],

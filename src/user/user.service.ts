@@ -14,6 +14,8 @@ import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { ReactivateUserDto } from './dto/reactivate-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class UserService {
@@ -22,6 +24,7 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
     private readonly jwtService: JwtService,
+    private readonly permissionService: PermissionService,
   ) {}
 
   private selectUserFields = {
@@ -100,8 +103,11 @@ export class UserService {
     username: string,
     updateUserDto: UpdateUserDto,
     profileImg: Express.Multer.File,
+    tokenPayload: TokenPayloadDto,
   ): Promise<User> {
     const user = await this.findOne(username);
+
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 
     if (updateUserDto?.email && updateUserDto.email !== user.email) {
       const emailIsTaken = await this.prismaService.user.findFirst({
@@ -150,24 +156,28 @@ export class UserService {
     return updatedUser;
   }
 
-  async remove(id: string) {
+  async remove(username: string, tokenPayload: TokenPayloadDto) {
     const user = await this.prismaService.user.findUnique({
-      where: { id },
+      where: { username, active: true },
     });
-    if (!user || !user.active) {
+    if (!user) {
       throw new NotFoundException('User not found');
     }
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 
     await this.prismaService.user.update({
-      where: { id },
+      where: { username },
       data: { active: false },
     });
     return { message: 'User deleted successfully' };
   }
 
-  async removeProfilePicture(username: string): Promise<User> {
+  async removeProfilePicture(
+    username: string,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<User> {
     const user = await this.findOne(username);
-
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
     if (user.profileImg) {
       try {
         await this.cloudinaryService.deleteProfilePicture(user.profileImg);

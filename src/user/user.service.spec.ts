@@ -302,9 +302,11 @@ describe('<UserService />', () => {
         service.update('jDoe2', updateUserDto, undefined),
       ).rejects.toThrow(ConflictException);
     });
+
+    it('should throw an error if a user is trying to update other user', async () => {});
   });
 
-  describe('<Delete />', () => {
+  describe('<Remove />', () => {
     it('should delete a user successfully', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
@@ -333,6 +335,8 @@ describe('<UserService />', () => {
         .mockResolvedValue({ active: false } as any);
       await expect(service.remove('jD')).rejects.toThrow(NotFoundException);
     });
+
+    it('should throw an error if a user is trying to remove other user', async () => {});
   });
 
   describe('<FindAll />', () => {
@@ -420,6 +424,7 @@ describe('<UserService />', () => {
       );
       expect(prismaService.user.update).not.toHaveBeenCalled();
     });
+    it('should throw an error if a user is trying to delete other user profile picture', async () => {});
   });
 
   describe('<Reactivate />', () => {

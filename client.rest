@@ -3,6 +3,8 @@
 #@accessToken={{refreshAccessToken.response.body.accessToken}}
 @refreshToken={{authenticate.response.body.refreshToken}}
 @reactiveToken={{authenticate.response.body.reactiveToken}}
+
+@username=t0nny@14
 ###
 
 
@@ -31,10 +33,6 @@ Content-Type: application/json
 # create and update via postman
 GET {{baseUrl}}/users/t0nny@14
 Authorization: Bearer {{accessToken}}
-###
-
-DELETE {{baseUrl}}/users/13325
-Authorization: Bearer {{accessToken}}
 
 ###
 GET {{baseUrl}}/users
@@ -45,7 +43,17 @@ Authorization: Bearer {{accessToken}}
 
 ###
 
-DELETE {{baseUrl}}/users/t0nny@14/profile-image
+PATCH {{baseUrl}}/users/{{username}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+DELETE {{baseUrl}}/users/{{username}}
+Authorization: Bearer {{accessToken}}
+
+### 
+
+DELETE {{baseUrl}}/users/{{username}}/profile-image
 Authorization: Bearer {{accessToken}}
 
 ###
