@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CloudinaryService } from './cloudinary.service';
 import { BadRequestException } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
-import { generateFileMock } from './mock/file.mock';
+import { CloudinaryService } from './cloudinary.service';
+import { generateFileMock } from './mocks';
 
 jest.mock('cloudinary', () => ({
   v2: {

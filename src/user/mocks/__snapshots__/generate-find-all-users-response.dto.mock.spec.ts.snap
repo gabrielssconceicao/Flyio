@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FindAllUsersResponseDto /> should generate a valid find all users response dto mock 1`] = `
+{
+  "count": 1,
+  "users": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
+}
+`;

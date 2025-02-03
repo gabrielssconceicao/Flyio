@@ -1,27 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
 import {
   BadRequestException,
   ConflictException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { User } from './entities/user.entity';
+import jwtConfig from '../auth/config/jwt.config';
+import {
+  jwtServiceMock,
+  jwtConfigurationMock,
+  generateTokenPayloadDtoMock,
+} from '../auth/mocks';
+import { TokenPayloadDto } from '../auth/dto';
+import { generateFileMock } from '../cloudinary/mocks';
+
+import { CreateUserDto, FindAllUsersResponseDto } from './dto';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
-} from './mocks/user.mock';
-import { generateFileMock } from '../cloudinary/mock/file.mock';
-import { JwtService } from '@nestjs/jwt';
-import { jwtServiceMock } from 'src/auth/mocks/jwt.service.mock';
-import jwtConfig from 'src/auth/config/jwt.config';
-import { jwtConfigurationMock } from 'src/auth/mocks/jwt.configuration.mock';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-import { TokenPayloadDto } from '../auth/dto/token-payload.dto';
-import { generateTokenPayloadDtoMock } from 'src/auth/mocks/token-payload.dto.mock';
+} from './mocks';
 
 describe('UserController', () => {
   let controller: UserController;

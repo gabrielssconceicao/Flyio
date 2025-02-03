@@ -1,14 +1,14 @@
 import { JwtService } from '@nestjs/jwt';
-import { AuthTokenGuard } from './auth-token.guard';
-import { ConfigType } from '@nestjs/config';
-import jwtConfig from '../config/jwt.config';
-import { jwtServiceMock } from '../mocks/jwt.service.mock';
 import {
   ExecutionContext,
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { jwtConfigurationMock } from '../mocks/jwt.configuration.mock';
+import { ConfigType } from '@nestjs/config';
+import { AuthTokenGuard } from './auth-token.guard';
+import jwtConfig from '../config/jwt.config';
+import { jwtServiceMock, jwtConfigurationMock } from '../mocks';
+
 describe('<AuthTokenGuard />', () => {
   let authTokenGuard: AuthTokenGuard;
   let jwtService: JwtService;

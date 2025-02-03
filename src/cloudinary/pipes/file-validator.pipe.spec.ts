@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { generateFileMock } from '../mock/file.mock';
+import { generateFileMock } from '../mocks';
 import { FileValidatorPipe } from './file-validator.pipe';
 
 describe('<FileValidatorPipe />', () => {

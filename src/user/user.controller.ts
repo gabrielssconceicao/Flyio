@@ -13,9 +13,6 @@ import {
   UploadedFile,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -26,16 +23,22 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
-import { QueryParamDto } from './dto/query-param.dto';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
-import { ReactivateUserDto } from './dto/reactivate-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UserService } from './user.service';
+import { User } from './entities/user.entity';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
-import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { ProfileImageValidatorPipe } from '../cloudinary/pipes/profile-image-validator.pipe';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  QueryParamDto,
+  FindAllUsersResponseDto,
+  ReactivateUserDto,
+} from './dto';
+import { TokenPayloadDto } from '../auth/dto';
+
 @ApiTags('Users')
 @Controller('users')
 export class UserController {

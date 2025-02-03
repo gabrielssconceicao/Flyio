@@ -1,17 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { userPrismaService } from '../prisma/mock/prisma.service.mock';
-import { hashingServiceMock } from './mocks/hashing.service.mock';
-import { jwtConfigurationMock } from './mocks/jwt.configuration.mock';
-import { jwtServiceMock } from './mocks/jwt.service.mock';
-import { HashingServiceProtocol } from './hashing/hashing.service';
-import { JwtService } from '@nestjs/jwt';
-import jwtConfig from './config/jwt.config';
-import { ConfigType } from '@nestjs/config';
-import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto } from './dto/login.dto';
-import { generateLoginDtoMock } from './mocks/login.dto.mock';
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { userPrismaService } from '../prisma/mock/prisma.service.mock';
+import { AuthService } from './auth.service';
+
+import { PrismaService } from '../prisma/prisma.service';
+import jwtConfig from './config/jwt.config';
+import { LoginDto } from './dto/login.dto';
+import { HashingServiceProtocol } from './hashing/hashing.service';
+import {
+  hashingServiceMock,
+  jwtConfigurationMock,
+  jwtServiceMock,
+  generateLoginDtoMock,
+} from './mocks';
+
 describe('<AuthService />', () => {
   let service: AuthService;
   let prismaService: PrismaService;

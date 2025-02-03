@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import {
   dtoErrorMessages,
   DtoErrorType,
-} from 'src/common/utils/dto-error-messages';
+} from '../../common/utils/dto-error-messages';
 
 export class ReactivateUserDto {
   @ApiProperty({

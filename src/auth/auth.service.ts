@@ -4,14 +4,13 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { HashingServiceProtocol } from './hashing/hashing.service';
-import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDto, LoginResponseDto, LoginDto } from './dto';
 import jwtConfig from './config/jwt.config';
-import { ConfigType } from '@nestjs/config';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { LoginResponseDto } from './dto/login-response.dto';
+
 @Injectable()
 export class AuthService {
   constructor(

@@ -4,18 +4,20 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtService } from '@nestjs/jwt';
 import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from './entities/user.entity';
-import { QueryParamDto } from './dto/query-param.dto';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { ReactivateUserDto } from './dto/reactivate-user.dto';
-import { JwtService } from '@nestjs/jwt';
-import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { PermissionService } from '../permission/permission.service';
+import { TokenPayloadDto } from '../auth/dto';
+import { User } from './entities/user.entity';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  ReactivateUserDto,
+  QueryParamDto,
+  FindAllUsersResponseDto,
+} from './dto';
 
 @Injectable()
 export class UserService {

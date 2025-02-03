@@ -1,12 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
-import { PrismaService } from '../prisma/prisma.service';
-import {
-  selectUserFieldsMock,
-  userPrismaService,
-} from '../prisma/mock/prisma.service.mock';
-import { hashingServiceMock } from '../auth/mocks/hashing.service.mock';
+import { JwtService } from '@nestjs/jwt';
 import {
   BadRequestException,
   ConflictException,
@@ -14,27 +7,34 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import {
+  selectUserFieldsMock,
+  userPrismaService,
+} from '../prisma/mock/prisma.service.mock';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import {
+  cloudinaryServiceMock,
+  generateFileMock,
+  generatedProfilePictureMock,
+} from '../cloudinary/mocks';
+import { PermissionService } from '../permission/permission.service';
+import { permissionServiceMock } from '../permission/mock/permission.service.mock';
+import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
+import {
+  jwtServiceMock,
+  generateTokenPayloadDtoMock,
+  hashingServiceMock,
+} from '../auth/mocks';
+import { TokenPayloadDto } from '../auth/dto';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
+import { CreateUserDto, FindAllUsersResponseDto, UpdateUserDto } from './dto';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
-} from './mocks/user.mock';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { cloudinaryServiceMock } from '../cloudinary/mock/cloudinary.service.mock';
-import {
-  generatedProfilePictureMock,
-  generateFileMock,
-} from '../cloudinary/mock/file.mock';
-import { jwtServiceMock } from '../auth/mocks/jwt.service.mock';
-import { JwtService } from '@nestjs/jwt';
-import { PermissionService } from '../permission/permission.service';
-import { permissionServiceMock } from '../permission/mock/permission.service.mock';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { TokenPayloadDto } from '../auth/dto/token-payload.dto';
-import { generateTokenPayloadDtoMock } from '../auth/mocks/token-payload.dto.mock';
+} from './mocks';
 
 describe('<UserService />', () => {
   let service: UserService;
