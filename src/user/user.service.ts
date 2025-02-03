@@ -157,10 +157,8 @@ export class UserService {
   }
 
   async remove(username: string, tokenPayload: TokenPayloadDto) {
-    const user = await this.prismaService.user.findUnique({
-      where: { username, active: true },
-    });
-    if (!user) {
+    const user = await this.findOne(username);
+    if (!user.active) {
       throw new NotFoundException('User not found');
     }
     this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);

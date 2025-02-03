@@ -24,12 +24,6 @@ exports[`<UserService /> <Create /> should create a user successfully without pr
 }
 `;
 
-exports[`<UserService /> <Delete /> should delete a user successfully 1`] = `
-{
-  "message": "User deleted successfully",
-}
-`;
-
 exports[`<UserService /> <FindAll /> should search for a list of users  1`] = `
 {
   "count": 1,
@@ -59,6 +53,12 @@ exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 exports[`<UserService /> <Reactivate /> should reactivate a user successfully 1`] = `
 {
   "message": "Account reactivated successfully",
+}
+`;
+
+exports[`<UserService /> <Remove /> should delete a user successfully 1`] = `
+{
+  "message": "User deleted successfully",
 }
 `;
 

@@ -20,6 +20,8 @@ import { jwtConfigurationMock } from 'src/auth/mocks/jwt.configuration.mock';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
+import { TokenPayloadDto } from '../auth/dto/token-payload.dto';
+import { generateTokenPayloadDtoMock } from 'src/auth/mocks/token-payload.dto.mock';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -32,6 +34,7 @@ describe('UserController', () => {
   let users: FindAllUsersResponseDto;
   let username: string;
   let id: string;
+  let tokenPayload: TokenPayloadDto;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
@@ -69,8 +72,9 @@ describe('UserController', () => {
     user = generateUserMock();
     users = generateFindAllUsersResponseDtoMock();
 
-    username = 'jDoe';
-    id = 'f-3wds';
+    username = user.username;
+    id = user.id;
+    tokenPayload = generateTokenPayloadDtoMock();
   });
 
   afterEach(() => {
@@ -155,12 +159,18 @@ describe('UserController', () => {
 
       const updatedUser = { ...user, ...updateUserDto };
       jest.spyOn(userServiceMock, 'update').mockResolvedValue(updatedUser);
-      const result = await controller.update(id, updateUserDto, file);
+      const result = await controller.update(
+        id,
+        updateUserDto,
+        file,
+        tokenPayload,
+      );
 
       expect(userServiceMock.update).toHaveBeenCalledWith(
         id,
         updateUserDto,
         file,
+        tokenPayload,
       );
       expect(result).toEqual(updatedUser);
       expect(result).toMatchSnapshot();
@@ -169,12 +179,9 @@ describe('UserController', () => {
       jest
         .spyOn(userServiceMock, 'update')
         .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(controller.update(id, {}, undefined)).rejects.toThrow(
-        NotFoundException,
-      );
       await expect(
-        controller.update(id, {}, undefined),
-      ).rejects.toMatchSnapshot();
+        controller.update(id, {}, undefined, tokenPayload),
+      ).rejects.toThrow(NotFoundException);
     });
     it('should throw an ConflictException', async () => {
       const updateUserDto = {
@@ -188,11 +195,8 @@ describe('UserController', () => {
           ),
         );
       await expect(
-        controller.update(id, updateUserDto, undefined),
+        controller.update(id, updateUserDto, undefined, tokenPayload),
       ).rejects.toThrow(ConflictException);
-      await expect(
-        controller.update(id, updateUserDto, undefined),
-      ).rejects.toMatchSnapshot();
     });
   });
 
@@ -200,8 +204,8 @@ describe('UserController', () => {
     it('should delete a user successfully', async () => {
       const message = 'User deleted successfully';
       jest.spyOn(userServiceMock, 'remove').mockResolvedValue({ message });
-      const result = await controller.remove(id);
-      expect(userServiceMock.remove).toHaveBeenCalledWith(id);
+      const result = await controller.remove(id, tokenPayload);
+      expect(userServiceMock.remove).toHaveBeenCalledWith(id, tokenPayload);
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
     });
@@ -209,8 +213,9 @@ describe('UserController', () => {
       jest
         .spyOn(userServiceMock, 'remove')
         .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(controller.remove(id)).rejects.toThrow(NotFoundException);
-      await expect(controller.remove(id)).rejects.toMatchSnapshot();
+      await expect(controller.remove(id, tokenPayload)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -220,9 +225,10 @@ describe('UserController', () => {
       jest
         .spyOn(userServiceMock, 'removeProfilePicture')
         .mockResolvedValue(user);
-      const result = await controller.removeProfileImg(username);
+      const result = await controller.removeProfileImg(username, tokenPayload);
       expect(userServiceMock.removeProfilePicture).toHaveBeenCalledWith(
         username,
+        tokenPayload,
       );
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
@@ -231,9 +237,9 @@ describe('UserController', () => {
       jest
         .spyOn(userServiceMock, 'removeProfilePicture')
         .mockRejectedValue(new BadRequestException());
-      await expect(controller.removeProfileImg(username)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        controller.removeProfileImg(username, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

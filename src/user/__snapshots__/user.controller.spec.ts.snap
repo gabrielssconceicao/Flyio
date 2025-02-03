@@ -20,8 +20,6 @@ exports[`UserController <Delete /> should delete a user successfully 1`] = `
 }
 `;
 
-exports[`UserController <Delete /> should throw an NotFoundException 1`] = `[NotFoundException: User not found]`;
-
 exports[`UserController <FindAll /> should return an array of users if user is logged in and token is valid 1`] = `
 {
   "count": 1,
@@ -67,10 +65,6 @@ exports[`UserController <RemoveProfilePicture /> should remove profile picture s
   "username": "jDoe453",
 }
 `;
-
-exports[`UserController <Update /> should throw an ConflictException 1`] = `[ConflictException: Email is already associated with an existing account]`;
-
-exports[`UserController <Update /> should throw an NotFoundException 1`] = `[NotFoundException: User not found]`;
 
 exports[`UserController <Update /> should update a user successfully 1`] = `
 {

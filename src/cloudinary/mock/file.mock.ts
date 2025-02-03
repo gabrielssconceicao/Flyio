@@ -7,4 +7,5 @@ export const generateFileMock = () => {
   } as Express.Multer.File;
 };
 
-export const generatedProfilePictureMock = 'https://example.com/profile.jpg';
+export const generatedProfilePictureMock =
+  'https://example.com/profile-picture.jpg';
