@@ -14,7 +14,6 @@ export const selectUserFieldsMock = {
   id: true,
   name: true,
   username: true,
-  email: true,
   profileImg: true,
   bio: true,
   active: true,

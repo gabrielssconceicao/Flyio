@@ -33,7 +33,6 @@ export class UserService {
     id: true,
     name: true,
     username: true,
-    email: true,
     profileImg: true,
     bio: true,
     active: true,
@@ -107,7 +106,13 @@ export class UserService {
     profileImg: Express.Multer.File,
     tokenPayload: TokenPayloadDto,
   ): Promise<User> {
-    const user = await this.findOne(username);
+    const user = await this.prismaService.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 

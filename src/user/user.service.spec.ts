@@ -231,7 +231,9 @@ describe('<UserService />', () => {
   describe('<Update />', () => {
     it('should update a user successfully without profile picture', async () => {
       user.profileImg = null;
-      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
       jest
         .spyOn(cloudinaryService, 'uploadProfilePicture')
@@ -247,7 +249,9 @@ describe('<UserService />', () => {
         file,
         tokenPayload,
       );
-      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { username },
+      });
       expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
       expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(file);
       expect(prismaService.user.update).toHaveBeenCalledWith({
@@ -267,7 +271,9 @@ describe('<UserService />', () => {
       expect(result).toMatchSnapshot();
     });
     it('should update a user successfully with profile picture', async () => {
-      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
       jest
         .spyOn(cloudinaryService, 'updateProfilePicture')
@@ -283,7 +289,9 @@ describe('<UserService />', () => {
         file,
         tokenPayload,
       );
-      expect(service.findOne).toHaveBeenCalledWith(username);
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { username },
+      });
       expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
       expect(cloudinaryService.updateProfilePicture).toHaveBeenCalledWith(
         file,
@@ -307,7 +315,9 @@ describe('<UserService />', () => {
     });
 
     it('should throw an error if user not found', async () => {
-      jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockRejectedValue(new NotFoundException());
 
       await expect(
         service.update(username, updateUserDto, file, tokenPayload),
@@ -323,7 +333,9 @@ describe('<UserService />', () => {
         email: 'newemail@example.com',
       };
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
 
       jest
         .spyOn(prismaService.user, 'findFirst')
@@ -336,7 +348,9 @@ describe('<UserService />', () => {
 
     it('should throw an error if a user is trying to update other user', async () => {
       user.id = 'other-id-4';
-      jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
       jest
         .spyOn(permissionService, 'verifyUserOwnership')
         .mockImplementation(() => {

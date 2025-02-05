@@ -4,7 +4,6 @@ exports[`<UserService /> <Create /> should create a user successfully 1`] = `
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
@@ -16,7 +15,6 @@ exports[`<UserService /> <Create /> should create a user successfully without pr
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
@@ -42,7 +40,6 @@ exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
@@ -66,7 +63,6 @@ exports[`<UserService /> <RemoveProfilePicture /> should not remove profile pict
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": null,
@@ -78,7 +74,6 @@ exports[`<UserService /> <RemoveProfilePicture /> should remove profile picture 
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": null,
@@ -90,7 +85,6 @@ exports[`<UserService /> <Update /> should update a user successfully with profi
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "password": "new_password",
@@ -103,7 +97,6 @@ exports[`<UserService /> <Update /> should update a user successfully without pr
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "password": "new_password",

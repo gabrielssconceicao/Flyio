@@ -4,7 +4,6 @@ exports[`UserController <Create/ > should create a user 1`] = `
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
@@ -38,7 +37,6 @@ exports[`UserController <FindOne /> should return a user successfully 1`] = `
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
@@ -58,7 +56,6 @@ exports[`UserController <RemoveProfilePicture /> should remove profile picture s
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": null,
@@ -70,7 +67,6 @@ exports[`UserController <Update /> should update a user successfully 1`] = `
 {
   "active": true,
   "bio": "Update bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",

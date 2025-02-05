@@ -9,7 +9,7 @@ describe('<UserMocks />', () => {
         id: userMock.id,
         name: userMock.name,
         username: userMock.username,
-        email: userMock.email,
+
         profileImg: userMock.profileImg,
         bio: userMock.bio,
         active: userMock.active,

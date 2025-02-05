@@ -4,7 +4,6 @@ exports[`<UserMocks /> should generate a valid user mock 1`] = `
 {
   "active": true,
   "bio": "This is my bio",
-  "email": "jdoe@me.com",
   "id": "42-d-f-df4",
   "name": "John Doe",
   "profileImg": "https://example.com/profile.jpg",
