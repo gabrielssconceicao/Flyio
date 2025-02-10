@@ -277,49 +277,49 @@ export class UserController {
     example: 'jDoe45',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'User updated successfully.',
     type: User,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'File upload failed due to invalid file type.',
     schema: {
       example: {
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'Invalid file type',
         error: 'Bad Request',
       },
     },
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'File upload failed due to size limit.',
     schema: {
       example: {
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'File too small or too large',
         error: 'Bad Request',
       },
     },
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatus.NOT_FOUND,
     description: 'User not found.',
     schema: {
       example: {
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         message: 'User not found.',
         error: 'Not Found',
       },
     },
   })
   @ApiResponse({
-    status: 409,
+    status: HttpStatus.CONFLICT,
     description: 'Email already in use',
     schema: {
       example: {
-        statusCode: 409,
+        statusCode: HttpStatus.CONFLICT,
         message: 'Email is already associated with an existing account',
         error: 'Conflict',
       },
@@ -392,29 +392,29 @@ export class UserController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete user by id' })
+  @ApiOperation({ summary: 'Desactivate user by id' })
   @ApiParam({
     name: 'id',
     description: 'User id',
     example: '42-d-f-df4',
   })
   @ApiResponse({
-    status: 200,
-    description: 'User not found.',
+    status: HttpStatus.OK,
+    description: 'User desactivated successfully.',
     schema: {
       example: {
-        message: 'User deleted successfully.',
+        message: 'User desactivated successfully.',
       },
     },
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found.',
+    status: HttpStatus.BAD_REQUEST,
+    description: 'User is already deactivated',
     schema: {
       example: {
-        statusCode: 404,
-        message: 'User not found.',
-        error: 'Not Found',
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'User is already deactivated',
+        error: 'Bad Request',
       },
     },
   })
@@ -466,11 +466,11 @@ export class UserController {
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':username')
-  remove(
+  desactivateUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
-    return this.userService.remove(username, tokenPayload);
+    return this.userService.desactivateUser(username, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Delete user profile picture by username' })
@@ -480,17 +480,17 @@ export class UserController {
     example: 'jDoe45',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'Profile picture deleted successfully.',
     type: User,
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'No profile picture to delete.',
     type: User,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'Error deleting profile picture.',
     schema: {
       example: {
@@ -570,7 +570,7 @@ export class UserController {
     description: 'Reactivate user by token',
   })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'Account reactivated successfully.',
     schema: {
       example: {
@@ -579,7 +579,7 @@ export class UserController {
     },
   })
   @ApiResponse({
-    status: 401,
+    status: HttpStatus.UNAUTHORIZED,
     description: 'Invalid or expired token.',
     schema: {
       example: {

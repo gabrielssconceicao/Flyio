@@ -362,28 +362,36 @@ describe('<UserService />', () => {
     });
   });
 
-  describe('<Remove />', () => {
+  describe('<DesactivateUser />', () => {
     it('should delete a user successfully', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(user as any);
       jest
         .spyOn(prismaService.user, 'update')
         .mockResolvedValue({ active: false } as any);
       jest.spyOn(permissionService, 'verifyUserOwnership').mockImplementation();
-      const result = await service.remove(username, tokenPayload);
+      const result = await service.desactivateUser(username, tokenPayload);
       expect(service.findOne).toHaveBeenCalledWith(username);
       expect(prismaService.user.update).toHaveBeenCalledWith({
         where: { username },
         data: { active: false },
       });
-      expect(result).toEqual({ message: 'User deleted successfully' });
+      expect(result).toEqual({ message: 'User desactivated successfully' });
       expect(result).toMatchSnapshot();
     });
 
     it('should throw a NotFoundException if user not found', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
-      await expect(service.remove(username, tokenPayload)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.desactivateUser(username, tokenPayload),
+      ).rejects.toThrow(NotFoundException);
+    });
+    it('should throw a BadRequestException if user is already deleted', async () => {
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue({
+        active: false,
+      } as any);
+      await expect(
+        service.desactivateUser(username, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw an error if a user is trying to remove other user', async () => {
@@ -394,9 +402,9 @@ describe('<UserService />', () => {
         .mockImplementation(() => {
           throw new ForbiddenException();
         });
-      await expect(service.remove(username, tokenPayload)).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(
+        service.desactivateUser(username, tokenPayload),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 

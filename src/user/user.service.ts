@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -163,10 +164,10 @@ export class UserService {
     return updatedUser;
   }
 
-  async remove(username: string, tokenPayload: TokenPayloadDto) {
+  async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
     const user = await this.findOne(username);
     if (!user.active) {
-      throw new NotFoundException('User not found');
+      throw new BadRequestException('User is already deactivated');
     }
     this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 
@@ -174,7 +175,7 @@ export class UserService {
       where: { username },
       data: { active: false },
     });
-    return { message: 'User deleted successfully' };
+    return { message: 'User desactivated successfully' };
   }
 
   async removeProfilePicture(

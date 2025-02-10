@@ -48,7 +48,7 @@ describe('UserController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            desactivateUser: jest.fn(),
             removeProfilePicture: jest.fn(),
             reactivate: jest.fn(),
           },
@@ -202,22 +202,29 @@ describe('UserController', () => {
     });
   });
 
-  describe('<Delete />', () => {
+  describe('<DesactivateUser />', () => {
     it('should delete a user successfully', async () => {
-      const message = 'User deleted successfully';
-      jest.spyOn(userServiceMock, 'remove').mockResolvedValue({ message });
-      const result = await controller.remove(id, tokenPayload);
-      expect(userServiceMock.remove).toHaveBeenCalledWith(id, tokenPayload);
+      const message = 'User desactivated successfully';
+      jest
+        .spyOn(userServiceMock, 'desactivateUser')
+        .mockResolvedValue({ message });
+      const result = await controller.desactivateUser(id, tokenPayload);
+      expect(userServiceMock.desactivateUser).toHaveBeenCalledWith(
+        id,
+        tokenPayload,
+      );
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
     });
-    it('should throw an NotFoundException', async () => {
+    it('should throw an BadRequestException', async () => {
       jest
-        .spyOn(userServiceMock, 'remove')
-        .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(controller.remove(id, tokenPayload)).rejects.toThrow(
-        NotFoundException,
-      );
+        .spyOn(userServiceMock, 'desactivateUser')
+        .mockRejectedValue(
+          new BadRequestException('User is already deactivated'),
+        );
+      await expect(
+        controller.desactivateUser(id, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
