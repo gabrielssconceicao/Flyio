@@ -4,7 +4,7 @@
   
 - [ ] database
   - [x] create users table
-  - [ ] create posts table
+  - [x] create posts table
   - [ ] create followers table
   - [ ] create likes table
   - [ ] create comments table
@@ -31,28 +31,27 @@
     - [x] delete profile image
       - [x] test service
       - [x] test controller
-  - [ ] auth routes
+  - [x] auth routes
     - [x] login
       - [x] jwt
       - [x] create auth guard
-      - [xx] validate user
-    - [ ] logout 
+      - [xx] validate user 
     - [ ] protect routes
-      - [ ] user
-        - [ ] update
-        - [ ] delete
-        - [ ] delete profile
-    - [ ] tests
-      - [ ] hash service
-      - [ ] auth service
-      - [ ] auth controller
-      - [ ] user protected routes
+      - [x] user
+        - [x] update
+        - [x] delete
+        - [x] delete profile
+    - [x] tests
+      - [x] hash service
+      - [x] auth service
+      - [x] auth controller
+      - [x] user protected routes
   - [ ] post routes
     - [ ] get all
     - [ ] get one
     - [ ] post 
-    - [ ] patch
     - [ ] delete
+    - [ ] get all posts by user (user route)
   - [ ] like routes
     - [ ] get all
     - [ ] get one
@@ -66,32 +65,30 @@
     - [ ] patch
     - [ ] delete
     
-- [ ] users
+- [x] users
   - [x] create
     - [x] createUserDto
     - [x] test CreateUserDto
     - [x] password hash
     - [x] profile image upload
-  - [ ] delete
-    - [ ] is logged in
-  - [ ] reactivate
+  - [x] delete
+    - [x] is logged in
+  - [x] reactivate
   - [x] get one
-  - [ ] update
+  - [x] update
     - [x] update user
     - [x] update profile image
-    - [ ] is logged in
-  - [ ] delete profile image
-    - [ ] is logged
-  - 
+    - [x] is logged in
+  - [x] delete profile image
+    - [x] is logged
 
-- [ ] login
+- [x] login
   - [x] auth
-  - [ ] logout
-    - [ ] blacklist
   - [x] refreshtoken
 
 - [ ] posts
-
+    - [ ] create
+      - [ ] 
 - [ ] likes
 
 - [ ] comments

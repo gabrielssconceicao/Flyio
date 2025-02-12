@@ -10,6 +10,7 @@ import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { AuthModule } from '../auth/auth.module';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { PermissionModule } from '../permission/permission.module';
+import { PostModule } from 'src/post/post.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PermissionModule } from '../permission/permission.module';
     CloudinaryModule,
     PermissionModule,
     UserModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [
