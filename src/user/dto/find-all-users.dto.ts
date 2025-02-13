@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PickType } from '@nestjs/mapped-types';
 import { User } from '../entities/user.entity';
+import { FindAllResponseDto } from 'src/common/dto/find-all-response.dto';
 
 class UserSummaryDto extends PickType(User, [
   'id',
@@ -28,16 +29,10 @@ class UserSummaryDto extends PickType(User, [
   profileImg: string | null;
 }
 
-export class FindAllUsersResponseDto {
+export class FindAllUsersResponseDto extends FindAllResponseDto<UserSummaryDto> {
   @ApiProperty({
     type: [UserSummaryDto],
     description: 'List of users with limited details',
   })
-  users: UserSummaryDto[];
-
-  @ApiProperty({
-    example: 1,
-    description: 'Total count of users in the database',
-  })
-  count: number;
+  items: UserSummaryDto[];
 }

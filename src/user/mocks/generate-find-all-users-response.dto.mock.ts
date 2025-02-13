@@ -5,7 +5,7 @@ export const generateFindAllUsersResponseDtoMock =
   (): FindAllUsersResponseDto => {
     return {
       count: 1,
-      users: [
+      items: [
         {
           id: userMock.id,
           name: userMock.name,

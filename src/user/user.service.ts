@@ -86,7 +86,7 @@ export class UserService {
       skip: offset,
     });
     const count = await this.prismaService.user.count({ where });
-    return { count, users };
+    return { count, items: users };
   }
 
   async findOne(username: string): Promise<User> {
