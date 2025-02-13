@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PickType } from '@nestjs/mapped-types';
 import { User } from '../entities/user.entity';
-import { FindAllResponseDto } from 'src/common/dto/find-all-response.dto';
+import { FindAllResponseDto } from '../../common/dto/find-all-response.dto';
 
 class UserSummaryDto extends PickType(User, [
   'id',
