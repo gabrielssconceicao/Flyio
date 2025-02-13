@@ -4,7 +4,7 @@ describe('<FindAllUsersResponseDto />', () => {
     const result = generateFindAllUsersResponseDtoMock();
 
     expect(result.count).toBe(1);
-    expect(result.users.length).toEqual(1);
+    expect(result.items.length).toEqual(1);
 
     expect(result).toMatchSnapshot();
   });

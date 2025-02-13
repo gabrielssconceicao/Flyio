@@ -31,7 +31,7 @@ exports[`<UserService /> <DesactivateUser /> should delete a user successfully 1
 exports[`<UserService /> <FindAll /> should search for a list of users  1`] = `
 {
   "count": 1,
-  "users": [
+  "items": [
     {
       "id": "42-d-f-df4",
       "name": "John Doe",

@@ -22,7 +22,7 @@ exports[`UserController <DesactivateUser /> should delete a user successfully 1`
 exports[`UserController <FindAll /> should return an array of users if user is logged in and token is valid 1`] = `
 {
   "count": 1,
-  "users": [
+  "items": [
     {
       "id": "42-d-f-df4",
       "name": "John Doe",

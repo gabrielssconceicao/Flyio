@@ -212,7 +212,7 @@ describe('<UserService />', () => {
 
       jest
         .spyOn(prismaService.user, 'findMany')
-        .mockResolvedValue(findAllResponse.users as any);
+        .mockResolvedValue(findAllResponse.items as any);
       jest
         .spyOn(prismaService.user, 'count')
         .mockResolvedValue(findAllResponse.count);
@@ -222,7 +222,7 @@ describe('<UserService />', () => {
       expect(prismaService.user.findMany).toHaveBeenCalled();
       expect(prismaService.user.count).toHaveBeenCalled();
       expect(result.count).toBe(1);
-      expect(result.users.length).toBe(1);
+      expect(result.items.length).toBe(1);
       expect(result).toEqual(findAllResponse);
       expect(result).toMatchSnapshot();
     });

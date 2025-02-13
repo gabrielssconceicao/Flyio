@@ -3,7 +3,7 @@
 exports[`<FindAllUsersResponseDto /> should generate a valid find all users response dto mock 1`] = `
 {
   "count": 1,
-  "users": [
+  "items": [
     {
       "id": "42-d-f-df4",
       "name": "John Doe",
