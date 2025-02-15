@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`<LoginDtoMock> should generate a valid login dto mock 1`] = `
-{
-  "login": "login",
-  "password": "123456",
-}
-`;
