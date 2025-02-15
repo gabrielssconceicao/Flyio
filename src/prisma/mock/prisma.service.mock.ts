@@ -10,6 +10,12 @@ export const userPrismaService = {
   },
 };
 
+export const postPrismaService = {
+  post: {
+    create: jest.fn(),
+  },
+};
+
 export const selectUserFieldsMock = {
   id: true,
   name: true,
