@@ -12,8 +12,6 @@ export class CloudinaryService {
     });
   }
 
-  private readonly profileImageFolder = 'profile-pictures';
-
   private uploadToCloudinary(
     buffer: Buffer,
     uploadConfig: any,
@@ -106,5 +104,20 @@ export class CloudinaryService {
         },
       );
     });
+  }
+
+  async uploadPostImages(files: Express.Multer.File[]): Promise<string[]> {
+    const postsImagesUrl = await Promise.all(
+      files.map((file) => {
+        const { buffer } = file;
+        const renamedFile = `file_${Date.now()}${Math.floor(Math.random() * 10) + 1}`;
+        return this.uploadToCloudinary(buffer, {
+          resource_type: 'image',
+          folder: 'posts',
+          public_id: renamedFile,
+        });
+      }),
+    );
+    return postsImagesUrl;
   }
 }
