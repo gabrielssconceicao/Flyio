@@ -125,4 +125,68 @@ describe('<CloudinaryService />', () => {
       expect(destroyStreamMock).toHaveBeenCalled();
     });
   });
+
+  describe('<UploadPostImages />', () => {
+    it('should upload multiple post images and return secure URLs', async () => {
+      const mockUrls = [
+        'https://mock.cloudinary.com/image/post_1.jpg',
+        'https://mock.cloudinary.com/image/post_2.jpg',
+        'https://mock.cloudinary.com/image/post_3.jpg',
+      ];
+
+      const uploadStreamMock = jest.fn((options, callback) => {
+        callback(null, { secure_url: mockUrls.shift() });
+        return { pipe: jest.fn() };
+      });
+
+      cloudinary.uploader.upload_stream = uploadStreamMock as any;
+
+      const mockFiles = [
+        generateFileMock(),
+        generateFileMock(),
+        generateFileMock(),
+      ];
+      const result = await service.uploadPostImages(mockFiles);
+
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(expect.arrayContaining(mockUrls));
+      expect(uploadStreamMock).toHaveBeenCalledTimes(3);
+    });
+
+    it('should rollback uploads if one image fails', async () => {
+      const mockUrls = [
+        'https://mock.cloudinary.com/image/post_1.jpg',
+        'https://mock.cloudinary.com/image/post_2.jpg',
+      ];
+
+      const uploadStreamMock = jest.fn((options, callback) => {
+        if (mockUrls.length) {
+          callback(null, { secure_url: mockUrls.shift() });
+        } else {
+          callback(new Error('Upload failed'), null);
+        }
+        return { pipe: jest.fn() };
+      });
+
+      const deleteMock = jest.fn((publicId, options, callback) => {
+        callback(null, { result: 'ok' });
+      });
+
+      cloudinary.uploader.upload_stream = uploadStreamMock as any;
+      cloudinary.uploader.destroy = deleteMock as any;
+
+      const mockFiles = [
+        generateFileMock(),
+        generateFileMock(),
+        generateFileMock(),
+      ];
+
+      await expect(service.uploadPostImages(mockFiles)).rejects.toThrow(
+        BadRequestException,
+      );
+
+      expect(uploadStreamMock).toHaveBeenCalledTimes(3);
+      expect(deleteMock).toHaveBeenCalledTimes(2); // Deveria remover as imagens já enviadas
+    });
+  });
 });

@@ -107,17 +107,33 @@ export class CloudinaryService {
   }
 
   async uploadPostImages(files: Express.Multer.File[]): Promise<string[]> {
-    const postsImagesUrl = await Promise.all(
-      files.map((file) => {
-        const { buffer } = file;
-        const renamedFile = `file_${Date.now()}${Math.floor(Math.random() * 10) + 1}`;
-        return this.uploadToCloudinary(buffer, {
-          resource_type: 'image',
-          folder: 'posts',
-          public_id: renamedFile,
-        });
-      }),
-    );
-    return postsImagesUrl;
+    const uploadedImages: string[] = [];
+
+    try {
+      await Promise.all(
+        files.map(async (file) => {
+          const { buffer } = file;
+          const renamedFile = `file_${Date.now()}${Math.floor(Math.random() * 10) + 1}`;
+
+          const imageUrl = await this.uploadToCloudinary(buffer, {
+            resource_type: 'image',
+            folder: 'posts',
+            public_id: renamedFile,
+          });
+
+          uploadedImages.push(imageUrl);
+        }),
+      );
+
+      return uploadedImages;
+    } catch {
+      await Promise.all(
+        uploadedImages.map((url) => this.deleteProfilePicture(url)),
+      );
+
+      throw new BadRequestException(
+        'Error uploading post images. All uploads have been rolled back.',
+      );
+    }
   }
 }
