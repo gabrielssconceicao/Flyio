@@ -4,6 +4,8 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class CloudinaryService {
+  private readonly postImagesFolder = 'posts';
+  private readonly profileImagesFolder = 'profile-pictures';
   constructor() {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -65,7 +67,7 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImagesFolder,
       public_id: renamedFile,
     });
   }
@@ -80,17 +82,21 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImagesFolder,
       public_id: publicId,
       overwrite: true,
     });
   }
 
   async deleteProfilePicture(profileImgUrl: string) {
+    return this.deletePicture(profileImgUrl, this.profileImagesFolder);
+  }
+
+  private async deletePicture(profileImgUrl: string, folder: string) {
     const publicId = this.getPublicIdFromUrl(profileImgUrl);
     return new Promise((resolve, reject) => {
       cloudinary.uploader.destroy(
-        `profile-pictures/${publicId}`,
+        `${folder}/${publicId}`,
         {
           resource_type: 'image',
           invalidate: true,
@@ -128,7 +134,9 @@ export class CloudinaryService {
       return uploadedImages;
     } catch {
       await Promise.all(
-        uploadedImages.map((url) => this.deleteProfilePicture(url)),
+        uploadedImages.map((url) =>
+          this.deletePicture(url, this.postImagesFolder),
+        ),
       );
 
       throw new BadRequestException(
