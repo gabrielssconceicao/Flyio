@@ -3,6 +3,9 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { TokenPayloadDto } from '../auth/dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
+import { PostEntity } from './entities/post.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PostService {
@@ -10,11 +13,30 @@ export class PostService {
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
+
+  private selectPostFields = {
+    id: true,
+    content: true,
+    createdAt: true,
+    user: {
+      select: {
+        username: true,
+        profileImg: true,
+      },
+    },
+    images: {
+      select: {
+        id: true,
+        url: true,
+      },
+    },
+  };
+
   async create(
     createPostDto: CreatePostDto,
     images: Express.Multer.File[],
     tokenPayload: TokenPayloadDto,
-  ) {
+  ): Promise<PostEntity> {
     let postImagesUrl: string[] = [];
     if (images.length) {
       postImagesUrl = await this.cloudinaryService.uploadPostImages(images);
@@ -29,29 +51,25 @@ export class PostService {
           },
         },
       },
-      select: {
-        id: true,
-        content: true,
-        createdAt: true,
-        user: {
-          select: {
-            username: true,
-            profileImg: true,
-          },
-        },
-        images: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-      },
+      select: this.selectPostFields,
     });
     return post;
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<FindAllPostsResponseDto> {
+    const { limit = 50, offset = 0 } = paginationDto;
+    const posts = await this.prismaService.post.findMany({
+      select: this.selectPostFields,
+      take: limit,
+      skip: offset,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    const count = await this.prismaService.post.count();
+    return { count, items: posts };
   }
 
   findOne(id: number) {

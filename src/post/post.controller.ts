@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpStatus,
   Get,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -27,6 +28,8 @@ import { PostImagesValidatorPipe } from '../cloudinary/pipes/post-image-validato
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto';
 import { PostEntity } from './entities/post.entity';
+import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('post')
 @ApiBearerAuth()
@@ -88,9 +91,15 @@ export class PostController {
     return this.postService.create(createPostDto, images, tokenPayload);
   }
 
+  @ApiOperation({ summary: 'Get all posts' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Posts fetched successfully',
+    type: FindAllPostsResponseDto,
+  })
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.postService.findAll(paginationDto);
   }
 
   @Delete(':id')
