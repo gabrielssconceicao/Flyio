@@ -38,6 +38,7 @@ import {
   ReactivateUserDto,
 } from './dto';
 import { TokenPayloadDto } from '../auth/dto';
+import { ApiAuthResponses } from '../common/decorators/guard.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -72,22 +73,11 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to invalid file type.',
+    description: 'File upload failed due to invalid file type or size limit.',
     schema: {
       example: {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Invalid file type',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to size limit.',
-    schema: {
-      example: {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'File too small or too large',
+        message: 'Invalid file type or file too small/too large',
         error: 'Bad Request',
       },
     },
@@ -125,39 +115,7 @@ export class UserController {
     description: 'List of users and the total count',
     type: FindAllUsersResponseDto,
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
+  @ApiAuthResponses()
   @ApiQuery({
     name: 'search',
     description: 'Filter by user name or username',
@@ -211,39 +169,7 @@ export class UserController {
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
+  @ApiAuthResponses()
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -283,22 +209,11 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to invalid file type.',
+    description: 'File upload failed due to invalid file type or size limit.',
     schema: {
       example: {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Invalid file type',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to size limit.',
-    schema: {
-      example: {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'File too small or too large',
+        message: 'Invalid file type or file too small/too large',
         error: 'Bad Request',
       },
     },
@@ -325,39 +240,7 @@ export class UserController {
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
+  @ApiAuthResponses()
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'FORBIDDEN - You do not have permission',
@@ -418,39 +301,7 @@ export class UserController {
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
+  @ApiAuthResponses()
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'FORBIDDEN - You do not have permission',
@@ -498,39 +349,7 @@ export class UserController {
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
+  @ApiAuthResponses()
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'FORBIDDEN - You do not have permission',

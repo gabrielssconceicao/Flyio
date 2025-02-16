@@ -8,8 +8,10 @@ import {
   UploadedFiles,
   UseGuards,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -17,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
+import { ApiAuthResponses } from '../common/decorators/guard.decorator';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
@@ -24,7 +27,11 @@ import { PostImagesValidatorPipe } from '../cloudinary/pipes/post-image-validato
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto';
 import { PostEntity } from './entities/post.entity';
+
 @Controller('post')
+@ApiBearerAuth()
+@ApiAuthResponses()
+@UseGuards(AuthTokenGuard)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
@@ -58,60 +65,15 @@ export class PostController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to invalid file type.',
+    description: 'File upload failed due to invalid file type or size limit.',
     schema: {
       example: {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Invalid file type',
+        message: 'Invalid file type or file too small/too large',
         error: 'Bad Request',
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'File upload failed due to size limit.',
-    schema: {
-      example: {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'File too small or too large',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Token invalid or missing',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid token',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized - Login Required',
-    schema: {
-      example: {
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Login required',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - Token expired',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Token expired',
-        error: 'Forbidden',
-      },
-    },
-  })
-  @UseGuards(AuthTokenGuard)
   @Post()
   @UseInterceptors(
     FilesInterceptor('images', 4, {
@@ -125,6 +87,8 @@ export class PostController {
   ) {
     return this.postService.create(createPostDto, images, tokenPayload);
   }
+
+  @Get()
   findAll() {
     return this.postService.findAll();
   }
