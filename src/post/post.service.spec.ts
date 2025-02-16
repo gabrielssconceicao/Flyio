@@ -11,7 +11,11 @@ import {
 import { TokenPayloadDto } from '../auth/dto';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto';
-import { postMock, generateCreatePostDtoMock } from './mock';
+import {
+  postMock,
+  generateCreatePostDtoMock,
+  generateFindAllPostsDtoMock,
+} from './mock';
 import { PostEntity } from './entities/post.entity';
 describe('PostService', () => {
   let service: PostService;
@@ -83,6 +87,20 @@ describe('PostService', () => {
       expect(result).toEqual(post);
       expect(result.images.length).toBe(0);
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<FindAll/>', () => {
+    it('should find all posts', async () => {
+      jest
+        .spyOn(prismaService.post, 'findMany')
+        .mockResolvedValue([post] as any);
+      jest.spyOn(prismaService.post, 'count').mockResolvedValue(1);
+
+      const result = await service.findAll({ limit: 10, offset: 0 });
+      expect(prismaService.post.findMany).toHaveBeenCalled();
+      expect(prismaService.post.count).toHaveBeenCalled();
+      expect(result).toEqual(generateFindAllPostsDtoMock());
     });
   });
 });

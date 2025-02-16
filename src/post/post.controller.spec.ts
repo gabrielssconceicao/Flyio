@@ -4,7 +4,11 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { jwtConfigurationMock, jwtServiceMock } from '../auth/mocks';
 import jwtConfig from '../auth/config/jwt.config';
-import { generateCreatePostDtoMock, postMock } from './mock';
+import {
+  generateCreatePostDtoMock,
+  generateFindAllPostsDtoMock,
+  postMock,
+} from './mock';
 import { generateFileMock } from '../cloudinary/mocks';
 import { generateTokenPayloadDtoMock } from '../auth/mocks';
 describe('PostController', () => {
@@ -18,6 +22,7 @@ describe('PostController', () => {
           provide: PostService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
         {
@@ -33,6 +38,10 @@ describe('PostController', () => {
 
     controller = module.get<PostController>(PostController);
     postService = module.get<PostService>(PostService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -51,6 +60,18 @@ describe('PostController', () => {
       expect(result).toEqual(postMock);
       expect(postService.create).toHaveBeenCalled();
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<FindAll/>', () => {
+    it('should find all posts', async () => {
+      jest
+        .spyOn(postService, 'findAll')
+        .mockResolvedValue(generateFindAllPostsDtoMock());
+
+      const result = await controller.findAll({ limit: 10, offset: 0 });
+      expect(postService.findAll).toHaveBeenCalled();
+      expect(result).toEqual(generateFindAllPostsDtoMock());
     });
   });
 });

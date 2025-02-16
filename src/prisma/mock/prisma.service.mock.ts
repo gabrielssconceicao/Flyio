@@ -13,6 +13,8 @@ export const userPrismaService = {
 export const postPrismaService = {
   post: {
     create: jest.fn(),
+    findMany: jest.fn(),
+    count: jest.fn(),
   },
 };
 
