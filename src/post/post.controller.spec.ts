@@ -11,6 +11,7 @@ import {
 } from './mock';
 import { generateFileMock } from '../cloudinary/mocks';
 import { generateTokenPayloadDtoMock } from '../auth/mocks';
+import { NotFoundException } from '@nestjs/common';
 describe('PostController', () => {
   let controller: PostController;
   let postService: PostService;
@@ -23,6 +24,7 @@ describe('PostController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
         {
@@ -72,6 +74,25 @@ describe('PostController', () => {
       const result = await controller.findAll({ limit: 10, offset: 0 });
       expect(postService.findAll).toHaveBeenCalled();
       expect(result).toEqual(generateFindAllPostsDtoMock());
+    });
+  });
+
+  describe('<FindOne />', () => {
+    it('should return a post', async () => {
+      jest.spyOn(postService, 'findOne').mockResolvedValue(postMock as any);
+
+      const result = await controller.findOne('fakeId');
+      expect(result).toEqual(postMock);
+      expect(postService.findOne).toHaveBeenCalled();
+    });
+    it('shoud throw an NotFoundException', async () => {
+      jest
+        .spyOn(postService, 'findOne')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(controller.findOne('fakeId')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

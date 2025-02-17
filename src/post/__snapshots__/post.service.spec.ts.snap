@@ -25,3 +25,16 @@ exports[`PostService <CreatePost /> should create a post without images 1`] = `
   },
 }
 `;
+
+exports[`PostService <FindOne /> should return a post 1`] = `
+{
+  "content": "Hello world",
+  "createdAt": 2023-03-15T17:30:00.000Z,
+  "id": "42-d-f-df4",
+  "images": [],
+  "user": {
+    "profileImg": "https://example.com/profile.jpg",
+    "username": "jDoe453",
+  },
+}
+`;

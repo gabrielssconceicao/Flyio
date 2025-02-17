@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Get,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -78,6 +79,7 @@ export class PostController {
     },
   })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
     FilesInterceptor('images', 4, {
       storage: multer.memoryStorage(),
@@ -98,8 +100,32 @@ export class PostController {
     type: FindAllPostsResponseDto,
   })
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.postService.findAll(paginationDto);
+  }
+
+  @ApiOperation({ summary: 'Get post by id' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Post fetched successfully',
+    type: PostEntity,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Post not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'Post not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.postService.findOne(id);
   }
 
   @Delete(':id')

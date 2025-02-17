@@ -15,6 +15,7 @@ export const postPrismaService = {
     create: jest.fn(),
     findMany: jest.fn(),
     count: jest.fn(),
+    findUnique: jest.fn(),
   },
 };
 

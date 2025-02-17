@@ -17,6 +17,7 @@ import {
   generateFindAllPostsDtoMock,
 } from './mock';
 import { PostEntity } from './entities/post.entity';
+import { NotFoundException } from '@nestjs/common';
 describe('PostService', () => {
   let service: PostService;
   let prismaService: PrismaService;
@@ -24,6 +25,7 @@ describe('PostService', () => {
   let createPostDto: CreatePostDto;
   let post: PostEntity;
   let tokenPayload: TokenPayloadDto;
+  let id: string;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -46,6 +48,7 @@ describe('PostService', () => {
     createPostDto = generateCreatePostDtoMock();
     post = postMock;
     tokenPayload = generateTokenPayloadDtoMock();
+    id = post.id;
   });
 
   afterEach(() => {
@@ -101,6 +104,27 @@ describe('PostService', () => {
       expect(prismaService.post.findMany).toHaveBeenCalled();
       expect(prismaService.post.count).toHaveBeenCalled();
       expect(result).toEqual(generateFindAllPostsDtoMock());
+    });
+  });
+
+  describe('<FindOne />', () => {
+    it('should return a post', async () => {
+      jest
+        .spyOn(prismaService.post, 'findUnique')
+        .mockResolvedValue(post as any);
+
+      const result = await service.findOne(id);
+      expect(result).toEqual(post);
+      expect(prismaService.post.findUnique).toHaveBeenCalled();
+      expect(result).toMatchSnapshot();
+    });
+
+    it('shoud throw an NotFoundException', async () => {
+      jest.spyOn(prismaService.post, 'findUnique').mockResolvedValue(null);
+
+      await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.post.findUnique).toHaveBeenCalled();
     });
   });
 });
