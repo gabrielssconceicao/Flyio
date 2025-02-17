@@ -128,8 +128,25 @@ export class PostController {
     return this.postService.findOne(id);
   }
 
+  @ApiOperation({ summary: 'Delete post by id' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Post deleted successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Post not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'Post not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+    return this.postService.remove(id);
   }
 }

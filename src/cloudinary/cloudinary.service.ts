@@ -144,4 +144,10 @@ export class CloudinaryService {
       );
     }
   }
+
+  async deletePostImages(imageUrls: string[]) {
+    return Promise.all(
+      imageUrls.map((url) => this.deletePicture(url, this.postImagesFolder)),
+    );
+  }
 }

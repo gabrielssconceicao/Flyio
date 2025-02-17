@@ -25,6 +25,7 @@ describe('PostController', () => {
             create: jest.fn(),
             findAll: jest.fn(),
             findOne: jest.fn(),
+            remove: jest.fn(),
           },
         },
         {
@@ -91,6 +92,23 @@ describe('PostController', () => {
         .mockRejectedValue(new NotFoundException());
 
       await expect(controller.findOne('fakeId')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+  describe('<Delete />', () => {
+    it('should delete a post', async () => {
+      jest.spyOn(postService, 'remove').mockResolvedValue();
+
+      await controller.remove('fakeId');
+      expect(postService.remove).toHaveBeenCalled();
+    });
+    it('shoud throw an NotFoundException', async () => {
+      jest
+        .spyOn(postService, 'remove')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(controller.remove('fakeId')).rejects.toThrow(
         NotFoundException,
       );
     });

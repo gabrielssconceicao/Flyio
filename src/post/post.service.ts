@@ -83,7 +83,15 @@ export class PostService {
     return post;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string): Promise<void> {
+    const post = await this.findOne(id);
+    if (post.images.length) {
+      await this.cloudinaryService.deletePostImages(
+        post.images.map((url) => url.url),
+      );
+    }
+
+    await this.prismaService.post.delete({ where: { id } });
+    return;
   }
 }

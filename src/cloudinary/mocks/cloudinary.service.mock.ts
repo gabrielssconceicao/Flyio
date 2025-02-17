@@ -3,4 +3,5 @@ export const cloudinaryServiceMock = {
   updateProfilePicture: jest.fn(),
   deleteProfilePicture: jest.fn(),
   uploadPostImages: jest.fn(),
+  deletePostImages: jest.fn(),
 };

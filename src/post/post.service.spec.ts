@@ -127,4 +127,34 @@ describe('PostService', () => {
       expect(prismaService.post.findUnique).toHaveBeenCalled();
     });
   });
+
+  describe('<Delete />', () => {
+    it('should delete a post without images', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(post as any);
+      jest.spyOn(prismaService.post, 'delete').mockResolvedValue({} as any);
+
+      await service.remove(id);
+
+      expect(service.findOne).toHaveBeenCalledWith(id);
+      expect(prismaService.post.delete).toHaveBeenCalled();
+    });
+    it('should delete a post with images', async () => {
+      post.images = [{ url: 'https://example.com/image.jpg', id: 'p-43-5' }];
+      jest.spyOn(service, 'findOne').mockResolvedValue(post as any);
+      jest.spyOn(cloudinary, 'deletePostImages').mockResolvedValue({} as any);
+      jest.spyOn(prismaService.post, 'delete').mockResolvedValue({} as any);
+
+      await service.remove(id);
+
+      expect(service.findOne).toHaveBeenCalledWith(id);
+      expect(cloudinary.deletePostImages).toHaveBeenCalled();
+      expect(prismaService.post.delete).toHaveBeenCalled();
+    });
+
+    it('should throw an NotFoundException', async () => {
+      jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
+
+      await expect(service.remove(id)).rejects.toThrow(NotFoundException);
+    });
+  });
 });
