@@ -20,9 +20,9 @@ describe('<PostImagesValidatorPipe/ >', () => {
     expect(result).toEqual(files);
     expect(result).toMatchSnapshot();
   });
-  it('should return null if the files is empty', () => {
+  it('should return an empty array if the files is empty', () => {
     const result = pipe.transform([], {} as any);
-    expect(result).toBeNull();
+    expect(result).toEqual([]);
     expect(result).toMatchSnapshot();
   });
   it('should throw an error if the file is too small', () => {

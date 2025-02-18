@@ -17,6 +17,8 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
+  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -94,6 +96,22 @@ export class PostController {
   }
 
   @ApiOperation({ summary: 'Get all posts' })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Number of posts to return per page',
+    required: false,
+    type: Number,
+    minimum: 1,
+    maximum: 50,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'offset',
+    description: 'Number of posts to skip for pagination',
+    required: false,
+    type: Number,
+    example: 0,
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Posts fetched successfully',
@@ -106,6 +124,12 @@ export class PostController {
   }
 
   @ApiOperation({ summary: 'Get post by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Post id',
+    required: true,
+    example: '42-d-f-df4',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Post fetched successfully',
@@ -129,6 +153,12 @@ export class PostController {
   }
 
   @ApiOperation({ summary: 'Delete post by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Post id',
+    required: true,
+    example: '42-d-f-df4',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Post deleted successfully',
@@ -144,9 +174,25 @@ export class PostController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Forbidden - User does not own the post',
+    content: {
+      'application/json': {
+        example: {
+          statusCode: HttpStatus.FORBIDDEN,
+          message: 'You do not have permission',
+          error: 'Forbidden',
+        },
+      },
+    },
+  })
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(id);
+  remove(
+    @Param('id') id: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postService.remove(id, tokenPayload);
   }
 }

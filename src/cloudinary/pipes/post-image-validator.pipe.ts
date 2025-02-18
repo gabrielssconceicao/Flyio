@@ -9,7 +9,7 @@ export class PostImagesValidatorPipe extends FileValidatorPipe {
 
   transform(values: Express.Multer.File[], metadata: ArgumentMetadata) {
     if (!Array.isArray(values) || values.length === 0) {
-      return null;
+      return [];
     }
 
     values.forEach((value) => this.validateFile(value));

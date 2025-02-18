@@ -6,12 +6,14 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { PermissionService } from 'src/permission/permission.service';
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly permissionService: PermissionService,
   ) {}
 
   private selectPostFields = {
@@ -83,8 +85,12 @@ export class PostService {
     return post;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, tokenPayload: TokenPayloadDto): Promise<void> {
     const post = await this.findOne(id);
+    this.permissionService.verifyUserOwnership(
+      post.user.username,
+      tokenPayload.username,
+    );
     if (post.images.length) {
       await this.cloudinaryService.deletePostImages(
         post.images.map((url) => url.url),

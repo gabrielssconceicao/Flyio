@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { postPrismaService } from '../prisma/mock/prisma.service.mock';
 import { generateTokenPayloadDtoMock } from '../auth/mocks';
@@ -17,7 +18,8 @@ import {
   generateFindAllPostsDtoMock,
 } from './mock';
 import { PostEntity } from './entities/post.entity';
-import { NotFoundException } from '@nestjs/common';
+import { permissionServiceMock } from '../permission/mock/permission.service.mock';
+import { PermissionService } from '../permission/permission.service';
 describe('PostService', () => {
   let service: PostService;
   let prismaService: PrismaService;
@@ -37,6 +39,10 @@ describe('PostService', () => {
         {
           provide: CloudinaryService,
           useValue: cloudinaryServiceMock,
+        },
+        {
+          provide: PermissionService,
+          useValue: permissionServiceMock,
         },
       ],
     }).compile();
@@ -133,7 +139,7 @@ describe('PostService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(post as any);
       jest.spyOn(prismaService.post, 'delete').mockResolvedValue({} as any);
 
-      await service.remove(id);
+      await service.remove(id, tokenPayload);
 
       expect(service.findOne).toHaveBeenCalledWith(id);
       expect(prismaService.post.delete).toHaveBeenCalled();
@@ -144,7 +150,7 @@ describe('PostService', () => {
       jest.spyOn(cloudinary, 'deletePostImages').mockResolvedValue({} as any);
       jest.spyOn(prismaService.post, 'delete').mockResolvedValue({} as any);
 
-      await service.remove(id);
+      await service.remove(id, tokenPayload);
 
       expect(service.findOne).toHaveBeenCalledWith(id);
       expect(cloudinary.deletePostImages).toHaveBeenCalled();
@@ -154,7 +160,9 @@ describe('PostService', () => {
     it('should throw an NotFoundException', async () => {
       jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
 
-      await expect(service.remove(id)).rejects.toThrow(NotFoundException);
+      await expect(service.remove(id, tokenPayload)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

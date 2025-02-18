@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PostImagesValidatorPipe/ > should return null if the files is empty 1`] = `null`;
+exports[`<PostImagesValidatorPipe/ > should return an empty array if the files is empty 1`] = `[]`;
 
 exports[`<PostImagesValidatorPipe/ > should return the files 1`] = `
 [

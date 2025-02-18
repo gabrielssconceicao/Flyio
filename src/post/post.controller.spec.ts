@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
+import { NotFoundException } from '@nestjs/common';
 import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { jwtConfigurationMock, jwtServiceMock } from '../auth/mocks';
@@ -11,7 +12,6 @@ import {
 } from './mock';
 import { generateFileMock } from '../cloudinary/mocks';
 import { generateTokenPayloadDtoMock } from '../auth/mocks';
-import { NotFoundException } from '@nestjs/common';
 describe('PostController', () => {
   let controller: PostController;
   let postService: PostService;
@@ -100,7 +100,7 @@ describe('PostController', () => {
     it('should delete a post', async () => {
       jest.spyOn(postService, 'remove').mockResolvedValue();
 
-      await controller.remove('fakeId');
+      await controller.remove('42-d-f-df4', generateTokenPayloadDtoMock());
       expect(postService.remove).toHaveBeenCalled();
     });
     it('shoud throw an NotFoundException', async () => {
@@ -108,9 +108,9 @@ describe('PostController', () => {
         .spyOn(postService, 'remove')
         .mockRejectedValue(new NotFoundException());
 
-      await expect(controller.remove('fakeId')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        controller.remove('42-d-f-df4', generateTokenPayloadDtoMock()),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });
