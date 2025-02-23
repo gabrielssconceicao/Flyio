@@ -3,9 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -15,7 +13,6 @@ import { User } from './entities/user.entity';
 import {
   CreateUserDto,
   UpdateUserDto,
-  ReactivateUserDto,
   QueryParamDto,
   FindAllUsersResponseDto,
 } from './dto';
@@ -26,7 +23,7 @@ export class UserService {
     private readonly hashingService: HashingServiceProtocol,
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
-    private readonly jwtService: JwtService,
+
     private readonly permissionService: PermissionService,
   ) {}
 
@@ -166,10 +163,10 @@ export class UserService {
 
   async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
     const user = await this.findOne(username);
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
     if (!user.active) {
       throw new BadRequestException('User is already deactivated');
     }
-    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 
     await this.prismaService.user.update({
       where: { username },
@@ -200,18 +197,5 @@ export class UserService {
       }
     }
     return user;
-  }
-
-  async reactivate(reactivateUserDto: ReactivateUserDto) {
-    try {
-      const { sub } = this.jwtService.verify(reactivateUserDto.token);
-      await this.prismaService.user.update({
-        where: { id: sub },
-        data: { active: true },
-      });
-      return { message: 'Account reactivated successfully' };
-    } catch {
-      throw new UnauthorizedException('Invalid or expired token');
-    }
   }
 }

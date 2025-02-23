@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserRelationsService /> <Reactivate /> should reactivate a user successfully 1`] = `
+{
+  "message": "Account reactivated successfully",
+}
+`;

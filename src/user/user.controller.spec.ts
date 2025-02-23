@@ -3,7 +3,6 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserController } from './user.controller';
@@ -27,7 +26,7 @@ import {
 
 describe('UserController', () => {
   let controller: UserController;
-  let userServiceMock: UserService;
+  let service: UserService;
 
   //mocks
   let createUserDto: CreateUserDto;
@@ -50,7 +49,6 @@ describe('UserController', () => {
             update: jest.fn(),
             desactivateUser: jest.fn(),
             removeProfilePicture: jest.fn(),
-            reactivate: jest.fn(),
           },
         },
 
@@ -66,7 +64,7 @@ describe('UserController', () => {
     }).compile();
 
     controller = module.get<UserController>(UserController);
-    userServiceMock = module.get<UserService>(UserService);
+    service = module.get<UserService>(UserService);
 
     // mocks
     createUserDto = generateCreateUserDtoMock(true);
@@ -85,21 +83,21 @@ describe('UserController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-    expect(userServiceMock).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('<Create/ >', () => {
     it('should create a user', async () => {
-      jest.spyOn(userServiceMock, 'create').mockResolvedValue(user);
+      jest.spyOn(service, 'create').mockResolvedValue(user);
 
       const result = await controller.create(createUserDto, file);
-      expect(userServiceMock.create).toHaveBeenCalledWith(createUserDto, file);
+      expect(service.create).toHaveBeenCalledWith(createUserDto, file);
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
     it('should throw ConflictException when email or username is already in use', async () => {
       jest
-        .spyOn(userServiceMock, 'create')
+        .spyOn(service, 'create')
         .mockRejectedValue(
           new ConflictException(
             'This email or username is already associated with an existing account',
@@ -122,11 +120,11 @@ describe('UserController', () => {
         limit: 1,
         offset: 0,
       };
-      jest.spyOn(userServiceMock, 'findAll').mockResolvedValue(users);
+      jest.spyOn(service, 'findAll').mockResolvedValue(users);
 
       const result = await controller.findAll(query);
 
-      expect(userServiceMock.findAll).toHaveBeenCalledWith(query);
+      expect(service.findAll).toHaveBeenCalledWith(query);
       expect(result).toEqual(users);
       expect(result).toMatchSnapshot();
     });
@@ -134,15 +132,15 @@ describe('UserController', () => {
 
   describe('<FindOne />', () => {
     it('should return a user successfully', async () => {
-      jest.spyOn(userServiceMock, 'findOne').mockResolvedValue(user);
+      jest.spyOn(service, 'findOne').mockResolvedValue(user);
       const result = await controller.findOne(username);
-      expect(userServiceMock.findOne).toHaveBeenCalledWith(username);
+      expect(service.findOne).toHaveBeenCalledWith(username);
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
     it('should throw an NotFoundException', async () => {
       jest
-        .spyOn(userServiceMock, 'findOne')
+        .spyOn(service, 'findOne')
         .mockRejectedValue(new NotFoundException('User not found'));
 
       await expect(controller.findOne(username)).rejects.toThrow(
@@ -160,7 +158,7 @@ describe('UserController', () => {
       };
 
       const updatedUser = { ...user, ...updateUserDto };
-      jest.spyOn(userServiceMock, 'update').mockResolvedValue(updatedUser);
+      jest.spyOn(service, 'update').mockResolvedValue(updatedUser);
       const result = await controller.update(
         id,
         updateUserDto,
@@ -168,7 +166,7 @@ describe('UserController', () => {
         tokenPayload,
       );
 
-      expect(userServiceMock.update).toHaveBeenCalledWith(
+      expect(service.update).toHaveBeenCalledWith(
         id,
         updateUserDto,
         file,
@@ -179,7 +177,7 @@ describe('UserController', () => {
     });
     it('should throw an NotFoundException', async () => {
       jest
-        .spyOn(userServiceMock, 'update')
+        .spyOn(service, 'update')
         .mockRejectedValue(new NotFoundException('User not found'));
       await expect(
         controller.update(id, {}, undefined, tokenPayload),
@@ -190,7 +188,7 @@ describe('UserController', () => {
         email: 'john@example.com',
       };
       jest
-        .spyOn(userServiceMock, 'update')
+        .spyOn(service, 'update')
         .mockRejectedValue(
           new ConflictException(
             'Email is already associated with an existing account',
@@ -205,20 +203,15 @@ describe('UserController', () => {
   describe('<DesactivateUser />', () => {
     it('should delete a user successfully', async () => {
       const message = 'User desactivated successfully';
-      jest
-        .spyOn(userServiceMock, 'desactivateUser')
-        .mockResolvedValue({ message });
+      jest.spyOn(service, 'desactivateUser').mockResolvedValue({ message });
       const result = await controller.desactivateUser(id, tokenPayload);
-      expect(userServiceMock.desactivateUser).toHaveBeenCalledWith(
-        id,
-        tokenPayload,
-      );
+      expect(service.desactivateUser).toHaveBeenCalledWith(id, tokenPayload);
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
     });
     it('should throw an BadRequestException', async () => {
       jest
-        .spyOn(userServiceMock, 'desactivateUser')
+        .spyOn(service, 'desactivateUser')
         .mockRejectedValue(
           new BadRequestException('User is already deactivated'),
         );
@@ -231,11 +224,9 @@ describe('UserController', () => {
   describe('<RemoveProfilePicture />', () => {
     it('should remove profile picture successfully', async () => {
       user = { ...user, profileImg: null };
-      jest
-        .spyOn(userServiceMock, 'removeProfilePicture')
-        .mockResolvedValue(user);
+      jest.spyOn(service, 'removeProfilePicture').mockResolvedValue(user);
       const result = await controller.removeProfileImg(username, tokenPayload);
-      expect(userServiceMock.removeProfilePicture).toHaveBeenCalledWith(
+      expect(service.removeProfilePicture).toHaveBeenCalledWith(
         username,
         tokenPayload,
       );
@@ -244,38 +235,11 @@ describe('UserController', () => {
     });
     it('should throw an BadRequestException if an error occurs', async () => {
       jest
-        .spyOn(userServiceMock, 'removeProfilePicture')
+        .spyOn(service, 'removeProfilePicture')
         .mockRejectedValue(new BadRequestException());
       await expect(
         controller.removeProfileImg(username, tokenPayload),
       ).rejects.toThrow(BadRequestException);
-    });
-  });
-
-  describe('<Reactivate />', () => {
-    it('should reactivate a user successfully', async () => {
-      const reactivateUserDto = {
-        token: 'token',
-      };
-      const message = 'User reactivated successfully';
-      jest.spyOn(userServiceMock, 'reactivate').mockResolvedValue({ message });
-      const result = await controller.reactivate(reactivateUserDto);
-      expect(userServiceMock.reactivate).toHaveBeenCalledWith(
-        reactivateUserDto,
-      );
-      expect(result).toEqual({ message });
-      expect(result).toMatchSnapshot();
-    });
-    it('should thow an UnauthorizedException if token is invalid or expired', async () => {
-      const reactivateUserDto = {
-        token: 'expired-token',
-      };
-      jest
-        .spyOn(userServiceMock, 'reactivate')
-        .mockRejectedValue(new UnauthorizedException());
-      await expect(controller.reactivate(reactivateUserDto)).rejects.toThrow(
-        UnauthorizedException,
-      );
     });
   });
 });

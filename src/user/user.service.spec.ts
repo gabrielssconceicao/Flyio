@@ -5,7 +5,6 @@ import {
   ConflictException,
   ForbiddenException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -473,38 +472,6 @@ describe('<UserService />', () => {
       await expect(
         service.removeProfilePicture(username, tokenPayload),
       ).rejects.toThrow(ForbiddenException);
-    });
-  });
-
-  describe('<Reactivate />', () => {
-    it('should reactivate a user successfully', async () => {
-      const reactivateUserDto = {
-        token: 'token',
-      };
-      jest.spyOn(jwtService, 'verify').mockReturnValue({ sub: 1 });
-      jest.spyOn(prismaService.user, 'update').mockResolvedValue({} as any);
-
-      const result = await service.reactivate(reactivateUserDto);
-      expect(jwtService.verify).toHaveBeenCalledWith(reactivateUserDto.token);
-      expect(prismaService.user.update).toHaveBeenCalledWith({
-        where: { id: 1 },
-        data: { active: true },
-      });
-      expect(result).toEqual({ message: 'Account reactivated successfully' });
-      expect(result).toMatchSnapshot();
-    });
-
-    it('should throw an UnauthorizedException if token is invalid', async () => {
-      const reactivateUserDto = {
-        token: 'token',
-      };
-      jest.spyOn(jwtService, 'verify').mockImplementation(() => {
-        throw new UnauthorizedException();
-      });
-
-      await expect(service.reactivate(reactivateUserDto)).rejects.toThrow(
-        UnauthorizedException,
-      );
     });
   });
 });

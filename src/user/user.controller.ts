@@ -35,7 +35,6 @@ import {
   UpdateUserDto,
   QueryParamDto,
   FindAllUsersResponseDto,
-  ReactivateUserDto,
 } from './dto';
 import { TokenPayloadDto } from '../auth/dto';
 import { ApiAuthResponses } from '../common/decorators/guard.decorator';
@@ -275,11 +274,11 @@ export class UserController {
     );
   }
 
-  @ApiOperation({ summary: 'Desactivate user by id' })
+  @ApiOperation({ summary: 'Desactivate user by username' })
   @ApiParam({
-    name: 'id',
-    description: 'User id',
-    example: '42-d-f-df4',
+    name: 'username',
+    description: 'User username',
+    example: 'jDoe45',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -301,7 +300,6 @@ export class UserController {
       },
     },
   })
-  @ApiAuthResponses()
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'FORBIDDEN - You do not have permission',
@@ -313,6 +311,7 @@ export class UserController {
       },
     },
   })
+  @ApiAuthResponses()
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -349,29 +348,18 @@ export class UserController {
       },
     },
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'FORBIDDEN - You do not have permission',
+    schema: {
+      example: {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'You do not have permission',
+        error: 'Forbidden',
+      },
+    },
+  })
   @ApiAuthResponses()
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - You do not have permission',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'You do not have permission',
-        error: 'Forbidden',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'FORBIDDEN - You do not have permission',
-    schema: {
-      example: {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'You do not have permission',
-        error: 'Forbidden',
-      },
-    },
-  })
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -381,34 +369,5 @@ export class UserController {
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.userService.removeProfilePicture(username, tokenPayload);
-  }
-
-  @ApiOperation({ summary: 'Reactivate user by token' })
-  @ApiBody({
-    type: ReactivateUserDto,
-    description: 'Reactivate user by token',
-  })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Account reactivated successfully.',
-    schema: {
-      example: {
-        message: 'Account reactivated successfully',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Invalid or expired token.',
-    schema: {
-      example: {
-        message: 'Invalid or expired token',
-      },
-    },
-  })
-  @HttpCode(HttpStatus.CREATED)
-  @Post('reactivate/:token')
-  reactivate(@Param() reactivateUserDto: ReactivateUserDto) {
-    return this.userService.reactivate(reactivateUserDto);
   }
 }

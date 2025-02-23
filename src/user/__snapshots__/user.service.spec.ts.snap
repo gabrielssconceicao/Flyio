@@ -53,12 +53,6 @@ exports[`<UserService /> <FindOne /> should return a user successfully 1`] = `
 }
 `;
 
-exports[`<UserService /> <Reactivate /> should reactivate a user successfully 1`] = `
-{
-  "message": "Account reactivated successfully",
-}
-`;
-
 exports[`<UserService /> <RemoveProfilePicture /> should not remove profile picture if user does not have one 1`] = `
 {
   "active": true,
