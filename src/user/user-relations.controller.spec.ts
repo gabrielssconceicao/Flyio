@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRelationsController } from './user-relations.controller';
 import { UserRelationsService } from './user-relations.service';
@@ -17,6 +17,7 @@ describe('UserRelationsController', () => {
           provide: UserRelationsService,
           useValue: {
             reactivate: jest.fn(),
+            getAllPostsByUsername: jest.fn(),
           },
         },
 
@@ -66,6 +67,38 @@ describe('UserRelationsController', () => {
       await expect(controller.reactivate(reactivateUserDto)).rejects.toThrow(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe('<GetAllPostsByUsername />', () => {
+    it('should get all posts by username successfully', async () => {
+      const username = 'username';
+      const paginationDto = {
+        page: 1,
+        limit: 10,
+      };
+      jest.spyOn(service, 'getAllPostsByUsername').mockResolvedValue({
+        count: 0,
+        items: [],
+      });
+      const result = await controller.getAllPostsByUsername(
+        username,
+        paginationDto,
+      );
+      expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
+        username,
+        paginationDto,
+      );
+      expect(result).toMatchSnapshot();
+    });
+    it('should throw an NotFoundException if user does not exist', async () => {
+      const username = 'username';
+      jest
+        .spyOn(service, 'getAllPostsByUsername')
+        .mockRejectedValue(new NotFoundException('User not found'));
+      await expect(
+        controller.getAllPostsByUsername(username, {}),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

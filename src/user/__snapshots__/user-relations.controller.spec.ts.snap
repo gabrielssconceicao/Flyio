@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UserRelationsController <GetAllPostsByUsername /> should get all posts by username successfully 1`] = `
+{
+  "count": 0,
+  "items": [],
+}
+`;
+
 exports[`UserRelationsController <Reactivate /> should reactivate a user successfully 1`] = `
 {
   "message": "User reactivated successfully",

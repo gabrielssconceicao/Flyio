@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts if user is found 1`] = `
+{
+  "count": 0,
+  "items": [],
+}
+`;
+
 exports[`<UserRelationsService /> <Reactivate /> should reactivate a user successfully 1`] = `
 {
   "message": "Account reactivated successfully",

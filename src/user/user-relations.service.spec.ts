@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { userPrismaService } from '../prisma/mock/prisma.service.mock';
 import { jwtServiceMock } from '../auth/mocks';
@@ -17,7 +17,7 @@ describe('<UserRelationsService />', () => {
         UserRelationsService,
         {
           provide: PrismaService,
-          useValue: userPrismaService,
+          useValue: { ...userPrismaService, findAll: jest.fn() },
         },
         {
           provide: JwtService,
@@ -71,6 +71,40 @@ describe('<UserRelationsService />', () => {
 
       await expect(service.reactivate(reactivateUserDto)).rejects.toThrow(
         UnauthorizedException,
+      );
+    });
+  });
+
+  describe('<GetAllPostsByUsername />', () => {
+    it('should return an array of posts if user is found', async () => {
+      const username = 'username';
+      const paginationDto = { limit: 10, offset: 0 };
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue({} as any);
+      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+        count: 0,
+        items: [],
+      } as any);
+
+      const result = await service.getAllPostsByUsername(
+        username,
+        paginationDto,
+      );
+
+      expect(prismaService.user.findUnique).toHaveBeenCalled();
+      expect(prismaService.findAll).toHaveBeenCalled();
+      expect(result).toEqual({
+        count: 0,
+        items: [],
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an NotFoundException if user is not found', async () => {
+      const username = 'username';
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
+
+      await expect(service.getAllPostsByUsername(username, {})).rejects.toThrow(
+        NotFoundException,
       );
     });
   });

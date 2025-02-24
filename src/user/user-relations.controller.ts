@@ -1,7 +1,26 @@
-import { Controller, HttpCode, HttpStatus, Param, Patch } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ReactivateUserDto } from './dto';
 import { UserRelationsService } from './user-relations.service';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
+import { ApiAuthResponses } from '../common/decorators/guard.decorator';
+import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -35,5 +54,30 @@ export class UserRelationsController {
   @Patch('reactivate/:token')
   reactivate(@Param() reactivateUserDto: ReactivateUserDto) {
     return this.userRelationsService.reactivate(reactivateUserDto);
+  }
+
+  @ApiOperation({ summary: 'Get all posts of a user by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'Username of the user',
+    example: 'jDoe453',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of posts of a user with limited details',
+    type: FindAllUsersPostsResponseDto,
+  })
+  @ApiAuthResponses()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthTokenGuard)
+  @Get(':username/posts')
+  getAllPostsByUsername(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.userRelationsService.getAllPostsByUsername(
+      username,
+      paginationDto,
+    );
   }
 }
