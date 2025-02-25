@@ -37,4 +37,7 @@ export class PostEntity {
     type: [PostImage],
   })
   images: PostImage[];
+
+  @ApiProperty({ example: 0, description: 'Number of post likes' })
+  likes: number;
 }

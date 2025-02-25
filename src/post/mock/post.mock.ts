@@ -9,4 +9,5 @@ export const postMock: PostEntity = {
     profileImg: 'https://example.com/profile.jpg',
   },
   images: [],
+  likes: 0,
 };

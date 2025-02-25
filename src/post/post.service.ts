@@ -32,6 +32,11 @@ export class PostService {
         url: true,
       },
     },
+    _count: {
+      select: {
+        PostLikes: true,
+      },
+    },
   };
 
   async create(
@@ -43,7 +48,7 @@ export class PostService {
     if (images.length) {
       postImagesUrl = await this.cloudinaryService.uploadPostImages(images);
     }
-    const post = await this.prismaService.post.create({
+    const { _count, ...post } = await this.prismaService.post.create({
       data: {
         content: createPostDto.text,
         userId: tokenPayload.sub,
@@ -55,7 +60,7 @@ export class PostService {
       },
       select: this.selectPostFields,
     });
-    return post;
+    return { ...post, likes: _count.PostLikes };
   }
 
   async findAll(
@@ -64,6 +69,7 @@ export class PostService {
     const { limit = 50, offset = 0 } = paginationDto;
     const posts = await this.prismaService.post.findMany({
       select: this.selectPostFields,
+
       take: limit,
       skip: offset,
       orderBy: {
@@ -71,7 +77,13 @@ export class PostService {
       },
     });
     const count = await this.prismaService.post.count();
-    return { count, items: posts };
+    return {
+      count,
+      items: posts.map(({ _count, ...post }) => ({
+        ...post,
+        likes: _count.PostLikes,
+      })),
+    };
   }
 
   async findOne(id: string) {
@@ -82,7 +94,7 @@ export class PostService {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    return post;
+    return { ...post, likes: post._count.PostLikes };
   }
 
   async remove(id: string, tokenPayload: TokenPayloadDto): Promise<void> {

@@ -25,7 +25,8 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  posts Post[]
+  posts     Post[]
+  PostLikes PostLikes[]
 }
 
 model Post {
@@ -36,6 +37,7 @@ model Post {
   userId    String
   user      User         @relation(fields: [userId], references: [id])
   images    PostImages[]
+  PostLikes PostLikes[]
 }
 
 model PostImages {
@@ -44,4 +46,14 @@ model PostImages {
   postId    String
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model PostLikes {
+  postId String
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
 }
