@@ -6,6 +6,7 @@ exports[`PostController <Create /> should create a post 1`] = `
   "createdAt": 2023-03-15T17:30:00.000Z,
   "id": "42-d-f-df4",
   "images": [],
+  "likes": 0,
   "user": {
     "profileImg": "https://example.com/profile.jpg",
     "username": "jDoe453",

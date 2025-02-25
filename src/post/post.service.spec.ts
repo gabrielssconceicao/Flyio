@@ -28,6 +28,7 @@ describe('PostService', () => {
   let post: PostEntity;
   let tokenPayload: TokenPayloadDto;
   let id: string;
+  let servicePost: PostEntity & { _count: { PostLikes: number } };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -53,6 +54,7 @@ describe('PostService', () => {
 
     createPostDto = generateCreatePostDtoMock();
     post = postMock;
+    servicePost = { ...post, _count: { PostLikes: 0 } };
     tokenPayload = generateTokenPayloadDtoMock();
     id = post.id;
   });
@@ -69,7 +71,9 @@ describe('PostService', () => {
 
   describe('<CreatePost />', () => {
     it('should create a post without images', async () => {
-      jest.spyOn(prismaService.post, 'create').mockResolvedValue(post as any);
+      jest
+        .spyOn(prismaService.post, 'create')
+        .mockResolvedValue(servicePost as any);
 
       const result = await service.create(createPostDto, [], tokenPayload);
       expect(prismaService.post.create).toHaveBeenCalled();
@@ -79,7 +83,9 @@ describe('PostService', () => {
       expect(result).toMatchSnapshot();
     });
     it('should create a post with images', async () => {
-      jest.spyOn(prismaService.post, 'create').mockResolvedValue(post as any);
+      jest
+        .spyOn(prismaService.post, 'create')
+        .mockResolvedValue(servicePost as any);
       jest
         .spyOn(cloudinary, 'uploadPostImages')
         .mockResolvedValue([generatedProfilePictureMock]);
@@ -103,7 +109,7 @@ describe('PostService', () => {
     it('should find all posts', async () => {
       jest
         .spyOn(prismaService.post, 'findMany')
-        .mockResolvedValue([post] as any);
+        .mockResolvedValue([servicePost] as any);
       jest.spyOn(prismaService.post, 'count').mockResolvedValue(1);
 
       const result = await service.findAll({ limit: 10, offset: 0 });
@@ -117,7 +123,7 @@ describe('PostService', () => {
     it('should return a post', async () => {
       jest
         .spyOn(prismaService.post, 'findUnique')
-        .mockResolvedValue(post as any);
+        .mockResolvedValue(servicePost as any);
 
       const result = await service.findOne(id);
       expect(result).toEqual(post);

@@ -94,7 +94,8 @@ export class PostService {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    return { ...post, likes: post._count.PostLikes };
+    const { _count, ...rest } = post;
+    return { ...rest, likes: _count.PostLikes };
   }
 
   async remove(id: string, tokenPayload: TokenPayloadDto): Promise<void> {
