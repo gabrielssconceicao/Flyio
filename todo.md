@@ -46,12 +46,12 @@
       - [x] auth service
       - [x] auth controller
       - [x] user protected routes
-  - [ ] post routes
-    - [ ] get all
-    - [ ] get one
-    - [ ] post 
-    - [ ] delete
-    - [ ] get all posts by user (user route)
+  - [x] post routes
+    - [x] get all
+    - [x] get one
+    - [x] post 
+    - [x] delete
+    - [x] get all posts by user (user route)
   - [ ] like routes
     - [ ] get all
     - [ ] get one
@@ -82,13 +82,6 @@
   - [x] delete profile image
     - [x] is logged
 
-- [x] login
-  - [x] auth
-  - [x] refreshtoken
-
-- [ ] posts
-    - [ ] create
-      - [ ] 
 - [ ] likes
 
 - [ ] comments
