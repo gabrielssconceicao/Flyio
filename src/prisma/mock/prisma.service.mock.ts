@@ -18,6 +18,10 @@ export const postPrismaService = {
     findUnique: jest.fn(),
     delete: jest.fn(),
   },
+  postLikes: {
+    create: jest.fn(),
+    delete: jest.fn(),
+  },
 };
 
 export const selectUserFieldsMock = {

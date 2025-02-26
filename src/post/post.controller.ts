@@ -237,7 +237,7 @@ export class PostController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post(':id/like')
-  likePost(
+  like(
     @Param('id') postId: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
@@ -279,7 +279,7 @@ export class PostController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post(':id/unlike')
-  unlikePost(
+  unlike(
     @Param('id') postId: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {

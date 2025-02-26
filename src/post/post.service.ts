@@ -10,7 +10,7 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { PermissionService } from 'src/permission/permission.service';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class PostService {
@@ -64,7 +64,7 @@ export class PostService {
       },
       select: this.selectPostFields,
     });
-    return { ...post, likes: _count.PostLikes };
+    return { ...post, likes: _count.PostLikes, liked: false };
   }
 
   async findAll(
