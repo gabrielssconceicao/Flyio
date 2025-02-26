@@ -119,8 +119,11 @@ export class PostController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.postService.findAll(paginationDto);
+  findAll(
+    @Query() paginationDto: PaginationDto,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postService.findAll(paginationDto, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Get post by id' })
@@ -148,8 +151,11 @@ export class PostController {
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(id);
+  findOne(
+    @Param('id') id: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postService.findOne(id, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Delete post by id' })
@@ -194,5 +200,89 @@ export class PostController {
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.postService.remove(id, tokenPayload);
+  }
+
+  @ApiOperation({ summary: 'Like post by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Post id',
+    required: true,
+    example: '42-d-f-df4',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Post liked successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Post already liked',
+    schema: {
+      example: {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Post already liked',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Post not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'Post not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post(':id/like')
+  likePost(
+    @Param('id') postId: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postService.like(postId, tokenPayload);
+  }
+
+  @ApiOperation({ summary: 'Unlike post by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Post id',
+    required: true,
+    example: '42-d-f-df4',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Post unliked successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Post not liked',
+    schema: {
+      example: {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Post not liked',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Post not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'Post not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post(':id/unlike')
+  unlikePost(
+    @Param('id') postId: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postService.unlike(postId, tokenPayload);
   }
 }

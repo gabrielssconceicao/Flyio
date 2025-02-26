@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { TokenPayloadDto } from '../auth/dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -65,10 +69,16 @@ export class PostService {
 
   async findAll(
     paginationDto: PaginationDto,
+    tokenPayload: TokenPayloadDto,
   ): Promise<FindAllPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
     const posts = await this.prismaService.post.findMany({
-      select: this.selectPostFields,
+      select: {
+        ...this.selectPostFields,
+        PostLikes: {
+          where: { userId: tokenPayload.sub },
+        },
+      },
 
       take: limit,
       skip: offset,
@@ -79,27 +89,37 @@ export class PostService {
     const count = await this.prismaService.post.count();
     return {
       count,
-      items: posts.map(({ _count, ...post }) => ({
+      items: posts.map(({ _count, PostLikes, ...post }) => ({
         ...post,
         likes: _count.PostLikes,
+        liked: PostLikes.length ? true : false,
       })),
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, tokenPayload: TokenPayloadDto) {
     const post = await this.prismaService.post.findUnique({
       where: { id },
-      select: this.selectPostFields,
+      select: {
+        ...this.selectPostFields,
+        PostLikes: {
+          where: { userId: tokenPayload.sub },
+        },
+      },
     });
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    const { _count, ...rest } = post;
-    return { ...rest, likes: _count.PostLikes };
+    const { _count, PostLikes, ...rest } = post;
+    return {
+      ...rest,
+      likes: _count.PostLikes,
+      liked: !!PostLikes.length,
+    };
   }
 
   async remove(id: string, tokenPayload: TokenPayloadDto): Promise<void> {
-    const post = await this.findOne(id);
+    const post = await this.findOne(id, tokenPayload);
     this.permissionService.verifyUserOwnership(
       post.user.username,
       tokenPayload.username,
@@ -112,5 +132,32 @@ export class PostService {
 
     await this.prismaService.post.delete({ where: { id } });
     return;
+  }
+
+  async like(postId: string, tokenPayload: TokenPayloadDto) {
+    const post = await this.findOne(postId, tokenPayload);
+    if (post.liked) {
+      throw new BadRequestException('Post already liked');
+    }
+    await this.prismaService.postLikes.create({
+      data: {
+        postId,
+        userId: tokenPayload.sub,
+      },
+    });
+  }
+  async unlike(postId: string, tokenPayload: TokenPayloadDto) {
+    const post = await this.findOne(postId, tokenPayload);
+    if (!post.liked) {
+      throw new BadRequestException('Post not liked');
+    }
+    await this.prismaService.postLikes.delete({
+      where: {
+        postId_userId: {
+          postId,
+          userId: tokenPayload.sub,
+        },
+      },
+    });
   }
 }
