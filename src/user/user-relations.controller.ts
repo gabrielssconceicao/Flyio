@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -21,6 +22,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
 import { ApiAuthResponses } from '../common/decorators/guard.decorator';
 import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
+import { FindAllLikedPostsResponseDto } from '../post/dto/find-all-liked-post.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -68,6 +70,7 @@ export class UserRelationsController {
     type: FindAllUsersPostsResponseDto,
   })
   @ApiAuthResponses()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthTokenGuard)
   @Get(':username/posts')
@@ -76,6 +79,32 @@ export class UserRelationsController {
     @Query() paginationDto: PaginationDto,
   ) {
     return this.userRelationsService.getAllPostsByUsername(
+      username,
+      paginationDto,
+    );
+  }
+
+  @ApiOperation({ summary: 'Get all liked posts of a user' })
+  @ApiParam({
+    name: 'username',
+    description: 'Username of the user',
+    example: 'jDoe453',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of liked posts of a user',
+    type: FindAllLikedPostsResponseDto,
+  })
+  @ApiAuthResponses()
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthTokenGuard)
+  @Get(':username/posts/liked')
+  getAllLikedPostsByUsername(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ): Promise<FindAllLikedPostsResponseDto> {
+    return this.userRelationsService.getAllLikedPostByUsername(
       username,
       paginationDto,
     );

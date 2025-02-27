@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ReactivateUserDto } from './dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
+import { FindAllLikedPostsResponseDto } from '../post/dto/find-all-liked-post.dto';
 
 @Injectable()
 export class UserRelationsService {
@@ -34,14 +35,10 @@ export class UserRelationsService {
   ): Promise<FindAllUsersPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
 
-    if (
-      !(await this.prismaService.user.findUnique({
-        where: { username },
-      }))
-    ) {
+    if (await this.userExists(username)) {
       throw new NotFoundException('User not found');
     }
-
+    // add qtd likes
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.post,
       {
@@ -59,5 +56,70 @@ export class UserRelationsService {
     );
 
     return { count, items: items as any };
+  }
+
+  async getAllLikedPostByUsername(
+    username: string,
+    paginationDto: PaginationDto,
+  ): Promise<FindAllLikedPostsResponseDto> {
+    const { limit = 50, offset = 0 } = paginationDto;
+    const user = await this.prismaService.user.findUnique({
+      where: { username },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.post,
+      {
+        where: {
+          PostLikes: {
+            some: {
+              userId: user.id,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: limit,
+        skip: offset,
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          images: {
+            select: {
+              url: true,
+              id: true,
+            },
+          },
+          user: {
+            select: {
+              username: true,
+              profileImg: true,
+            },
+          },
+          _count: {
+            select: {
+              PostLikes: true,
+            },
+          },
+        },
+      },
+    );
+
+    return {
+      count,
+      items: items.map(({ _count, ...post }) => {
+        return { ...post, likes: _count.PostLikes, liked: true };
+      }),
+    };
+  }
+
+  private async userExists(username: string) {
+    return !(await this.prismaService.user.findUnique({
+      where: { username },
+    }));
   }
 }

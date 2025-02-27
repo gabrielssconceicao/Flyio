@@ -11,10 +11,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$disconnect();
   }
 
-  async findAll<T>(
+  async findAll(
     model: {
       count: (args?: Prisma.Args<any, 'count'>) => Promise<number>;
-      findMany: (args?: Prisma.Args<any, 'findMany'>) => Promise<T[]>;
+      findMany: (args?: Prisma.Args<any, 'findMany'>) => Promise<any[]>;
     },
     options?: {
       where?: any;
