@@ -1,5 +1,5 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { FindAllResponseDto } from 'src/common/dto/find-all-response.dto';
+import { FindAllResponseDto } from '../../common/dto/find-all-response.dto';
 import { PostEntity } from '../../post/entities/post.entity';
 
 export class FindAllUsersPostsResponseDto extends FindAllResponseDto<

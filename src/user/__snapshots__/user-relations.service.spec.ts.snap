@@ -1,9 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<UserRelationsService /> <GetAllLikedPostsByUsername /> should return an array of posts if user is found 1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "content": "Hello world",
+      "createdAt": 2023-03-15T17:30:00.000Z,
+      "id": "42-d-f-df4",
+      "images": [],
+      "liked": true,
+      "likes": 1,
+      "user": {
+        "profileImg": "https://example.com/profile.jpg",
+        "username": "jDoe453",
+      },
+    },
+  ],
+}
+`;
+
 exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts if user is found 1`] = `
 {
-  "count": 0,
-  "items": [],
+  "count": 1,
+  "items": [
+    {
+      "content": "Hello world",
+      "createdAt": 2023-03-15T17:30:00.000Z,
+      "id": "42-d-f-df4",
+      "images": [],
+      "liked": false,
+      "likes": 0,
+      "user": {
+        "profileImg": "https://example.com/profile.jpg",
+        "username": "jDoe453",
+      },
+    },
+  ],
 }
 `;
 

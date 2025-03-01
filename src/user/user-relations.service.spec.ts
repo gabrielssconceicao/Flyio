@@ -5,12 +5,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { userPrismaService } from '../prisma/mock/prisma.service.mock';
 import { jwtServiceMock } from '../auth/mocks';
 import { UserRelationsService } from './user-relations.service';
-
+import { generateFindAllPostsDtoMock } from '../post/mock';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { FindAllPostsResponseDto } from '../post/dto';
+import { generateUserMock } from './mocks';
 describe('<UserRelationsService />', () => {
   let service: UserRelationsService;
   let prismaService: PrismaService;
   let jwtService: JwtService;
 
+  let username: string;
+  let paginationDto: PaginationDto;
+  let findAllPostsDto: FindAllPostsResponseDto;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,6 +37,11 @@ describe('<UserRelationsService />', () => {
     prismaService = module.get<PrismaService>(PrismaService);
 
     jwtService = module.get<JwtService>(JwtService);
+
+    username = 'username';
+
+    paginationDto = { limit: 10, offset: 0 };
+    findAllPostsDto = generateFindAllPostsDtoMock();
   });
 
   afterEach(() => {
@@ -49,7 +60,9 @@ describe('<UserRelationsService />', () => {
         token: 'token',
       };
       jest.spyOn(jwtService, 'verify').mockReturnValue({ sub: 1 });
-      jest.spyOn(prismaService.user, 'update').mockResolvedValue({} as any);
+      jest
+        .spyOn(prismaService.user, 'update')
+        .mockResolvedValue(generateUserMock() as any);
 
       const result = await service.reactivate(reactivateUserDto);
       expect(jwtService.verify).toHaveBeenCalledWith(reactivateUserDto.token);
@@ -77,13 +90,12 @@ describe('<UserRelationsService />', () => {
 
   describe('<GetAllPostsByUsername />', () => {
     it('should return an array of posts if user is found', async () => {
-      const username = 'username';
-      const paginationDto = { limit: 10, offset: 0 };
-      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue({} as any);
-      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
-        count: 0,
-        items: [],
-      } as any);
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(generateUserMock() as any);
+      jest
+        .spyOn(prismaService, 'findAll')
+        .mockResolvedValue(findAllPostsDto as any);
 
       const result = await service.getAllPostsByUsername(
         username,
@@ -92,20 +104,59 @@ describe('<UserRelationsService />', () => {
 
       expect(prismaService.user.findUnique).toHaveBeenCalled();
       expect(prismaService.findAll).toHaveBeenCalled();
-      expect(result).toEqual({
-        count: 0,
-        items: [],
-      });
+      expect(result).toEqual(findAllPostsDto);
       expect(result).toMatchSnapshot();
     });
 
     it('should throw an NotFoundException if user is not found', async () => {
-      const username = 'username';
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
 
       await expect(service.getAllPostsByUsername(username, {})).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('<GetAllLikedPostsByUsername />', () => {
+    it('should return an array of posts if user is found', async () => {
+      findAllPostsDto.items[0] = {
+        ...findAllPostsDto.items[0],
+        liked: true,
+        likes: 1,
+      };
+      findAllPostsDto.items[0]['_count'] = { PostLikes: 1 };
+
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(generateUserMock() as any);
+
+      jest
+        .spyOn(prismaService, 'findAll')
+        .mockResolvedValue(findAllPostsDto as any);
+
+      const result = await service.getAllLikedPostsByUsername(
+        username,
+        paginationDto,
+      );
+
+      const likedPosts = generateFindAllPostsDtoMock();
+      likedPosts.items[0] = {
+        ...likedPosts.items[0],
+        liked: true,
+        likes: 1,
+      };
+      expect(prismaService.user.findUnique).toHaveBeenCalled();
+      expect(prismaService.findAll).toHaveBeenCalled();
+      expect(result).toEqual(likedPosts);
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an NotFoundException if user is not found', async () => {
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
+
+      await expect(
+        service.getAllLikedPostsByUsername(username, {}),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

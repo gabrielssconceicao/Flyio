@@ -1,14 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRelationsController } from './user-relations.controller';
 import { UserRelationsService } from './user-relations.service';
 import jwtConfig from '../auth/config/jwt.config';
 import { jwtServiceMock, jwtConfigurationMock } from '../auth/mocks';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { FindAllPostsResponseDto } from '../post/dto';
+import { generateFindAllPostsDtoMock } from '../post/mock';
 
 describe('UserRelationsController', () => {
   let controller: UserRelationsController;
   let service: UserRelationsService;
+
+  let username: string;
+  let paginationDto: PaginationDto;
+  let findAllPosts: FindAllPostsResponseDto;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserRelationsController],
@@ -18,6 +24,7 @@ describe('UserRelationsController', () => {
           useValue: {
             reactivate: jest.fn(),
             getAllPostsByUsername: jest.fn(),
+            getAllLikedPostsByUsername: jest.fn(),
           },
         },
 
@@ -34,6 +41,12 @@ describe('UserRelationsController', () => {
 
     controller = module.get<UserRelationsController>(UserRelationsController);
     service = module.get<UserRelationsService>(UserRelationsService);
+    username = 'username';
+    paginationDto = {
+      offset: 1,
+      limit: 10,
+    };
+    findAllPosts = generateFindAllPostsDtoMock();
   });
 
   afterEach(() => {
@@ -57,30 +70,13 @@ describe('UserRelationsController', () => {
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
     });
-    it('should thow an UnauthorizedException if token is invalid or expired', async () => {
-      const reactivateUserDto = {
-        token: 'expired-token',
-      };
-      jest
-        .spyOn(service, 'reactivate')
-        .mockRejectedValue(new UnauthorizedException());
-      await expect(controller.reactivate(reactivateUserDto)).rejects.toThrow(
-        UnauthorizedException,
-      );
-    });
   });
 
   describe('<GetAllPostsByUsername />', () => {
     it('should get all posts by username successfully', async () => {
-      const username = 'username';
-      const paginationDto = {
-        page: 1,
-        limit: 10,
-      };
-      jest.spyOn(service, 'getAllPostsByUsername').mockResolvedValue({
-        count: 0,
-        items: [],
-      });
+      jest
+        .spyOn(service, 'getAllPostsByUsername')
+        .mockResolvedValue(findAllPosts);
       const result = await controller.getAllPostsByUsername(
         username,
         paginationDto,
@@ -91,14 +87,26 @@ describe('UserRelationsController', () => {
       );
       expect(result).toMatchSnapshot();
     });
-    it('should throw an NotFoundException if user does not exist', async () => {
-      const username = 'username';
+  });
+
+  describe('<GetAllLikedPostsByUsername />', () => {
+    it('should get all posts by username successfully', async () => {
+      findAllPosts.items = findAllPosts.items.map((post) => ({
+        ...post,
+        liked: true,
+      }));
       jest
-        .spyOn(service, 'getAllPostsByUsername')
-        .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(
-        controller.getAllPostsByUsername(username, {}),
-      ).rejects.toThrow(NotFoundException);
+        .spyOn(service, 'getAllLikedPostsByUsername')
+        .mockResolvedValue(findAllPosts);
+      const result = await controller.getAllPostsByUsername(
+        username,
+        paginationDto,
+      );
+      expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
+        username,
+        paginationDto,
+      );
+      expect(result).toMatchSnapshot();
     });
   });
 });

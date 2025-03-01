@@ -35,7 +35,7 @@ export class UserRelationsService {
   ): Promise<FindAllUsersPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
 
-    if (await this.userExists(username)) {
+    if (!(await this.userExists(username))) {
       throw new NotFoundException('User not found');
     }
     // add qtd likes
@@ -58,14 +58,12 @@ export class UserRelationsService {
     return { count, items: items as any };
   }
 
-  async getAllLikedPostByUsername(
+  async getAllLikedPostsByUsername(
     username: string,
     paginationDto: PaginationDto,
   ): Promise<FindAllLikedPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
-    const user = await this.prismaService.user.findUnique({
-      where: { username },
-    });
+    const user = await this.userExists(username);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -118,8 +116,8 @@ export class UserRelationsService {
   }
 
   private async userExists(username: string) {
-    return !(await this.prismaService.user.findUnique({
+    return await this.prismaService.user.findUnique({
       where: { username },
-    }));
+    });
   }
 }

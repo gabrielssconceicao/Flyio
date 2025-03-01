@@ -104,7 +104,7 @@ export class UserRelationsController {
     @Param('username') username: string,
     @Query() paginationDto: PaginationDto,
   ): Promise<FindAllLikedPostsResponseDto> {
-    return this.userRelationsService.getAllLikedPostByUsername(
+    return this.userRelationsService.getAllLikedPostsByUsername(
       username,
       paginationDto,
     );
