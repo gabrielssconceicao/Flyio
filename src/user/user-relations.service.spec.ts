@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { userPrismaService } from '../prisma/mock/prisma.service.mock';
-import { jwtServiceMock } from '../auth/mocks';
+import { generateTokenPayloadDtoMock, jwtServiceMock } from '../auth/mocks';
 import { UserRelationsService } from './user-relations.service';
 import { generateFindAllPostsDtoMock } from '../post/mock';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -93,13 +93,19 @@ describe('<UserRelationsService />', () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
         .mockResolvedValue(generateUserMock() as any);
-      jest
-        .spyOn(prismaService, 'findAll')
-        .mockResolvedValue(findAllPostsDto as any);
+      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+        count: findAllPostsDto.count,
+        items: findAllPostsDto.items.map((item) => ({
+          ...item,
+          _count: { PostLikes: 0 },
+          PostLikes: [],
+        })),
+      } as any);
 
       const result = await service.getAllPostsByUsername(
         username,
         paginationDto,
+        generateTokenPayloadDtoMock(),
       );
 
       expect(prismaService.user.findUnique).toHaveBeenCalled();
@@ -111,43 +117,42 @@ describe('<UserRelationsService />', () => {
     it('should throw an NotFoundException if user is not found', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
 
-      await expect(service.getAllPostsByUsername(username, {})).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.getAllPostsByUsername(
+          username,
+          {},
+          generateTokenPayloadDtoMock(),
+        ),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('<GetAllLikedPostsByUsername />', () => {
     it('should return an array of posts if user is found', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(generateUserMock() as any);
+
+      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+        count: findAllPostsDto.count,
+        items: findAllPostsDto.items.map((item) => ({
+          ...item,
+          _count: { PostLikes: 1 },
+        })),
+      } as any);
       findAllPostsDto.items[0] = {
         ...findAllPostsDto.items[0],
         liked: true,
         likes: 1,
       };
-      findAllPostsDto.items[0]['_count'] = { PostLikes: 1 };
-
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(generateUserMock() as any);
-
-      jest
-        .spyOn(prismaService, 'findAll')
-        .mockResolvedValue(findAllPostsDto as any);
-
       const result = await service.getAllLikedPostsByUsername(
         username,
         paginationDto,
       );
 
-      const likedPosts = generateFindAllPostsDtoMock();
-      likedPosts.items[0] = {
-        ...likedPosts.items[0],
-        liked: true,
-        likes: 1,
-      };
       expect(prismaService.user.findUnique).toHaveBeenCalled();
       expect(prismaService.findAll).toHaveBeenCalled();
-      expect(result).toEqual(likedPosts);
+      expect(result).toEqual(findAllPostsDto);
       expect(result).toMatchSnapshot();
     });
 

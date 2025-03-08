@@ -9,6 +9,7 @@ import { ReactivateUserDto } from './dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
 import { FindAllLikedPostsResponseDto } from '../post/dto/find-all-liked-post.dto';
+import { TokenPayloadDto } from '../auth/dto';
 
 @Injectable()
 export class UserRelationsService {
@@ -32,13 +33,14 @@ export class UserRelationsService {
   async getAllPostsByUsername(
     username: string,
     paginationDto: PaginationDto,
+    tokenPayload: TokenPayloadDto,
   ): Promise<FindAllUsersPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
 
     if (!(await this.userExists(username))) {
       throw new NotFoundException('User not found');
     }
-    // add qtd likes
+
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.post,
       {
@@ -47,7 +49,21 @@ export class UserRelationsService {
           id: true,
           content: true,
           createdAt: true,
-          images: true,
+          images: {
+            select: {
+              url: true,
+              id: true,
+            },
+          },
+          _count: {
+            select: {
+              PostLikes: true,
+            },
+          },
+          PostLikes: {
+            where: { userId: tokenPayload.sub },
+            select: { userId: true },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip: offset,
@@ -55,7 +71,13 @@ export class UserRelationsService {
       },
     );
 
-    return { count, items: items as any };
+    const mappedPosts = items.map(({ _count, PostLikes, ...post }) => ({
+      ...post,
+      likes: _count.PostLikes,
+      liked: !!PostLikes.length,
+    }));
+
+    return { count, items: mappedPosts };
   }
 
   async getAllLikedPostsByUsername(

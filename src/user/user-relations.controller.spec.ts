@@ -3,7 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRelationsController } from './user-relations.controller';
 import { UserRelationsService } from './user-relations.service';
 import jwtConfig from '../auth/config/jwt.config';
-import { jwtServiceMock, jwtConfigurationMock } from '../auth/mocks';
+import {
+  jwtServiceMock,
+  jwtConfigurationMock,
+  generateTokenPayloadDtoMock,
+} from '../auth/mocks';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllPostsResponseDto } from '../post/dto';
 import { generateFindAllPostsDtoMock } from '../post/mock';
@@ -80,10 +84,12 @@ describe('UserRelationsController', () => {
       const result = await controller.getAllPostsByUsername(
         username,
         paginationDto,
+        generateTokenPayloadDtoMock(),
       );
       expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
         username,
         paginationDto,
+        generateTokenPayloadDtoMock(),
       );
       expect(result).toMatchSnapshot();
     });
@@ -101,10 +107,12 @@ describe('UserRelationsController', () => {
       const result = await controller.getAllPostsByUsername(
         username,
         paginationDto,
+        generateTokenPayloadDtoMock(),
       );
       expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
         username,
         paginationDto,
+        generateTokenPayloadDtoMock(),
       );
       expect(result).toMatchSnapshot();
     });

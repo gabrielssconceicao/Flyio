@@ -23,6 +23,8 @@ import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
 import { ApiAuthResponses } from '../common/decorators/guard.decorator';
 import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
 import { FindAllLikedPostsResponseDto } from '../post/dto/find-all-liked-post.dto';
+import { TokenPayloadParam } from '../auth/params/token-payload.param';
+import { TokenPayloadDto } from '../auth/dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -77,10 +79,12 @@ export class UserRelationsController {
   getAllPostsByUsername(
     @Param('username') username: string,
     @Query() paginationDto: PaginationDto,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.userRelationsService.getAllPostsByUsername(
       username,
       paginationDto,
+      tokenPayload,
     );
   }
 
