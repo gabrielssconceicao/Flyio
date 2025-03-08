@@ -18,5 +18,7 @@ export const generateUserMock = (): User => {
     profileImg: userMock.profileImg,
     bio: userMock.bio,
     active: userMock.active,
+    followers: 0,
+    following: 0,
   };
 };

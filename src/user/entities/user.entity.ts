@@ -24,4 +24,10 @@ export class User {
   bio: string | null;
   @ApiProperty({ example: true, description: 'User status' })
   active: boolean;
+
+  @ApiProperty({ example: 5, description: 'Number of followers' })
+  followers: number;
+
+  @ApiProperty({ example: 10, description: 'Number of following' })
+  following: number;
 }
