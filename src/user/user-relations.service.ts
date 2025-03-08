@@ -49,6 +49,12 @@ export class UserRelationsService {
           id: true,
           content: true,
           createdAt: true,
+          user: {
+            select: {
+              username: true,
+              profileImg: true,
+            },
+          },
           images: {
             select: {
               url: true,
