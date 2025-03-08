@@ -27,6 +27,8 @@ model User {
 
   posts     Post[]
   PostLikes PostLikes[]
+  following Follower[]  @relation("Following")
+  followers Follower[]  @relation("Followers")
 }
 
 model Post {
@@ -56,4 +58,14 @@ model PostLikes {
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@id([postId, userId])
+}
+
+model Follower {
+  followerId String
+  followedId String
+
+  follower User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followed User @relation("Followers", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followedId]) // Chave primária composta
 }
