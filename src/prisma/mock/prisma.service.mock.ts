@@ -31,4 +31,5 @@ export const selectUserFieldsMock = {
   profileImg: true,
   bio: true,
   active: true,
+  _count: { select: { following: true, followers: true } },
 };

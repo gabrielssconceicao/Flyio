@@ -52,6 +52,9 @@ describe('<UserService />', () => {
   let updateUserDto: UpdateUserDto;
   let username: string;
   let tokenPayload: TokenPayloadDto;
+  let userServiceResponse: User & {
+    _count: { followers: number; following: number };
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -99,6 +102,7 @@ describe('<UserService />', () => {
       bio: 'new bio',
     };
     tokenPayload = generateTokenPayloadDtoMock();
+    userServiceResponse = { ...user, _count: { followers: 0, following: 0 } };
   });
 
   afterEach(() => {
@@ -121,7 +125,9 @@ describe('<UserService />', () => {
         .spyOn(cloudinaryService, 'uploadProfilePicture')
         .mockResolvedValue(generatedProfilePictureMock);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest.spyOn(prismaService.user, 'create').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'create')
+        .mockResolvedValue(userServiceResponse as any);
 
       const result = await service.create(createUserDto, file);
 
@@ -146,7 +152,9 @@ describe('<UserService />', () => {
 
       jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
       jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest.spyOn(prismaService.user, 'create').mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.user, 'create')
+        .mockResolvedValue(userServiceResponse as any);
 
       const result = await service.create(createUserDto, file);
 
@@ -179,7 +187,7 @@ describe('<UserService />', () => {
     it('should return a user successfully', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(user as any);
+        .mockResolvedValue(userServiceResponse as any);
 
       const result = await service.findOne(username);
 
@@ -229,6 +237,7 @@ describe('<UserService />', () => {
 
   describe('<Update />', () => {
     it('should update a user successfully without profile picture', async () => {
+      userServiceResponse.profileImg = null;
       user.profileImg = null;
       jest
         .spyOn(prismaService.user, 'findUnique')
@@ -239,7 +248,7 @@ describe('<UserService />', () => {
         .mockResolvedValue(generatedProfilePictureMock);
       jest.spyOn(prismaService.user, 'update').mockResolvedValue({
         ...updateUserDto,
-        ...user,
+        ...userServiceResponse,
       } as any);
 
       const result = await service.update(
@@ -279,7 +288,7 @@ describe('<UserService />', () => {
         .mockResolvedValue(generatedProfilePictureMock);
       jest.spyOn(prismaService.user, 'update').mockResolvedValue({
         ...updateUserDto,
-        ...user,
+        ...userServiceResponse,
       } as any);
 
       const result = await service.update(
@@ -384,8 +393,10 @@ describe('<UserService />', () => {
         service.desactivateUser(username, tokenPayload),
       ).rejects.toThrow(NotFoundException);
     });
+
     it('should throw a BadRequestException if user is already deleted', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue({
+        ...userServiceResponse,
         active: false,
       } as any);
       await expect(
@@ -423,7 +434,7 @@ describe('<UserService />', () => {
       jest.spyOn(permissionService, 'verifyUserOwnership').mockImplementation();
       jest
         .spyOn(prismaService.user, 'update')
-        .mockResolvedValue({ ...user, profileImg: null } as any);
+        .mockResolvedValue({ ...userServiceResponse, profileImg: null } as any);
       jest
         .spyOn(cloudinaryService, 'deleteProfilePicture')
         .mockResolvedValue(null);
