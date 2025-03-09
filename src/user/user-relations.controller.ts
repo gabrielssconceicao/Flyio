@@ -121,6 +121,28 @@ export class UserRelationsController {
     description: 'Username of the user',
     example: 'jDoe453',
   })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User followed successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'User already followed/You cannot follow yourself',
+    schema: {
+      example: {
+        message: 'User already followed/You cannot follow yourself',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+    schema: {
+      example: {
+        message: 'User not found',
+      },
+    },
+  })
   @ApiAuthResponses()
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)

@@ -151,6 +151,10 @@ export class UserRelationsService {
       throw new NotFoundException('User not found');
     }
 
+    if (user.id === tokenPayload.sub) {
+      throw new BadRequestException('You cannot follow yourself');
+    }
+
     const follower = await this.prismaService.follower.findFirst({
       where: {
         followedId: user.id,
