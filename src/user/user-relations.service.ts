@@ -173,6 +173,37 @@ export class UserRelationsService {
       },
     });
   }
+  async unfollowUser(username: string, tokenPayload: TokenPayloadDto) {
+    const user = await this.userExists(username);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.id === tokenPayload.sub) {
+      throw new BadRequestException('You cannot unfollow yourself');
+    }
+
+    const follower = await this.prismaService.follower.findFirst({
+      where: {
+        followedId: user.id,
+        followerId: tokenPayload.sub,
+      },
+    });
+
+    if (!follower) {
+      throw new BadRequestException('User already unfollowed');
+    }
+
+    await this.prismaService.follower.delete({
+      where: {
+        followerId_followedId: {
+          followedId: user.id,
+          followerId: tokenPayload.sub,
+        },
+      },
+    });
+  }
 
   private async userExists(username: string) {
     return await this.prismaService.user.findUnique({

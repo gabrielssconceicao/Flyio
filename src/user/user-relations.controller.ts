@@ -131,6 +131,8 @@ export class UserRelationsController {
     schema: {
       example: {
         message: 'User already followed/You cannot follow yourself',
+        statusCode: HttpStatus.BAD_REQUEST,
+        error: 'Bad Request',
       },
     },
   })
@@ -140,6 +142,8 @@ export class UserRelationsController {
     schema: {
       example: {
         message: 'User not found',
+        statusCode: HttpStatus.NOT_FOUND,
+        error: 'Not Found',
       },
     },
   })
@@ -153,5 +157,51 @@ export class UserRelationsController {
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.userRelationsService.followUser(username, tokenPayload);
+  }
+
+  @ApiOperation({ summary: 'Unfollow a user' })
+  @ApiParam({
+    name: 'username',
+    description: 'Username of the user',
+    example: 'jDoe453',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User unfollowed successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description:
+      'User are not following this user/You cannot unfollow yourself',
+    schema: {
+      example: {
+        message:
+          'User are not following this user/You cannot unfollow yourself',
+        statusCode: HttpStatus.BAD_REQUEST,
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+    schema: {
+      example: {
+        message: 'User not found',
+        statusCode: HttpStatus.NOT_FOUND,
+        error: 'Not Found',
+      },
+    },
+  })
+  @ApiAuthResponses()
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
+  @Post(':username/unfollow')
+  @HttpCode(HttpStatus.CREATED)
+  unfollowUser(
+    @Param('username') username: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.userRelationsService.unfollowUser(username, tokenPayload);
   }
 }
