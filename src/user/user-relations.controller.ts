@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -112,5 +113,23 @@ export class UserRelationsController {
       username,
       paginationDto,
     );
+  }
+
+  @ApiOperation({ summary: 'Follow a user' })
+  @ApiParam({
+    name: 'username',
+    description: 'Username of the user',
+    example: 'jDoe453',
+  })
+  @ApiAuthResponses()
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
+  @Post(':username/follow')
+  @HttpCode(HttpStatus.CREATED)
+  followUser(
+    @Param('username') username: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.userRelationsService.followUser(username, tokenPayload);
   }
 }

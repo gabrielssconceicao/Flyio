@@ -17,6 +17,19 @@ import {
   FindAllUsersResponseDto,
 } from './dto';
 
+type UserWithCount = {
+  name: string;
+  username: string;
+  bio: string;
+  id: string;
+  profileImg: string;
+  active: boolean;
+  _count: {
+    following: number;
+    followers: number;
+  };
+};
+
 @Injectable()
 export class UserService {
   constructor(
@@ -34,6 +47,7 @@ export class UserService {
     profileImg: true,
     bio: true,
     active: true,
+    _count: { select: { followers: true, following: true } },
   };
 
   async create(
@@ -61,7 +75,7 @@ export class UserService {
       data: { ...rest, password: hashedPassword, profileImg: profileImgUrl },
       select: this.selectUserFields,
     });
-    return { ...createdUser, followers: 0, following: 0 };
+    return this.separateUsersAndCount(createdUser);
   }
 
   async findAll(query: QueryParamDto): Promise<FindAllUsersResponseDto> {
@@ -89,25 +103,13 @@ export class UserService {
   async findOne(username: string): Promise<User> {
     const user = await this.prismaService.user.findUnique({
       where: { username },
-      select: {
-        ...this.selectUserFields,
-        _count: {
-          select: {
-            followers: true,
-            following: true,
-          },
-        },
-      },
+      select: this.selectUserFields,
     });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const { _count } = user;
-    return {
-      ...user,
-      followers: _count.followers,
-      following: _count.following,
-    };
+
+    return this.separateUsersAndCount(user);
   }
 
   async update(
@@ -167,19 +169,9 @@ export class UserService {
     const updatedUser = await this.prismaService.user.update({
       where: { username },
       data: { ...personDto },
-      select: {
-        ...this.selectUserFields,
-        _count: { select: { followers: true, following: true } },
-      },
+      select: this.selectUserFields,
     });
-
-    const { _count } = updatedUser;
-
-    return {
-      ...updatedUser,
-      followers: _count.followers,
-      following: _count.following,
-    };
+    return this.separateUsersAndCount(updatedUser);
   }
 
   async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
@@ -210,21 +202,22 @@ export class UserService {
           data: {
             profileImg: null,
           },
-          select: {
-            ...this.selectUserFields,
-            _count: { select: { followers: true, following: true } },
-          },
+          select: this.selectUserFields,
         });
-        const { _count } = userWithoutProfile;
-        return {
-          ...userWithoutProfile,
-          followers: _count.followers,
-          following: _count.following,
-        };
+        return this.separateUsersAndCount(userWithoutProfile);
       } catch (error) {
         throw error;
       }
     }
     return user;
+  }
+
+  private separateUsersAndCount(users: UserWithCount): User {
+    const { _count, ...rest } = users;
+    return {
+      ...rest,
+      followers: _count.followers,
+      following: _count.following,
+    };
   }
 }

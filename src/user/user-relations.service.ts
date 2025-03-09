@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -141,6 +142,32 @@ export class UserRelationsService {
         return { ...post, likes: _count.PostLikes, liked: true };
       }),
     };
+  }
+
+  async followUser(username: string, tokenPayload: TokenPayloadDto) {
+    const user = await this.userExists(username);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const follower = await this.prismaService.follower.findFirst({
+      where: {
+        followedId: user.id,
+        followerId: tokenPayload.sub,
+      },
+    });
+
+    if (follower) {
+      throw new BadRequestException('User already followed');
+    }
+
+    await this.prismaService.follower.create({
+      data: {
+        followedId: user.id,
+        followerId: tokenPayload.sub,
+      },
+    });
   }
 
   private async userExists(username: string) {
