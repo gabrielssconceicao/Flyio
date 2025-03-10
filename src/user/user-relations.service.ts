@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
-import { ReactivateUserDto } from './dto';
+import { FindAllUsersResponseDto, ReactivateUserDto } from './dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllUsersPostsResponseDto } from './dto/find-all-user-posts.dto';
 import { FindAllLikedPostsResponseDto } from '../post/dto/find-all-liked-post.dto';
@@ -145,20 +145,20 @@ export class UserRelationsService {
   }
 
   async followUser(username: string, tokenPayload: TokenPayloadDto) {
-    const user = await this.userExists(username);
+    const followingUser = await this.userExists(username);
 
-    if (!user) {
+    if (!followingUser) {
       throw new NotFoundException('User not found');
     }
 
-    if (user.id === tokenPayload.sub) {
+    if (followingUser.id === tokenPayload.sub) {
       throw new BadRequestException('You cannot follow yourself');
     }
 
     const follower = await this.prismaService.follower.findFirst({
       where: {
-        followedId: user.id,
-        followerId: tokenPayload.sub,
+        followingId: followingUser.id,
+        userId: tokenPayload.sub,
       },
     });
 
@@ -168,26 +168,27 @@ export class UserRelationsService {
 
     await this.prismaService.follower.create({
       data: {
-        followedId: user.id,
-        followerId: tokenPayload.sub,
+        followingId: followingUser.id,
+        userId: tokenPayload.sub,
       },
     });
   }
-  async unfollowUser(username: string, tokenPayload: TokenPayloadDto) {
-    const user = await this.userExists(username);
 
-    if (!user) {
+  async unfollowUser(username: string, tokenPayload: TokenPayloadDto) {
+    const followingUser = await this.userExists(username);
+
+    if (!followingUser) {
       throw new NotFoundException('User not found');
     }
 
-    if (user.id === tokenPayload.sub) {
+    if (followingUser.id === tokenPayload.sub) {
       throw new BadRequestException('You cannot unfollow yourself');
     }
 
     const follower = await this.prismaService.follower.findFirst({
       where: {
-        followedId: user.id,
-        followerId: tokenPayload.sub,
+        followingId: followingUser.id,
+        userId: tokenPayload.sub,
       },
     });
 
@@ -197,12 +198,66 @@ export class UserRelationsService {
 
     await this.prismaService.follower.delete({
       where: {
-        followerId_followedId: {
-          followedId: user.id,
-          followerId: tokenPayload.sub,
+        userId_followingId: {
+          followingId: followingUser.id,
+          userId: tokenPayload.sub,
         },
       },
     });
+  }
+  async getAllFollowingsByUser(
+    username: string,
+  ): Promise<FindAllUsersResponseDto> {
+    const user = await this.userExists(username);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.follower,
+      {
+        where: { userId: user.id },
+        select: {
+          following: {
+            select: {
+              username: true,
+              name: true,
+              profileImg: true,
+              id: true,
+            },
+          },
+        },
+      },
+    );
+
+    return { count, items: items.map((item) => item.following) };
+  }
+  async getAllFollowersByUser(
+    username: string,
+  ): Promise<FindAllUsersResponseDto> {
+    const user = await this.userExists(username);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.follower,
+      {
+        where: { followingId: user.id },
+        select: {
+          user: {
+            select: {
+              username: true,
+              name: true,
+              profileImg: true,
+              id: true,
+            },
+          },
+        },
+      },
+    );
+
+    return { count, items: items.map((item) => item.user) };
   }
 
   private async userExists(username: string) {

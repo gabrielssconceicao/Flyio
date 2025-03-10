@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReactivateUserDto } from './dto';
+import { FindAllUsersResponseDto, ReactivateUserDto } from './dto';
 import { UserRelationsService } from './user-relations.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
@@ -197,11 +197,40 @@ export class UserRelationsController {
   @ApiBearerAuth()
   @UseGuards(AuthTokenGuard)
   @Post(':username/unfollow')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   unfollowUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.userRelationsService.unfollowUser(username, tokenPayload);
+  }
+
+  @ApiOperation({ summary: 'Get all followers' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Return list of users that user follows',
+    type: FindAllUsersResponseDto,
+  })
+  @ApiAuthResponses()
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
+  @Get(':username/followers')
+  @HttpCode(HttpStatus.CREATED)
+  getAllFollowersByUser(@Param('username') username: string) {
+    return this.userRelationsService.getAllFollowersByUser(username);
+  }
+  @ApiOperation({ summary: 'Get all followed users' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Return list of users that follow the user',
+    type: FindAllUsersResponseDto,
+  })
+  @ApiAuthResponses()
+  @ApiBearerAuth()
+  @UseGuards(AuthTokenGuard)
+  @Get(':username/followings')
+  @HttpCode(HttpStatus.CREATED)
+  getAllFollowingsByUser(@Param('username') username: string) {
+    return this.userRelationsService.getAllFollowingsByUser(username);
   }
 }

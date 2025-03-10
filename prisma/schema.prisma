@@ -61,11 +61,11 @@ model PostLikes {
 }
 
 model Follower {
-  followerId String
-  followedId String
+  userId      String
+  followingId String
 
-  follower User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
-  followed User @relation("Followers", fields: [followedId], references: [id], onDelete: Cascade)
+  user      User @relation("Following", fields: [userId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
 
-  @@id([followerId, followedId]) // Chave primária composta
+  @@id([userId, followingId])
 }
