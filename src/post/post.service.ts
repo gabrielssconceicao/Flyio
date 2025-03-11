@@ -39,6 +39,7 @@ export class PostService {
     _count: {
       select: {
         PostLikes: true,
+        comments: true,
       },
     },
   };
@@ -75,6 +76,7 @@ export class PostService {
     const posts = await this.prismaService.post.findMany({
       select: {
         ...this.selectPostFields,
+
         PostLikes: {
           where: { userId: tokenPayload.sub },
         },
@@ -91,6 +93,7 @@ export class PostService {
       count,
       items: posts.map(({ _count, PostLikes, ...post }) => ({
         ...post,
+        commentsCount: _count.comments,
         likes: _count.PostLikes,
         liked: PostLikes.length ? true : false,
       })),
@@ -105,15 +108,35 @@ export class PostService {
         PostLikes: {
           where: { userId: tokenPayload.sub },
         },
+        comments: {
+          where: { userId: tokenPayload.sub },
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+              select: {
+                name: true,
+                username: true,
+                profileImg: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    const { _count, PostLikes, ...rest } = post;
+    const { _count, PostLikes, comments, ...rest } = post;
     return {
       ...rest,
       likes: _count.PostLikes,
+      commentsCount: _count.comments,
+      comments,
       liked: !!PostLikes.length,
     };
   }

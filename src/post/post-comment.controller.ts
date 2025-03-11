@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Param,
@@ -31,5 +32,15 @@ export class PostCommentController {
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.postCommentService.create(postId, body, tokenPayload);
+  }
+
+  @ApiOperation({ summary: 'Delete post comment' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':postId/comment/:commentId')
+  delete(
+    @Param('commentId') commentId: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.postCommentService.delete(commentId, tokenPayload);
   }
 }

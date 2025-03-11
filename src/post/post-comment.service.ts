@@ -2,10 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TokenPayloadDto } from '../auth/dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class PostCommentService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly permissionService: PermissionService,
+  ) {}
 
   async create(
     postId: string,
@@ -39,5 +43,23 @@ export class PostCommentService {
     });
 
     return comment;
+  }
+
+  async delete(commentId: string, tokenPayload: TokenPayloadDto) {
+    const comment = await this.prismaService.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    this.permissionService.verifyUserOwnership(
+      tokenPayload.sub,
+      comment.userId,
+    );
+
+    await this.prismaService.comment.delete({
+      where: { id: commentId },
+    });
   }
 }
