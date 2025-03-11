@@ -75,10 +75,9 @@ model Follower {
 model Comment {
   id        String   @id @default(uuid())
   userId    String
-  postsId   String
+  postId    String
   content   String
   createdAt DateTime @default(now())
-  postId    String
   post      Post     @relation(fields: [postId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
