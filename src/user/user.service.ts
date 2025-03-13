@@ -27,18 +27,36 @@ export class UserService {
     return `This action removes a #${id} user`;
 =======
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { HashingServiceProtocol } from '../auth/hashing/hashing.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from './entities/user.entity';
-import { QueryParamDto } from './dto/query-param.dto';
-import { FindAllUsersResponseDto } from './dto/find-all-users.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { PermissionService } from '../permission/permission.service';
+import { TokenPayloadDto } from '../auth/dto';
+import { User } from './entities/user.entity';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  QueryParamDto,
+  FindAllUsersResponseDto,
+} from './dto';
+
+type UserWithCount = {
+  name: string;
+  username: string;
+  bio: string;
+  id: string;
+  profileImg: string;
+  active: boolean;
+  _count: {
+    following: number;
+    followers: number;
+  };
+};
 
 @Injectable()
 export class UserService {
@@ -46,16 +64,18 @@ export class UserService {
     private readonly hashingService: HashingServiceProtocol,
     private readonly prismaService: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
+
+    private readonly permissionService: PermissionService,
   ) {}
 
   private selectUserFields = {
     id: true,
     name: true,
     username: true,
-    email: true,
     profileImg: true,
     bio: true,
     active: true,
+    _count: { select: { followers: true, following: true } },
   };
 
   async create(
@@ -83,7 +103,7 @@ export class UserService {
       data: { ...rest, password: hashedPassword, profileImg: profileImgUrl },
       select: this.selectUserFields,
     });
-    return createdUser;
+    return this.separateUsersAndCount(createdUser);
   }
 
   async findAll(query: QueryParamDto): Promise<FindAllUsersResponseDto> {
@@ -105,7 +125,7 @@ export class UserService {
       skip: offset,
     });
     const count = await this.prismaService.user.count({ where });
-    return { count, users };
+    return { count, items: users };
   }
 
   async findOne(username: string): Promise<User> {
@@ -117,15 +137,24 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return this.separateUsersAndCount(user);
   }
 
   async update(
     username: string,
     updateUserDto: UpdateUserDto,
     profileImg: Express.Multer.File,
+    tokenPayload: TokenPayloadDto,
   ): Promise<User> {
-    const user = await this.findOne(username);
+    const user = await this.prismaService.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
 
     if (updateUserDto?.email && updateUserDto.email !== user.email) {
       const emailIsTaken = await this.prismaService.user.findFirst({
@@ -170,28 +199,29 @@ export class UserService {
       data: { ...personDto },
       select: this.selectUserFields,
     });
-
-    return updatedUser;
+    return this.separateUsersAndCount(updatedUser);
   }
 
-  async remove(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id },
-    });
-    if (!user || !user.active) {
-      throw new NotFoundException('User not found');
+  async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
+    const user = await this.findOne(username);
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
+    if (!user.active) {
+      throw new BadRequestException('User is already deactivated');
     }
 
     await this.prismaService.user.update({
-      where: { id },
+      where: { username },
       data: { active: false },
     });
-    return { message: 'User deleted successfully' };
+    return { message: 'User desactivated successfully' };
   }
 
-  async removeProfilePicture(username: string): Promise<User> {
+  async removeProfilePicture(
+    username: string,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<User> {
     const user = await this.findOne(username);
-
+    this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
     if (user.profileImg) {
       try {
         await this.cloudinaryService.deleteProfilePicture(user.profileImg);
@@ -202,12 +232,21 @@ export class UserService {
           },
           select: this.selectUserFields,
         });
-        return userWithoutProfile;
+        return this.separateUsersAndCount(userWithoutProfile);
       } catch (error) {
         throw error;
       }
     }
     return user;
 >>>>>>> images
+  }
+
+  private separateUsersAndCount(users: UserWithCount): User {
+    const { _count, ...rest } = users;
+    return {
+      ...rest,
+      followers: _count.followers,
+      following: _count.following,
+    };
   }
 }

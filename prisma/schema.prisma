@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -33,4 +33,60 @@ model User {
 >>>>>>> images
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  posts     Post[]
+  PostLikes PostLikes[]
+  following Follower[]  @relation("Following")
+  followers Follower[]  @relation("Followers")
+  Comment   Comment[]
+}
+
+model Post {
+  id        String       @id @default(uuid())
+  content   String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  images    PostImages[]
+  PostLikes PostLikes[]
+  comments  Comment[]
+}
+
+model PostImages {
+  id        String   @id @default(uuid())
+  url       String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model PostLikes {
+  postId String
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+}
+
+model Follower {
+  userId      String
+  followingId String
+
+  user      User @relation("Following", fields: [userId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, followingId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  content   String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
 }

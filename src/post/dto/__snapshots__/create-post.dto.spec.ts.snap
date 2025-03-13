@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreatePostDto> should fail if text is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Text is required",
+      "isString": "Text must be a string",
+      "maxLength": "Text must be at most 255 characters long",
+      "minLength": "Text must be at least 1 characters long",
+    },
+    "property": "text",
+    "value": undefined,
+  },
+]
+`;
+
+exports[`<CreatePostDto> should fail if text is too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Text must be at most 255 characters long",
+    },
+    "property": "text",
+    "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  },
+]
+`;

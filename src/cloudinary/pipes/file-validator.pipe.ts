@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class FileValidatorPipe implements PipeTransform {
+export abstract class FileValidatorPipe implements PipeTransform {
   constructor(
     private readonly minSize = 10 * 1024,
     private readonly maxSize = 15 * 1024 * 1024,
@@ -32,13 +32,15 @@ export class FileValidatorPipe implements PipeTransform {
       );
     }
   }
-  transform(value: Express.Multer.File, metadata: ArgumentMetadata) {
-    if (!value) {
-      return null;
-    }
+
+  protected validateFile(value: Express.Multer.File): void {
     const { size, mimetype } = value;
     this.validateFileSize(size);
     this.validateMimeType(mimetype);
-    return value;
   }
+
+  abstract transform(
+    value: Express.Multer.File | Express.Multer.File[],
+    metadata: ArgumentMetadata,
+  );
 }

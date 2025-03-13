@@ -1,30 +1,6 @@
-<<<<<<< HEAD
 import { validate } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
-import userMock from 'src/mocks/user.mock';
-
-const fillDto = (dto: CreateUserDto) => {
-  dto.name = userMock.name;
-  dto.email = userMock.email;
-  dto.password = userMock.password;
-  return dto;
-};
-
-describe('<CreateUserDto>', () => {
-  it('should create a valid DTO without bio and profileImg', async () => {
-    const dto = new CreateUserDto();
-    fillDto(dto);
-
-=======
-import { validate, ValidationError } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
-function formatErrors(errors: ValidationError[]) {
-  return errors.map((error) => ({
-    property: error.property,
-    constraints: error.constraints,
-    value: error.value,
-  }));
-}
+import { formatErrors } from '../../common/utils/dto-format.errors';
 describe('<CreateUserDto>', () => {
   let dto: CreateUserDto;
 

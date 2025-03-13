@@ -4,7 +4,7 @@
   
 - [ ] database
   - [x] create users table
-  - [ ] create posts table
+  - [x] create posts table
   - [ ] create followers table
   - [ ] create likes table
   - [ ] create comments table
@@ -28,15 +28,30 @@
     - [x] delete
       - [x] test service
       - [x] test controller 
-    - [ ] delete profile image
-      - [ ] test service
-      - [ ] test controller
-  - [ ] post routes
-    - [ ] get all
-    - [ ] get one
-    - [ ] post 
-    - [ ] patch
-    - [ ] delete
+    - [x] delete profile image
+      - [x] test service
+      - [x] test controller
+  - [x] auth routes
+    - [x] login
+      - [x] jwt
+      - [x] create auth guard
+      - [xx] validate user 
+    - [ ] protect routes
+      - [x] user
+        - [x] update
+        - [x] delete
+        - [x] delete profile
+    - [x] tests
+      - [x] hash service
+      - [x] auth service
+      - [x] auth controller
+      - [x] user protected routes
+  - [x] post routes
+    - [x] get all
+    - [x] get one
+    - [x] post 
+    - [x] delete
+    - [x] get all posts by user (user route)
   - [ ] like routes
     - [ ] get all
     - [ ] get one
@@ -49,31 +64,23 @@
     - [ ] post 
     - [ ] patch
     - [ ] delete
-  - [ ] auth routes
-    - [ ] post 
     
-- [ ] users
+- [x] users
   - [x] create
     - [x] createUserDto
     - [x] test CreateUserDto
     - [x] password hash
     - [x] profile image upload
-  - [ ] delete
-    - [ ] is logged in
-  - [ ] reactivate
+  - [x] delete
+    - [x] is logged in
+  - [x] reactivate
   - [x] get one
-  - [ ] update
+  - [x] update
     - [x] update user
     - [x] update profile image
-    - [ ] is logged in
-  - [ ] delete profile image
-    - [ ] is logged
-  - 
-
-- [ ] login
-  - [ ] auth
-
-- [ ] posts
+    - [x] is logged in
+  - [x] delete profile image
+    - [x] is logged
 
 - [ ] likes
 
@@ -83,3 +90,4 @@
 
 - [ ] apagar comentarios
 - [ ] desativar rota
+- [ ] mudar o swagger de user's com files para multpart

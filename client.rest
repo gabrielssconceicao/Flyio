@@ -2,65 +2,63 @@
 @baseUrl = http://localhost:3005
 =======
 @baseUrl=http://localhost:3000
+@accessToken={{authenticate.response.body.accessToken}}
+#@accessToken={{refreshAccessToken.response.body.accessToken}}
+@refreshToken={{authenticate.response.body.refreshToken}}
+@reactiveToken={{authenticate.response.body.reactiveToken}}
+
+@username=t0nny@14
 ###
 
-// /# User Routes #/
-#via postman client
-POST {{baseUrl}}/users/register
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data;name="name"
-
-< JaneDoe
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="username"
-
-jDoe
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="email"
-
-Jdoe4@email.com
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="password"
-
-123456
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="bio"
-
-This is my bio
-----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="profileImg"; filename="woman.jpg"
-Content-Type: image/jpeg
-
-< ./images/woman.jpg
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
->>>>>>> images
 
 
-###
-
-<<<<<<< HEAD
-
-GET {{baseUrl}}/user
-=======
-GET {{baseUrl}}/users/jDoe4
-
-###
-
-PATCH {{baseUrl}}/users/jDoe42
+// /# Auth Routes #/
+# @name authenticate
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "name": "Jonny"
+  "login": "jonny@email.com",
+  "password": "123456"
 }
+
 ###
 
-DELETE {{baseUrl}}/users/13325
+# @name refreshAccessToken
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+###
+// /# User Routes #/
+# create and update via postman
+GET {{baseUrl}}/users/t0nny@14
+Authorization: Bearer {{accessToken}}
 
 ###
 GET {{baseUrl}}/users
-#?search=J
-#&limit=10
-#&offset=0
->>>>>>> images
+?search=
+&limit=10
+&offset=0
+Authorization: Bearer {{accessToken}}
+
+###
+
+PATCH {{baseUrl}}/users/{{username}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+DELETE {{baseUrl}}/users/{{username}}
+Authorization: Bearer {{accessToken}}
+
+### 
+
+DELETE {{baseUrl}}/users/{{username}}/profile-image
+Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{baseUrl}}/users/reactivate/{{reactiveToken}}

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserRelationsController <GetAllLikedPostsByUsername /> should get all posts by username successfully 1`] = `undefined`;
+
+exports[`UserRelationsController <GetAllPostsByUsername /> should get all posts by username successfully 1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "content": "Hello world",
+      "createdAt": 2023-03-15T17:30:00.000Z,
+      "id": "42-d-f-df4",
+      "images": [],
+      "liked": false,
+      "likes": 0,
+      "user": {
+        "profileImg": "https://example.com/profile.jpg",
+        "username": "jDoe453",
+      },
+    },
+  ],
+}
+`;
+
+exports[`UserRelationsController <Reactivate /> should reactivate a user successfully 1`] = `
+{
+  "message": "User reactivated successfully",
+}
+`;

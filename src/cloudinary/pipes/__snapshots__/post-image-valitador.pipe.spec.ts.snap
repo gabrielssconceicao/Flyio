@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PostImagesValidatorPipe/ > should return an empty array if the files is empty 1`] = `[]`;
+
+exports[`<PostImagesValidatorPipe/ > should return the files 1`] = `
+[
+  {
+    "buffer": {
+      "data": [
+        116,
+        101,
+        115,
+        116,
+      ],
+      "type": "Buffer",
+    },
+    "mimetype": "image/jpeg",
+    "originalname": "image.jpg",
+    "size": 10240,
+  },
+]
+`;

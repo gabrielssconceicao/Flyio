@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuthService /> <Login /> should realize login 1`] = `
+{
+  "accessToken": "access-token",
+  "refreshToken": "refresh-token",
+}
+`;
+
+exports[`<AuthService /> <RefreshToken /> should generate a new access token with a valid refresh token 1`] = `
+{
+  "accessToken": "access-token",
+}
+`;

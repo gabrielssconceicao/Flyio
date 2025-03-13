@@ -4,6 +4,8 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class CloudinaryService {
+  private readonly postImagesFolder = 'posts';
+  private readonly profileImagesFolder = 'profile-pictures';
   constructor() {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,8 +13,6 @@ export class CloudinaryService {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
   }
-
-  private readonly profileImageFolder = 'profile-pictures';
 
   private uploadToCloudinary(
     buffer: Buffer,
@@ -67,7 +67,7 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImagesFolder,
       public_id: renamedFile,
     });
   }
@@ -82,17 +82,21 @@ export class CloudinaryService {
 
     return this.uploadToCloudinary(buffer, {
       resource_type: 'image',
-      folder: 'profile-pictures',
+      folder: this.profileImagesFolder,
       public_id: publicId,
       overwrite: true,
     });
   }
 
   async deleteProfilePicture(profileImgUrl: string) {
+    return this.deletePicture(profileImgUrl, this.profileImagesFolder);
+  }
+
+  private async deletePicture(profileImgUrl: string, folder: string) {
     const publicId = this.getPublicIdFromUrl(profileImgUrl);
     return new Promise((resolve, reject) => {
       cloudinary.uploader.destroy(
-        `profile-pictures/${publicId}`,
+        `${folder}/${publicId}`,
         {
           resource_type: 'image',
           invalidate: true,
@@ -106,5 +110,44 @@ export class CloudinaryService {
         },
       );
     });
+  }
+
+  async uploadPostImages(files: Express.Multer.File[]): Promise<string[]> {
+    const uploadedImages: string[] = [];
+
+    try {
+      await Promise.all(
+        files.map(async (file) => {
+          const { buffer } = file;
+          const renamedFile = `file_${Date.now()}${Math.floor(Math.random() * 10) + 1}`;
+
+          const imageUrl = await this.uploadToCloudinary(buffer, {
+            resource_type: 'image',
+            folder: 'posts',
+            public_id: renamedFile,
+          });
+
+          uploadedImages.push(imageUrl);
+        }),
+      );
+
+      return uploadedImages;
+    } catch {
+      await Promise.all(
+        uploadedImages.map((url) =>
+          this.deletePicture(url, this.postImagesFolder),
+        ),
+      );
+
+      throw new BadRequestException(
+        'Error uploading post images. All uploads have been rolled back.',
+      );
+    }
+  }
+
+  async deletePostImages(imageUrls: string[]) {
+    return Promise.all(
+      imageUrls.map((url) => this.deletePicture(url, this.postImagesFolder)),
+    );
   }
 }

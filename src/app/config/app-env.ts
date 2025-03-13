@@ -14,6 +14,10 @@ export const appEnvValidationSchema = () => {
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
     CLOUDINARY_API_SECRET: Joi.string().required(),
->>>>>>> images
+    JWT_SECRET: Joi.string().required(),
+    JWT_ACCESS_TOKEN_EXPIRES_IN: Joi.string().required(),
+    JWT_REFRESH_TOKEN_EXPIRES_IN: Joi.string().required(),
+    JWT_TOKEN_AUDIENCE: Joi.string().required(),
+    JWT_TOKEN_ISSUER: Joi.string().required(),
   });
 };
