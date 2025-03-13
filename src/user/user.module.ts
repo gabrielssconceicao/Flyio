@@ -5,8 +5,6 @@ import { UserController } from './user.controller';
 import { UserRelationsController } from './user-relations.controller';
 
 @Module({
-<<<<<<< HEAD
-=======
   imports: [],
   controllers: [UserController, UserRelationsController],
   providers: [UserService, UserRelationsService],

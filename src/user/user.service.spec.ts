@@ -107,13 +107,10 @@ describe('<UserService />', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
->>>>>>> images
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-<<<<<<< HEAD
-=======
     expect(hashingService).toBeDefined();
     expect(prismaService).toBeDefined();
     expect(cloudinaryService).toBeDefined();

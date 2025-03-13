@@ -61,7 +61,6 @@ describe('UserController', () => {
           useValue: jwtConfigurationMock,
         },
       ],
->>>>>>> images
     }).compile();
 
     controller = module.get<UserController>(UserController);
@@ -78,11 +77,6 @@ describe('UserController', () => {
     tokenPayload = generateTokenPayloadDtoMock();
   });
 
-<<<<<<< HEAD
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-=======
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -248,5 +242,4 @@ describe('UserController', () => {
       ).rejects.toThrow(BadRequestException);
     });
   });
->>>>>>> images
 });

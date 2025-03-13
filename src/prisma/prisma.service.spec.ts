@@ -10,18 +10,13 @@ describe('<PrismaService />', () => {
     }).compile();
 
     service = module.get<PrismaService>(PrismaService);
-<<<<<<< HEAD
-=======
     jest.spyOn(service, '$connect').mockResolvedValue(undefined);
     jest.spyOn(service, '$disconnect').mockResolvedValue(undefined);
->>>>>>> images
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-<<<<<<< HEAD
-=======
   it('should call $connect on module init', async () => {
     const connectSpy = jest.spyOn(service, '$connect');
     await service.onModuleInit();
@@ -33,5 +28,4 @@ describe('<PrismaService />', () => {
     await service.onModuleDestroy();
     expect(disconnectSpy).toHaveBeenCalledTimes(1);
   });
->>>>>>> images
 });
