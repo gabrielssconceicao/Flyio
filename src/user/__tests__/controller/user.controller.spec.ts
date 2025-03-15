@@ -1,29 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { User } from './entities/user.entity';
-import jwtConfig from '../auth/config/jwt.config';
+import { UserController } from '../../user.controller';
+import { UserService } from '../../user.service';
+import { User } from '../../entities/user.entity';
+import { CreateUserDto, FindAllUsersResponseDto } from '../../dto';
+import jwtConfig from 'src/auth/config/jwt.config';
 import {
   jwtServiceMock,
   jwtConfigurationMock,
   generateTokenPayloadDtoMock,
-} from '../auth/mocks';
-import { TokenPayloadDto } from '../auth/dto';
-import { generateFileMock } from '../cloudinary/mocks';
+} from 'src/auth/mocks';
+import { TokenPayloadDto } from 'src/auth/dto';
+import { generateFileMock } from 'src/cloudinary/mocks';
 
-import { CreateUserDto, FindAllUsersResponseDto } from './dto';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
-} from './mocks';
+} from '../../mocks';
 
 describe('UserController', () => {
   let controller: UserController;
   let service: UserService;
 
-  //mocks
   let createUserDto: CreateUserDto;
   let file: Express.Multer.File;
   let user: User;
