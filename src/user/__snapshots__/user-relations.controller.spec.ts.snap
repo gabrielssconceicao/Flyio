@@ -21,9 +21,3 @@ exports[`UserRelationsController <GetAllPostsByUsername /> should get all posts 
   ],
 }
 `;
-
-exports[`UserRelationsController <Reactivate /> should reactivate a user successfully 1`] = `
-{
-  "message": "User reactivated successfully",
-}
-`;

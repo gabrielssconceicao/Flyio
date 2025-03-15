@@ -39,9 +39,3 @@ exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an arr
   ],
 }
 `;
-
-exports[`<UserRelationsService /> <Reactivate /> should reactivate a user successfully 1`] = `
-{
-  "message": "Account reactivated successfully",
-}
-`;

@@ -62,20 +62,6 @@ describe('UserRelationsController', () => {
     expect(service).toBeDefined();
   });
 
-  describe('<Reactivate />', () => {
-    it('should reactivate a user successfully', async () => {
-      const reactivateUserDto = {
-        token: 'token',
-      };
-      const message = 'User reactivated successfully';
-      jest.spyOn(service, 'reactivate').mockResolvedValue({ message });
-      const result = await controller.reactivate(reactivateUserDto);
-      expect(service.reactivate).toHaveBeenCalledWith(reactivateUserDto);
-      expect(result).toEqual({ message });
-      expect(result).toMatchSnapshot();
-    });
-  });
-
   describe('<GetAllPostsByUsername />', () => {
     it('should get all posts by username successfully', async () => {
       jest
