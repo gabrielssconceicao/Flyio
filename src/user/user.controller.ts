@@ -56,11 +56,31 @@ export class UserController {
           format: 'binary',
           description: 'Profile image file (PNG or JPEG)',
         },
-        name: { type: 'string', description: 'Name of the user' },
-        email: { type: 'string', description: 'Email of the user' },
-        password: { type: 'string', description: 'Password of the user' },
-        username: { type: 'string', description: 'Username of the user' },
-        bio: { type: 'string', description: 'Bio of the user' },
+        name: {
+          type: 'string',
+          description: 'Name of the user',
+          example: 'John Doe',
+        },
+        email: {
+          type: 'string',
+          description: 'Email of the user',
+          example: 'jDoe@example.com',
+        },
+        password: {
+          type: 'string',
+          description: 'Password of the user',
+          example: 'password123',
+        },
+        username: {
+          type: 'string',
+          description: 'Username of the user',
+          example: 'jdoe',
+        },
+        bio: {
+          type: 'string',
+          description: 'Bio of the user',
+          example: 'This is my bio',
+        },
       },
       required: ['name', 'email', 'password', 'username'],
     },
@@ -98,7 +118,7 @@ export class UserController {
   @Post()
   @UseInterceptors(
     FileInterceptor('profileImg', {
-      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+      storage: multer.memoryStorage(),
     }),
   )
   async create(

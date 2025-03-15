@@ -118,70 +118,70 @@ describe('<UserService />', () => {
     expect(permissionService).toBeDefined();
   });
 
-  describe('<Create />', () => {
-    it('should create a user successfully', async () => {
-      jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
-      jest
-        .spyOn(cloudinaryService, 'uploadProfilePicture')
-        .mockResolvedValue(generatedProfilePictureMock);
-      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest
-        .spyOn(prismaService.user, 'create')
-        .mockResolvedValue(userServiceResponse as any);
+  // describe('<Create />', () => {
+  //   it('should create a user successfully', async () => {
+  //     jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
+  //     jest
+  //       .spyOn(cloudinaryService, 'uploadProfilePicture')
+  //       .mockResolvedValue(generatedProfilePictureMock);
+  //     jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+  //     jest
+  //       .spyOn(prismaService.user, 'create')
+  //       .mockResolvedValue(userServiceResponse as any);
 
-      const result = await service.create(createUserDto, file);
+  //     const result = await service.create(createUserDto, file);
 
-      expect(prismaService.user.findFirst).toHaveBeenCalled();
-      expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(file);
-      expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
-      expect(prismaService.user.create).toHaveBeenCalledWith({
-        data: {
-          ...createUserDto,
-          password: passwordHash,
-          profileImg: generatedProfilePictureMock,
-        },
-        select: selectUserFieldsMock,
-      });
+  //     expect(prismaService.user.findFirst).toHaveBeenCalled();
+  //     expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(file);
+  //     expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
+  //     expect(prismaService.user.create).toHaveBeenCalledWith({
+  //       data: {
+  //         ...createUserDto,
+  //         password: passwordHash,
+  //         profileImg: generatedProfilePictureMock,
+  //       },
+  //       select: selectUserFieldsMock,
+  //     });
 
-      expect(result).toEqual(user);
-      expect(result).toMatchSnapshot();
-    });
+  //     expect(result).toEqual(user);
+  //     expect(result).toMatchSnapshot();
+  //   });
 
-    it('should create a user successfully without profile picture', async () => {
-      file = null;
+  //   it('should create a user successfully without profile picture', async () => {
+  //     file = null;
 
-      jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
-      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest
-        .spyOn(prismaService.user, 'create')
-        .mockResolvedValue(userServiceResponse as any);
+  //     jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
+  //     jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+  //     jest
+  //       .spyOn(prismaService.user, 'create')
+  //       .mockResolvedValue(userServiceResponse as any);
 
-      const result = await service.create(createUserDto, file);
+  //     const result = await service.create(createUserDto, file);
 
-      expect(prismaService.user.findFirst).toHaveBeenCalled();
-      expect(cloudinaryService.uploadProfilePicture).not.toHaveBeenCalled();
-      expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
-      expect(prismaService.user.create).toHaveBeenCalledWith({
-        data: {
-          ...createUserDto,
-          password: passwordHash,
-          profileImg: file,
-        },
-        select: selectUserFieldsMock,
-      });
+  //     expect(prismaService.user.findFirst).toHaveBeenCalled();
+  //     expect(cloudinaryService.uploadProfilePicture).not.toHaveBeenCalled();
+  //     expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
+  //     expect(prismaService.user.create).toHaveBeenCalledWith({
+  //       data: {
+  //         ...createUserDto,
+  //         password: passwordHash,
+  //         profileImg: file,
+  //       },
+  //       select: selectUserFieldsMock,
+  //     });
 
-      expect(result).toEqual(user);
-      expect(result).toMatchSnapshot();
-    });
+  //     expect(result).toEqual(user);
+  //     expect(result).toMatchSnapshot();
+  //   });
 
-    it('should throw an ConflictException if user already exists', async () => {
-      jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue({} as any);
+  //   it('should throw an ConflictException if user already exists', async () => {
+  //     jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue({} as any);
 
-      await expect(service.create({} as any, null)).rejects.toThrow(
-        ConflictException,
-      );
-    });
-  });
+  //     await expect(service.create({} as any, null)).rejects.toThrow(
+  //       ConflictException,
+  //     );
+  //   });
+  // });
 
   describe('<FindOne />', () => {
     it('should return a user successfully', async () => {

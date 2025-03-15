@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreateCommentDto> should fail if content is empty 1`] = `
+[
+  {
+    "constraints": {
+      "isNotEmpty": "Content is required",
+      "isString": "Content must be a string",
+      "maxLength": "Content must be at most 255 characters long",
+      "minLength": "Content must be at least 1 characters long",
+    },
+    "property": "content",
+    "value": undefined,
+  },
+]
+`;
+
+exports[`<CreateCommentDto> should fail if content is too long 1`] = `
+[
+  {
+    "constraints": {
+      "maxLength": "Content must be at most 255 characters long",
+    },
+    "property": "content",
+    "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  },
+]
+`;
