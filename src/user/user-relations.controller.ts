@@ -26,6 +26,9 @@ import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto';
 
 @ApiTags('Users')
+@ApiAuthResponses()
+@ApiBearerAuth()
+@UseGuards(AuthTokenGuard)
 @Controller('users')
 export class UserRelationsController {
   constructor(private readonly userRelationsService: UserRelationsService) {}
@@ -41,10 +44,7 @@ export class UserRelationsController {
     description: 'List of posts of a user with limited details',
     type: FindAllUsersPostsResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthTokenGuard)
   @Get(':username/posts')
   getAllPostsByUsername(
     @Param('username') username: string,
@@ -69,10 +69,7 @@ export class UserRelationsController {
     description: 'List of liked posts of a user',
     type: FindAllLikedPostsResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthTokenGuard)
   @Get(':username/posts/liked')
   getAllLikedPostsByUsername(
     @Param('username') username: string,
@@ -91,7 +88,7 @@ export class UserRelationsController {
     example: 'jDoe453',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'User followed successfully',
   })
   @ApiResponse({
@@ -116,11 +113,8 @@ export class UserRelationsController {
       },
     },
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Post(':username/follow')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   followUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -135,7 +129,7 @@ export class UserRelationsController {
     example: 'jDoe453',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'User unfollowed successfully',
   })
   @ApiResponse({
@@ -162,9 +156,6 @@ export class UserRelationsController {
       },
     },
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Post(':username/unfollow')
   @HttpCode(HttpStatus.OK)
   unfollowUser(
@@ -180,11 +171,8 @@ export class UserRelationsController {
     description: 'Return list of users that user follows',
     type: FindAllUsersResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Get(':username/followers')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   getAllFollowersByUser(@Param('username') username: string) {
     return this.userRelationsService.getAllFollowersByUser(username);
   }
@@ -194,9 +182,6 @@ export class UserRelationsController {
     description: 'Return list of users that follow the user',
     type: FindAllUsersResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Get(':username/followings')
   @HttpCode(HttpStatus.CREATED)
   getAllFollowingsByUser(@Param('username') username: string) {

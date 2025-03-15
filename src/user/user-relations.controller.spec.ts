@@ -28,9 +28,9 @@ describe('UserRelationsController', () => {
         {
           provide: UserRelationsService,
           useValue: {
-            reactivate: jest.fn(),
             getAllPostsByUsername: jest.fn(),
             getAllLikedPostsByUsername: jest.fn(),
+            followUser: jest.fn(),
           },
         },
 
@@ -104,6 +104,14 @@ describe('UserRelationsController', () => {
         tokenPayload,
       );
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<FollowUser />', () => {
+    it('should follow a user successfully', async () => {
+      jest.spyOn(service, 'followUser').mockResolvedValue(null);
+      await controller.followUser(username, tokenPayload);
+      expect(service.followUser).toHaveBeenCalledWith(username, tokenPayload);
     });
   });
 });
