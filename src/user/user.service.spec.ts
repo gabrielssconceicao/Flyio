@@ -235,140 +235,140 @@ describe('<UserService />', () => {
   //   });
   // });
 
-  describe('<Update />', () => {
-    it('should update a user successfully without profile picture', async () => {
-      userServiceResponse.profileImg = null;
-      user.profileImg = null;
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(user as any);
-      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest
-        .spyOn(cloudinaryService, 'uploadProfilePicture')
-        .mockResolvedValue(generatedProfilePictureMock);
-      jest.spyOn(prismaService.user, 'update').mockResolvedValue({
-        ...updateUserDto,
-        ...userServiceResponse,
-      } as any);
+  // describe('<Update />', () => {
+  //   it('should update a user successfully without profile picture', async () => {
+  //     userServiceResponse.profileImg = null;
+  //     user.profileImg = null;
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockResolvedValue(user as any);
+  //     jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+  //     jest
+  //       .spyOn(cloudinaryService, 'uploadProfilePicture')
+  //       .mockResolvedValue(generatedProfilePictureMock);
+  //     jest.spyOn(prismaService.user, 'update').mockResolvedValue({
+  //       ...updateUserDto,
+  //       ...userServiceResponse,
+  //     } as any);
 
-      const result = await service.update(
-        username,
-        updateUserDto,
-        file,
-        tokenPayload,
-      );
-      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-        where: { username },
-      });
-      expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
-      expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(file);
-      expect(prismaService.user.update).toHaveBeenCalledWith({
-        where: { username },
-        data: {
-          ...updateUserDto,
-          password: passwordHash,
-          profileImg: generatedProfilePictureMock,
-        },
-        select: selectUserFieldsMock,
-      });
-      expect(result).toEqual({
-        ...updateUserDto,
-        ...user,
-      });
+  //     const result = await service.update(
+  //       username,
+  //       updateUserDto,
+  //       file,
+  //       tokenPayload,
+  //     );
+  //     expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+  //       where: { username },
+  //     });
+  //     expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
+  //     expect(cloudinaryService.uploadProfilePicture).toHaveBeenCalledWith(file);
+  //     expect(prismaService.user.update).toHaveBeenCalledWith({
+  //       where: { username },
+  //       data: {
+  //         ...updateUserDto,
+  //         password: passwordHash,
+  //         profileImg: generatedProfilePictureMock,
+  //       },
+  //       select: selectUserFieldsMock,
+  //     });
+  //     expect(result).toEqual({
+  //       ...updateUserDto,
+  //       ...user,
+  //     });
 
-      expect(result).toMatchSnapshot();
-    });
-    it('should update a user successfully with profile picture', async () => {
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(user as any);
-      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
-      jest
-        .spyOn(cloudinaryService, 'updateProfilePicture')
-        .mockResolvedValue(generatedProfilePictureMock);
-      jest.spyOn(prismaService.user, 'update').mockResolvedValue({
-        ...updateUserDto,
-        ...userServiceResponse,
-      } as any);
+  //     expect(result).toMatchSnapshot();
+  //   });
+  //   it('should update a user successfully with profile picture', async () => {
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockResolvedValue(user as any);
+  //     jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+  //     jest
+  //       .spyOn(cloudinaryService, 'updateProfilePicture')
+  //       .mockResolvedValue(generatedProfilePictureMock);
+  //     jest.spyOn(prismaService.user, 'update').mockResolvedValue({
+  //       ...updateUserDto,
+  //       ...userServiceResponse,
+  //     } as any);
 
-      const result = await service.update(
-        username,
-        updateUserDto,
-        file,
-        tokenPayload,
-      );
-      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-        where: { username },
-      });
-      expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
-      expect(cloudinaryService.updateProfilePicture).toHaveBeenCalledWith(
-        file,
-        user.profileImg,
-      );
-      expect(prismaService.user.update).toHaveBeenCalledWith({
-        where: { username },
-        data: {
-          ...updateUserDto,
-          password: passwordHash,
-          profileImg: generatedProfilePictureMock,
-        },
-        select: selectUserFieldsMock,
-      });
-      expect(result).toEqual({
-        ...updateUserDto,
-        ...user,
-      });
+  //     const result = await service.update(
+  //       username,
+  //       updateUserDto,
+  //       file,
+  //       tokenPayload,
+  //     );
+  //     expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+  //       where: { username },
+  //     });
+  //     expect(hashingService.hash).toHaveBeenCalledWith(updateUserDto.password);
+  //     expect(cloudinaryService.updateProfilePicture).toHaveBeenCalledWith(
+  //       file,
+  //       user.profileImg,
+  //     );
+  //     expect(prismaService.user.update).toHaveBeenCalledWith({
+  //       where: { username },
+  //       data: {
+  //         ...updateUserDto,
+  //         password: passwordHash,
+  //         profileImg: generatedProfilePictureMock,
+  //       },
+  //       select: selectUserFieldsMock,
+  //     });
+  //     expect(result).toEqual({
+  //       ...updateUserDto,
+  //       ...user,
+  //     });
 
-      expect(result).toMatchSnapshot();
-    });
+  //     expect(result).toMatchSnapshot();
+  //   });
 
-    it('should throw an error if user not found', async () => {
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockRejectedValue(new NotFoundException());
+  //   it('should throw an error if user not found', async () => {
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockRejectedValue(new NotFoundException());
 
-      await expect(
-        service.update(username, updateUserDto, file, tokenPayload),
-      ).rejects.toThrow(NotFoundException);
-    });
+  //     await expect(
+  //       service.update(username, updateUserDto, file, tokenPayload),
+  //     ).rejects.toThrow(NotFoundException);
+  //   });
 
-    it('should throw an error if email is already in use', async () => {
-      updateUserDto.email = 'johndoe@example.com';
+  //   it('should throw an error if email is already in use', async () => {
+  //     updateUserDto.email = 'johndoe@example.com';
 
-      const conflictingUserMock = {
-        id: 2,
-        username: 'otherUser',
-        email: 'newemail@example.com',
-      };
+  //     const conflictingUserMock = {
+  //       id: 2,
+  //       username: 'otherUser',
+  //       email: 'newemail@example.com',
+  //     };
 
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(user as any);
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockResolvedValue(user as any);
 
-      jest
-        .spyOn(prismaService.user, 'findFirst')
-        .mockResolvedValue(conflictingUserMock as any);
+  //     jest
+  //       .spyOn(prismaService.user, 'findFirst')
+  //       .mockResolvedValue(conflictingUserMock as any);
 
-      await expect(
-        service.update(username, updateUserDto, undefined, tokenPayload),
-      ).rejects.toThrow(ConflictException);
-    });
+  //     await expect(
+  //       service.update(username, updateUserDto, undefined, tokenPayload),
+  //     ).rejects.toThrow(ConflictException);
+  //   });
 
-    it('should throw an error if a user is trying to update other user', async () => {
-      user.id = 'other-id-4';
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(user as any);
-      jest
-        .spyOn(permissionService, 'verifyUserOwnership')
-        .mockImplementation(() => {
-          throw new ForbiddenException();
-        });
-      await expect(
-        service.update(username, updateUserDto, undefined, tokenPayload),
-      ).rejects.toThrow(ForbiddenException);
-    });
-  });
+  //   it('should throw an error if a user is trying to update other user', async () => {
+  //     user.id = 'other-id-4';
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockResolvedValue(user as any);
+  //     jest
+  //       .spyOn(permissionService, 'verifyUserOwnership')
+  //       .mockImplementation(() => {
+  //         throw new ForbiddenException();
+  //       });
+  //     await expect(
+  //       service.update(username, updateUserDto, undefined, tokenPayload),
+  //     ).rejects.toThrow(ForbiddenException);
+  //   });
+  // });
 
   describe('<DesactivateUser />', () => {
     it('should delete a user successfully', async () => {

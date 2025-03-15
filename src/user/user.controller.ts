@@ -173,16 +173,16 @@ export class UserController {
     example: 'jDoe45',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'User found successfully.',
     type: User,
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatus.NOT_FOUND,
     description: 'User not found.',
     schema: {
       example: {
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         message: 'User not found.',
         error: 'Not Found',
       },
