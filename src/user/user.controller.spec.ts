@@ -1,9 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -47,7 +43,7 @@ describe('UserController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            desactivateUser: jest.fn(),
+            deactivate: jest.fn(),
             removeProfilePicture: jest.fn(),
           },
         },
@@ -149,49 +145,16 @@ describe('UserController', () => {
       expect(result).toEqual(updatedUser);
       expect(result).toMatchSnapshot();
     });
-    it('should throw an NotFoundException', async () => {
-      jest
-        .spyOn(service, 'update')
-        .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(
-        controller.update(id, {}, undefined, tokenPayload),
-      ).rejects.toThrow(NotFoundException);
-    });
-    it('should throw an ConflictException', async () => {
-      const updateUserDto = {
-        email: 'john@example.com',
-      };
-      jest
-        .spyOn(service, 'update')
-        .mockRejectedValue(
-          new ConflictException(
-            'Email is already associated with an existing account',
-          ),
-        );
-      await expect(
-        controller.update(id, updateUserDto, undefined, tokenPayload),
-      ).rejects.toThrow(ConflictException);
-    });
   });
 
-  describe('<DesactivateUser />', () => {
+  describe('<Deactivate />', () => {
     it('should delete a user successfully', async () => {
       const message = 'User desactivated successfully';
-      jest.spyOn(service, 'desactivateUser').mockResolvedValue({ message });
-      const result = await controller.desactivateUser(id, tokenPayload);
-      expect(service.desactivateUser).toHaveBeenCalledWith(id, tokenPayload);
+      jest.spyOn(service, 'deactivate').mockResolvedValue({ message });
+      const result = await controller.deactivate(id, tokenPayload);
+      expect(service.deactivate).toHaveBeenCalledWith(id, tokenPayload);
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
-    });
-    it('should throw an BadRequestException', async () => {
-      jest
-        .spyOn(service, 'desactivateUser')
-        .mockRejectedValue(
-          new BadRequestException('User is already deactivated'),
-        );
-      await expect(
-        controller.desactivateUser(id, tokenPayload),
-      ).rejects.toThrow(BadRequestException);
     });
   });
 

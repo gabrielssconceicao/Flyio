@@ -177,8 +177,11 @@ export class UserService {
     return this.separateUsersAndCount(updatedUser);
   }
 
-  async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
+  async deactivate(username: string, tokenPayload: TokenPayloadDto) {
     const user = await this.findOne(username);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
     if (!user.active) {
       throw new BadRequestException('User is already deactivated');
@@ -188,7 +191,7 @@ export class UserService {
       where: { username },
       data: { active: false },
     });
-    return { message: 'User desactivated successfully' };
+    return { message: 'User deactivated successfully' };
   }
 
   async removeProfilePicture(

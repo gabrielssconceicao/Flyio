@@ -302,20 +302,31 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'User desactivated successfully.',
+    description: 'User deactivate successfully.',
     schema: {
       example: {
-        message: 'User desactivated successfully.',
+        message: 'User deactivate successfully.',
       },
     },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'User is already deactivated',
+    description: 'User is already deactivate',
     schema: {
       example: {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'User is already deactivated',
+        message: 'User is already deactivate',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'User not found',
         error: 'Bad Request',
       },
     },
@@ -336,11 +347,11 @@ export class UserController {
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':username')
-  desactivateUser(
+  deactivate(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
-    return this.userService.desactivateUser(username, tokenPayload);
+    return this.userService.deactivate(username, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Delete user profile picture by username' })
