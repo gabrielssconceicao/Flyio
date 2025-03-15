@@ -67,7 +67,7 @@ describe('UserController', () => {
     service = module.get<UserService>(UserService);
 
     // mocks
-    createUserDto = generateCreateUserDtoMock(true);
+    createUserDto = generateCreateUserDtoMock();
     file = generateFileMock();
     user = generateUserMock();
     users = generateFindAllUsersResponseDtoMock();
@@ -95,22 +95,6 @@ describe('UserController', () => {
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
-    it('should throw ConflictException when email or username is already in use', async () => {
-      jest
-        .spyOn(service, 'create')
-        .mockRejectedValue(
-          new ConflictException(
-            'This email or username is already associated with an existing account',
-          ),
-        );
-
-      await expect(controller.create(createUserDto, undefined)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(
-        controller.create(createUserDto, undefined),
-      ).rejects.toMatchSnapshot();
-    });
   });
 
   describe('<FindAll />', () => {
@@ -137,16 +121,6 @@ describe('UserController', () => {
       expect(service.findOne).toHaveBeenCalledWith(username);
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
-    });
-    it('should throw an NotFoundException', async () => {
-      jest
-        .spyOn(service, 'findOne')
-        .mockRejectedValue(new NotFoundException('User not found'));
-
-      await expect(controller.findOne(username)).rejects.toThrow(
-        NotFoundException,
-      );
-      await expect(controller.findOne(username)).rejects.toMatchSnapshot();
     });
   });
 

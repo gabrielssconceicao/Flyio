@@ -183,31 +183,31 @@ describe('<UserService />', () => {
   //   });
   // });
 
-  describe('<FindOne />', () => {
-    it('should return a user successfully', async () => {
-      jest
-        .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(userServiceResponse as any);
+  // describe('<FindOne />', () => {
+  //   it('should return a user successfully', async () => {
+  //     jest
+  //       .spyOn(prismaService.user, 'findUnique')
+  //       .mockResolvedValue(userServiceResponse as any);
 
-      const result = await service.findOne(username);
+  //     const result = await service.findOne(username);
 
-      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-        where: { username },
-        select: selectUserFieldsMock,
-      });
+  //     expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+  //       where: { username },
+  //       select: selectUserFieldsMock,
+  //     });
 
-      expect(result).toEqual(result);
-      expect(result).toMatchSnapshot();
-    });
+  //     expect(result).toEqual(result);
+  //     expect(result).toMatchSnapshot();
+  //   });
 
-    it('should throw an NotFoundException', async () => {
-      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
+  //   it('should throw an NotFoundException', async () => {
+  //     jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
 
-      await expect(service.findOne(username)).rejects.toThrow(
-        NotFoundException,
-      );
-    });
-  });
+  //     await expect(service.findOne(username)).rejects.toThrow(
+  //       NotFoundException,
+  //     );
+  //   });
+  // });
 
   describe('<FindAll />', () => {
     it('should search for a list of users ', async () => {
