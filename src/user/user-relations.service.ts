@@ -139,10 +139,6 @@ export class UserRelationsService {
   async unfollowUser(username: string, tokenPayload: TokenPayloadDto) {
     const followingUser = await this.userExists(username);
 
-    if (!followingUser) {
-      throw new NotFoundException('User not found');
-    }
-
     if (followingUser.id === tokenPayload.sub) {
       throw new BadRequestException('You cannot unfollow yourself');
     }

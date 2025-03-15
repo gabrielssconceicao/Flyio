@@ -31,6 +31,7 @@ describe('UserRelationsController', () => {
             getAllPostsByUsername: jest.fn(),
             getAllLikedPostsByUsername: jest.fn(),
             followUser: jest.fn(),
+            unfollowUser: jest.fn(),
           },
         },
 
@@ -112,6 +113,14 @@ describe('UserRelationsController', () => {
       jest.spyOn(service, 'followUser').mockResolvedValue(null);
       await controller.followUser(username, tokenPayload);
       expect(service.followUser).toHaveBeenCalledWith(username, tokenPayload);
+    });
+  });
+
+  describe('<UnfollowUser />', () => {
+    it('should unfollow a user successfully', async () => {
+      jest.spyOn(service, 'unfollowUser').mockResolvedValue(null);
+      await controller.unfollowUser(username, tokenPayload);
+      expect(service.unfollowUser).toHaveBeenCalledWith(username, tokenPayload);
     });
   });
 });

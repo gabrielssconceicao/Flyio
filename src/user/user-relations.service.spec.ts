@@ -31,6 +31,7 @@ describe('<UserRelationsService />', () => {
             follower: {
               findFirst: jest.fn(),
               create: jest.fn(),
+              delete: jest.fn(),
             },
             findAll: jest.fn(),
           },
@@ -180,6 +181,58 @@ describe('<UserRelationsService />', () => {
       await expect(service.followUser(username, tokenPayload)).rejects.toThrow(
         BadRequestException,
       );
+    });
+  });
+
+  describe('<UnfollowUser />', () => {
+    it('should unfollow a user', async () => {
+      user.id = 'id-jonny';
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+      jest
+        .spyOn(prismaService.follower, 'findFirst')
+        .mockResolvedValue({ userId: 'id-1', followingId: 'id-donny' } as any);
+      jest.spyOn(prismaService.follower, 'delete').mockResolvedValue({} as any);
+
+      await service.unfollowUser(user.username, tokenPayload);
+
+      expect(prismaService.user.findUnique).toHaveBeenCalled();
+      expect(prismaService.follower.findFirst).toHaveBeenCalled();
+      expect(prismaService.follower.delete).toHaveBeenCalled();
+    });
+
+    it('should throw an NotFoundException if user not found', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(
+        service.unfollowUser(username, tokenPayload),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw an BadRequestException if user unfollows itself', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+
+      await expect(
+        service.unfollowUser(user.username, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw an BadRequestException if user is already unfollowed', async () => {
+      user.id = 'id-jonny';
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+
+      jest.spyOn(prismaService.user, 'findFirst').mockResolvedValue(null);
+
+      await expect(
+        service.unfollowUser(username, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });
