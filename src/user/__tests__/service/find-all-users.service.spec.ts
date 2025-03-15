@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { NotFoundException } from '@nestjs/common';
-import { User } from '../../entities/user.entity';
-import { generateUserMock } from '../../mocks';
+import { generateFindAllUsersResponseDtoMock } from '../../mocks';
 import { UserService } from '../../user.service';
+import { FindAllUsersResponseDto } from '../../dto';
 import { HashingServiceProtocol } from 'src/auth/hashing/hashing.service';
 import { hashingServiceMock, jwtServiceMock } from 'src/auth/mocks';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -11,14 +10,13 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { cloudinaryServiceMock } from 'src/cloudinary/mocks';
 import { PermissionService } from 'src/permission/permission.service';
 
-describe('<UserService - (findOne) />', () => {
+describe('<UserService - (findAll) />', () => {
   let service: UserService;
   let hashingService: HashingServiceProtocol;
   let prismaService: PrismaService;
   let cloudinaryService: CloudinaryService;
 
-  let user: User;
-  let username: string;
+  let findAllUsersResponse: FindAllUsersResponseDto;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,8 +29,10 @@ describe('<UserService - (findOne) />', () => {
           provide: PrismaService,
           useValue: {
             user: {
-              findUnique: jest.fn(),
+              findMany: jest.fn(),
+              count: jest.fn(),
             },
+            findAll: jest.fn(),
           },
         },
         {
@@ -55,8 +55,7 @@ describe('<UserService - (findOne) />', () => {
     prismaService = module.get<PrismaService>(PrismaService);
     cloudinaryService = module.get<CloudinaryService>(CloudinaryService);
 
-    user = generateUserMock();
-    username = user.username;
+    findAllUsersResponse = generateFindAllUsersResponseDtoMock();
   });
 
   afterEach(() => {
@@ -70,23 +69,24 @@ describe('<UserService - (findOne) />', () => {
     expect(cloudinaryService).toBeDefined();
   });
 
-  it('should return a user successfully', async () => {
-    jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue({
-      ...user,
-      _count: { followers: 0, following: 0 },
+  it('should search for a list of users ', async () => {
+    const query = {
+      search: 'jD',
+      limit: 1,
+      offset: 0,
+    };
+
+    jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+      count: findAllUsersResponse.count,
+      items: findAllUsersResponse.items,
     } as any);
 
-    const result = await service.findOne(username);
+    const result = await service.findAll(query);
 
-    expect(prismaService.user.findUnique).toHaveBeenCalled();
-
-    expect(result).toEqual(result);
+    expect(prismaService.findAll).toHaveBeenCalled();
+    expect(result.count).toBe(1);
+    expect(result.items.length).toBe(1);
+    expect(result).toEqual(findAllUsersResponse);
     expect(result).toMatchSnapshot();
-  });
-
-  it('should throw an NotFoundException', async () => {
-    jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
-
-    await expect(service.findOne(username)).rejects.toThrow(NotFoundException);
   });
 });

@@ -85,19 +85,22 @@ export class UserService {
           OR: [{ name: { contains: search } }, { email: { contains: search } }],
         }
       : {};
-    const users = await this.prismaService.user.findMany({
-      where: where,
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        profileImg: true,
+
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.user,
+      {
+        where,
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profileImg: true,
+        },
+        take: limit,
+        skip: offset,
       },
-      take: limit,
-      skip: offset,
-    });
-    const count = await this.prismaService.user.count({ where });
-    return { count, items: users };
+    );
+    return { count, items };
   }
 
   async findOne(username: string): Promise<User> {

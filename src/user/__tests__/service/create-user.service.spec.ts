@@ -8,7 +8,6 @@ import { CreateUserDto } from '../../dto';
 import { HashingServiceProtocol } from 'src/auth/hashing/hashing.service';
 import { hashingServiceMock, jwtServiceMock } from 'src/auth/mocks';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { userPrismaService } from 'src/prisma/mock/prisma.service.mock';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import {
   cloudinaryServiceMock,
@@ -36,7 +35,12 @@ describe('<UserService - (create) />', () => {
         },
         {
           provide: PrismaService,
-          useValue: userPrismaService,
+          useValue: {
+            user: {
+              create: jest.fn(),
+              findFirst: jest.fn(),
+            },
+          },
         },
         {
           provide: CloudinaryService,

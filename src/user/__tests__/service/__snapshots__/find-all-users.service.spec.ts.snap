@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserService - (findAll) /> should search for a list of users  1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
+}
+`;

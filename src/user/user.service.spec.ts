@@ -209,31 +209,31 @@ describe('<UserService />', () => {
   //   });
   // });
 
-  describe('<FindAll />', () => {
-    it('should search for a list of users ', async () => {
-      const query = {
-        search: 'jD',
-        limit: 1,
-        offset: 0,
-      };
+  // describe('<FindAll />', () => {
+  //   it('should search for a list of users ', async () => {
+  //     const query = {
+  //       search: 'jD',
+  //       limit: 1,
+  //       offset: 0,
+  //     };
 
-      jest
-        .spyOn(prismaService.user, 'findMany')
-        .mockResolvedValue(findAllResponse.items as any);
-      jest
-        .spyOn(prismaService.user, 'count')
-        .mockResolvedValue(findAllResponse.count);
+  //     jest
+  //       .spyOn(prismaService.user, 'findMany')
+  //       .mockResolvedValue(findAllResponse.items as any);
+  //     jest
+  //       .spyOn(prismaService.user, 'count')
+  //       .mockResolvedValue(findAllResponse.count);
 
-      const result = await service.findAll(query);
+  //     const result = await service.findAll(query);
 
-      expect(prismaService.user.findMany).toHaveBeenCalled();
-      expect(prismaService.user.count).toHaveBeenCalled();
-      expect(result.count).toBe(1);
-      expect(result.items.length).toBe(1);
-      expect(result).toEqual(findAllResponse);
-      expect(result).toMatchSnapshot();
-    });
-  });
+  //     expect(prismaService.user.findMany).toHaveBeenCalled();
+  //     expect(prismaService.user.count).toHaveBeenCalled();
+  //     expect(result.count).toBe(1);
+  //     expect(result.items.length).toBe(1);
+  //     expect(result).toEqual(findAllResponse);
+  //     expect(result).toMatchSnapshot();
+  //   });
+  // });
 
   describe('<Update />', () => {
     it('should update a user successfully without profile picture', async () => {
