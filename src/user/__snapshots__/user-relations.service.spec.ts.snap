@@ -20,7 +20,7 @@ exports[`<UserRelationsService /> <GetAllLikedPostsByUsername /> should return a
 }
 `;
 
-exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts if user is found 1`] = `
+exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts of a user 1`] = `
 {
   "count": 1,
   "items": [

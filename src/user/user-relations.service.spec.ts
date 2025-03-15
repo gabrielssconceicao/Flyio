@@ -9,11 +9,14 @@ import { generateFindAllPostsDtoMock } from '../post/mock';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllPostsResponseDto } from '../post/dto';
 import { generateUserMock } from './mocks';
+import { User } from './entities/user.entity';
+
 describe('<UserRelationsService />', () => {
   let service: UserRelationsService;
   let prismaService: PrismaService;
   let jwtService: JwtService;
 
+  let user: User;
   let username: string;
   let paginationDto: PaginationDto;
   let findAllPostsDto: FindAllPostsResponseDto;
@@ -40,6 +43,8 @@ describe('<UserRelationsService />', () => {
 
     username = 'username';
 
+    user = generateUserMock();
+
     paginationDto = { limit: 10, offset: 0 };
     findAllPostsDto = generateFindAllPostsDtoMock();
   });
@@ -55,10 +60,10 @@ describe('<UserRelationsService />', () => {
   });
 
   describe('<GetAllPostsByUsername />', () => {
-    it('should return an array of posts if user is found', async () => {
+    it('should return an array of posts of a user', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(generateUserMock() as any);
+        .mockResolvedValue(user as any);
       jest.spyOn(prismaService, 'findAll').mockResolvedValue({
         count: findAllPostsDto.count,
         items: findAllPostsDto.items.map((item) => ({
@@ -97,7 +102,7 @@ describe('<UserRelationsService />', () => {
     it('should return an array of posts if user is found', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
-        .mockResolvedValue(generateUserMock() as any);
+        .mockResolvedValue(user as any);
 
       jest.spyOn(prismaService, 'findAll').mockResolvedValue({
         count: findAllPostsDto.count,

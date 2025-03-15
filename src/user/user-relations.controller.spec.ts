@@ -11,6 +11,7 @@ import {
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FindAllPostsResponseDto } from '../post/dto';
 import { generateFindAllPostsDtoMock } from '../post/mock';
+import { TokenPayloadDto } from 'src/auth/dto';
 
 describe('UserRelationsController', () => {
   let controller: UserRelationsController;
@@ -19,6 +20,7 @@ describe('UserRelationsController', () => {
   let username: string;
   let paginationDto: PaginationDto;
   let findAllPosts: FindAllPostsResponseDto;
+  let tokenPayload: TokenPayloadDto;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserRelationsController],
@@ -51,6 +53,7 @@ describe('UserRelationsController', () => {
       limit: 10,
     };
     findAllPosts = generateFindAllPostsDtoMock();
+    tokenPayload = generateTokenPayloadDtoMock();
   });
 
   afterEach(() => {
@@ -70,12 +73,12 @@ describe('UserRelationsController', () => {
       const result = await controller.getAllPostsByUsername(
         username,
         paginationDto,
-        generateTokenPayloadDtoMock(),
+        tokenPayload,
       );
       expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
         username,
         paginationDto,
-        generateTokenPayloadDtoMock(),
+        tokenPayload,
       );
       expect(result).toMatchSnapshot();
     });
@@ -93,12 +96,12 @@ describe('UserRelationsController', () => {
       const result = await controller.getAllPostsByUsername(
         username,
         paginationDto,
-        generateTokenPayloadDtoMock(),
+        tokenPayload,
       );
       expect(service.getAllPostsByUsername).toHaveBeenCalledWith(
         username,
         paginationDto,
-        generateTokenPayloadDtoMock(),
+        tokenPayload,
       );
       expect(result).toMatchSnapshot();
     });

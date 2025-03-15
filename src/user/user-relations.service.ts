@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { FindAllUsersResponseDto } from './dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -13,10 +12,30 @@ import { TokenPayloadDto } from '../auth/dto';
 
 @Injectable()
 export class UserRelationsService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
+
+  private selectPostFields = {
+    id: true,
+    content: true,
+    createdAt: true,
+    images: {
+      select: {
+        url: true,
+        id: true,
+      },
+    },
+    user: {
+      select: {
+        username: true,
+        profileImg: true,
+      },
+    },
+    _count: {
+      select: {
+        PostLikes: true,
+      },
+    },
+  };
 
   async getAllPostsByUsername(
     username: string,
@@ -25,35 +44,14 @@ export class UserRelationsService {
   ): Promise<FindAllUsersPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
 
-    if (!(await this.userExists(username))) {
-      throw new NotFoundException('User not found');
-    }
+    await this.userExists(username);
 
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.post,
       {
         where: { user: { username } },
         select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          user: {
-            select: {
-              username: true,
-              profileImg: true,
-            },
-          },
-          images: {
-            select: {
-              url: true,
-              id: true,
-            },
-          },
-          _count: {
-            select: {
-              PostLikes: true,
-            },
-          },
+          ...this.selectPostFields,
           PostLikes: {
             where: { userId: tokenPayload.sub },
             select: { userId: true },
@@ -80,9 +78,7 @@ export class UserRelationsService {
   ): Promise<FindAllLikedPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
     const user = await this.userExists(username);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.post,
       {
@@ -98,28 +94,7 @@ export class UserRelationsService {
         },
         take: limit,
         skip: offset,
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          images: {
-            select: {
-              url: true,
-              id: true,
-            },
-          },
-          user: {
-            select: {
-              username: true,
-              profileImg: true,
-            },
-          },
-          _count: {
-            select: {
-              PostLikes: true,
-            },
-          },
-        },
+        select: this.selectPostFields,
       },
     );
 
@@ -248,8 +223,14 @@ export class UserRelationsService {
   }
 
   private async userExists(username: string) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { username },
     });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
