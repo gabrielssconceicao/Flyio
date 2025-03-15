@@ -362,12 +362,8 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Profile picture deleted successfully.',
-    type: User,
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'No profile picture to delete.',
+    description:
+      'Profile picture deleted successfully./No profile picture to delete. ',
     type: User,
   })
   @ApiResponse({

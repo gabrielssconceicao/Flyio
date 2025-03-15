@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserService - (removeProfilePicture) /> should not remove profile picture if user does not have one 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "followers": 0,
+  "following": 0,
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;
+
+exports[`<UserService - (removeProfilePicture) /> should remove profile picture successfully 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "followers": 0,
+  "following": 0,
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;

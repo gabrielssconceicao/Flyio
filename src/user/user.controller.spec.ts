@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -169,14 +168,6 @@ describe('UserController', () => {
       );
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
-    });
-    it('should throw an BadRequestException if an error occurs', async () => {
-      jest
-        .spyOn(service, 'removeProfilePicture')
-        .mockRejectedValue(new BadRequestException());
-      await expect(
-        controller.removeProfileImg(username, tokenPayload),
-      ).rejects.toThrow(BadRequestException);
     });
   });
 });
