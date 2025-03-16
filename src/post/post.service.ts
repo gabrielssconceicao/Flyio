@@ -134,7 +134,6 @@ export class PostService {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    console.log(post);
     const { _count, PostLikes, comments, ...rest } = post;
     return {
       ...rest,
