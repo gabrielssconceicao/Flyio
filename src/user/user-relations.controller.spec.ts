@@ -9,9 +9,8 @@ import {
   generateTokenPayloadDtoMock,
 } from '../auth/mocks';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { FindAllPostsResponseDto } from '../post/dto';
 import { generateFindAllPostsDtoMock } from '../post/mock';
-import { TokenPayloadDto } from 'src/auth/dto';
+import { generateFindAllUsersResponseDtoMock } from './mocks';
 
 describe('UserRelationsController', () => {
   let controller: UserRelationsController;
@@ -19,8 +18,9 @@ describe('UserRelationsController', () => {
 
   let username: string;
   let paginationDto: PaginationDto;
-  let findAllPosts: FindAllPostsResponseDto;
-  let tokenPayload: TokenPayloadDto;
+  let findAllPosts: ReturnType<typeof generateFindAllPostsDtoMock>;
+  let findAllUsers: ReturnType<typeof generateFindAllUsersResponseDtoMock>;
+  let tokenPayload: ReturnType<typeof generateTokenPayloadDtoMock>;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserRelationsController],
@@ -32,6 +32,7 @@ describe('UserRelationsController', () => {
             getAllLikedPostsByUsername: jest.fn(),
             followUser: jest.fn(),
             unfollowUser: jest.fn(),
+            getAllFollowersByUser: jest.fn(),
           },
         },
 
@@ -55,6 +56,8 @@ describe('UserRelationsController', () => {
     };
     findAllPosts = generateFindAllPostsDtoMock();
     tokenPayload = generateTokenPayloadDtoMock();
+
+    findAllUsers = generateFindAllUsersResponseDtoMock();
   });
 
   afterEach(() => {
@@ -121,6 +124,24 @@ describe('UserRelationsController', () => {
       jest.spyOn(service, 'unfollowUser').mockResolvedValue(null);
       await controller.unfollowUser(username, tokenPayload);
       expect(service.unfollowUser).toHaveBeenCalledWith(username, tokenPayload);
+    });
+  });
+
+  describe('<GetAllFollowersByUser />', () => {
+    it('should get all posts by username successfully', async () => {
+      jest
+        .spyOn(service, 'getAllFollowersByUser')
+        .mockResolvedValue(findAllUsers);
+      const result = await controller.getAllFollowersByUser(
+        username,
+        paginationDto,
+      );
+      expect(service.getAllFollowersByUser).toHaveBeenCalledWith(
+        username,
+        paginationDto,
+      );
+
+      expect(result).toMatchSnapshot();
     });
   });
 });

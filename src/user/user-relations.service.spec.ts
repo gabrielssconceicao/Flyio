@@ -6,7 +6,7 @@ import { generateTokenPayloadDtoMock } from '../auth/mocks';
 import { UserRelationsService } from './user-relations.service';
 import { generateFindAllPostsDtoMock } from '../post/mock';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { generateUserMock } from './mocks';
+import { generateUserMock, generateFindAllUsersResponseDtoMock } from './mocks';
 
 describe('<UserRelationsService />', () => {
   let service: UserRelationsService;
@@ -14,8 +14,12 @@ describe('<UserRelationsService />', () => {
 
   let user: ReturnType<typeof generateUserMock>;
   let username: string;
+  let findAllUsersResponseDto: ReturnType<
+    typeof generateFindAllUsersResponseDtoMock
+  >;
   let paginationDto: PaginationDto;
   let findAllPostsDto: ReturnType<typeof generateFindAllPostsDtoMock>;
+
   let tokenPayload: ReturnType<typeof generateTokenPayloadDtoMock>;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,9 +48,8 @@ describe('<UserRelationsService />', () => {
     prismaService = module.get<PrismaService>(PrismaService);
 
     username = 'jDoe453';
-
     user = generateUserMock();
-
+    findAllUsersResponseDto = generateFindAllUsersResponseDtoMock();
     paginationDto = { limit: 10, offset: 0 };
     findAllPostsDto = generateFindAllPostsDtoMock();
 
@@ -233,6 +236,49 @@ describe('<UserRelationsService />', () => {
       await expect(
         service.unfollowUser(username, tokenPayload),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('<getAllFollowingsByUser />', () => {
+    it('should return an array of followings of a user', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+
+      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+        count: findAllUsersResponseDto.count,
+        items: [{ following: findAllUsersResponseDto.items[0] }],
+      } as any);
+
+      const result = await service.getAllFollowingsByUser(username);
+
+      expect(result).toEqual(findAllUsersResponseDto);
+      expect(result.count).toBe(1);
+      expect(result.items.length).toBe(1);
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<GetAllFollowersByUser />', () => {
+    it('should return an array of followers of a user', async () => {
+      jest
+        .spyOn(prismaService.user, 'findUnique')
+        .mockResolvedValue(user as any);
+
+      jest.spyOn(prismaService, 'findAll').mockResolvedValue({
+        count: findAllUsersResponseDto.count,
+        items: [{ user: findAllUsersResponseDto.items[0] }],
+      } as any);
+
+      const result = await service.getAllFollowersByUser(
+        username,
+        paginationDto,
+      );
+
+      expect(result).toEqual(findAllUsersResponseDto);
+      expect(result.count).toBe(1);
+      expect(result.items.length).toBe(1);
+      expect(result).toMatchSnapshot();
     });
   });
 });

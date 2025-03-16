@@ -167,9 +167,6 @@ export class UserRelationsService {
     username: string,
   ): Promise<FindAllUsersResponseDto> {
     const user = await this.userExists(username);
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
 
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.follower,
@@ -187,17 +184,17 @@ export class UserRelationsService {
         },
       },
     );
-
     return { count, items: items.map((item) => item.following) };
   }
   async getAllFollowersByUser(
     username: string,
+    paginationDto: PaginationDto,
   ): Promise<FindAllUsersResponseDto> {
     const user = await this.userExists(username);
     if (!user) {
       throw new BadRequestException('User not found');
     }
-
+    const { limit = 50, offset = 0 } = paginationDto;
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.follower,
       {
@@ -212,6 +209,8 @@ export class UserRelationsService {
             },
           },
         },
+        skip: offset,
+        take: limit,
       },
     );
 

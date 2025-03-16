@@ -157,7 +157,7 @@ export class UserRelationsController {
     },
   })
   @Post(':username/unfollow')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   unfollowUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -165,16 +165,22 @@ export class UserRelationsController {
     return this.userRelationsService.unfollowUser(username, tokenPayload);
   }
 
-  @ApiOperation({ summary: 'Get all followers' })
+  @ApiOperation({ summary: 'Get all followers by user' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return list of users that user follows',
     type: FindAllUsersResponseDto,
   })
   @Get(':username/followers')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  getAllFollowersByUser(@Param('username') username: string) {
-    return this.userRelationsService.getAllFollowersByUser(username);
+  @HttpCode(HttpStatus.OK)
+  getAllFollowersByUser(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.userRelationsService.getAllFollowersByUser(
+      username,
+      paginationDto,
+    );
   }
   @ApiOperation({ summary: 'Get all followed users' })
   @ApiResponse({
@@ -183,7 +189,7 @@ export class UserRelationsController {
     type: FindAllUsersResponseDto,
   })
   @Get(':username/followings')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   getAllFollowingsByUser(@Param('username') username: string) {
     return this.userRelationsService.getAllFollowingsByUser(username);
   }
