@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { generateFileMock } from '../mocks';
-import { PostImagesValidatorPipe } from './post-image-validator.pipe';
+import { PostImagesValidatorPipe } from '../pipes/post-image-validator.pipe';
 
 describe('<PostImagesValidatorPipe/ >', () => {
   let pipe: PostImagesValidatorPipe;
