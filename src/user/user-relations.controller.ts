@@ -182,6 +182,7 @@ export class UserRelationsController {
       paginationDto,
     );
   }
+
   @ApiOperation({ summary: 'Get all followed users' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -190,7 +191,13 @@ export class UserRelationsController {
   })
   @Get(':username/followings')
   @HttpCode(HttpStatus.OK)
-  getAllFollowingsByUser(@Param('username') username: string) {
-    return this.userRelationsService.getAllFollowingsByUser(username);
+  getAllFollowingsByUser(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.userRelationsService.getAllFollowingsByUser(
+      username,
+      paginationDto,
+    );
   }
 }

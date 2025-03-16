@@ -165,9 +165,11 @@ export class UserRelationsService {
   }
   async getAllFollowingsByUser(
     username: string,
+    paginationDto: PaginationDto,
   ): Promise<FindAllUsersResponseDto> {
     const user = await this.userExists(username);
 
+    const { limit = 50, offset = 0 } = paginationDto;
     const { count, items } = await this.prismaService.findAll(
       this.prismaService.follower,
       {
@@ -182,6 +184,8 @@ export class UserRelationsService {
             },
           },
         },
+        skip: offset,
+        take: limit,
       },
     );
     return { count, items: items.map((item) => item.following) };

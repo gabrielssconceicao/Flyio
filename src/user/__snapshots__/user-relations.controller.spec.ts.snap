@@ -1,6 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UserRelationsController <GetAllFollowersByUser /> should get all posts by username successfully 1`] = `
+exports[`UserRelationsController <GetAllFollowersByUser /> should get all followers by username successfully 1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
+}
+`;
+
+exports[`UserRelationsController <GetAllFollowingsByUser /> should get all followings by username successfully 1`] = `
 {
   "count": 1,
   "items": [

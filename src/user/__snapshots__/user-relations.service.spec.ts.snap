@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<UserRelationsService /> <GetAllFollowersByUser /> should return an array of followers of a user 1`] = `
+exports[`<UserRelationsService /> <GetAllFollowersByUser /> should return all followers of a user 1`] = `
 {
   "count": 1,
   "items": [
@@ -54,7 +54,7 @@ exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an arr
 }
 `;
 
-exports[`<UserRelationsService /> <getAllFollowingsByUser /> should return an array of followings of a user 1`] = `
+exports[`<UserRelationsService /> <getAllFollowingsByUser /> should return all followings of a user 1`] = `
 {
   "count": 1,
   "items": [

@@ -240,7 +240,7 @@ describe('<UserRelationsService />', () => {
   });
 
   describe('<getAllFollowingsByUser />', () => {
-    it('should return an array of followings of a user', async () => {
+    it('should return all followings of a user', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
         .mockResolvedValue(user as any);
@@ -250,7 +250,10 @@ describe('<UserRelationsService />', () => {
         items: [{ following: findAllUsersResponseDto.items[0] }],
       } as any);
 
-      const result = await service.getAllFollowingsByUser(username);
+      const result = await service.getAllFollowingsByUser(
+        username,
+        paginationDto,
+      );
 
       expect(result).toEqual(findAllUsersResponseDto);
       expect(result.count).toBe(1);
@@ -260,7 +263,7 @@ describe('<UserRelationsService />', () => {
   });
 
   describe('<GetAllFollowersByUser />', () => {
-    it('should return an array of followers of a user', async () => {
+    it('should return all followers of a user', async () => {
       jest
         .spyOn(prismaService.user, 'findUnique')
         .mockResolvedValue(user as any);

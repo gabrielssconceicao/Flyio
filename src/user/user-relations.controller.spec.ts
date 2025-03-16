@@ -33,6 +33,7 @@ describe('UserRelationsController', () => {
             followUser: jest.fn(),
             unfollowUser: jest.fn(),
             getAllFollowersByUser: jest.fn(),
+            getAllFollowingsByUser: jest.fn(),
           },
         },
 
@@ -128,7 +129,7 @@ describe('UserRelationsController', () => {
   });
 
   describe('<GetAllFollowersByUser />', () => {
-    it('should get all posts by username successfully', async () => {
+    it('should get all followers by username successfully', async () => {
       jest
         .spyOn(service, 'getAllFollowersByUser')
         .mockResolvedValue(findAllUsers);
@@ -137,6 +138,24 @@ describe('UserRelationsController', () => {
         paginationDto,
       );
       expect(service.getAllFollowersByUser).toHaveBeenCalledWith(
+        username,
+        paginationDto,
+      );
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('<GetAllFollowingsByUser />', () => {
+    it('should get all followings by username successfully', async () => {
+      jest
+        .spyOn(service, 'getAllFollowingsByUser')
+        .mockResolvedValue(findAllUsers);
+      const result = await controller.getAllFollowingsByUser(
+        username,
+        paginationDto,
+      );
+      expect(service.getAllFollowingsByUser).toHaveBeenCalledWith(
         username,
         paginationDto,
       );
