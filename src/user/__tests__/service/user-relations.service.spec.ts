@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
-import { generateTokenPayloadDtoMock } from '../auth/mocks';
-import { UserRelationsService } from './user-relations.service';
-import { generateFindAllPostsDtoMock } from '../post/mock';
-import { PaginationDto } from '../common/dto/pagination.dto';
-import { generateUserMock, generateFindAllUsersResponseDtoMock } from './mocks';
+import { generateTokenPayloadDtoMock } from 'src/auth/mocks';
+import { generateFindAllPostsDtoMock } from 'src/post/mock';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UserRelationsService } from '../../user-relations.service';
+import {
+  generateUserMock,
+  generateFindAllUsersResponseDtoMock,
+} from '../../mocks';
 
 describe('<UserRelationsService />', () => {
   let service: UserRelationsService;

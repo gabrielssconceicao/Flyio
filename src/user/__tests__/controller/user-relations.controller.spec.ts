@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { UserRelationsController } from './user-relations.controller';
-import { UserRelationsService } from './user-relations.service';
-import jwtConfig from '../auth/config/jwt.config';
+import { UserRelationsController } from '../../user-relations.controller';
+import { UserRelationsService } from '../../user-relations.service';
+import { generateFindAllUsersResponseDtoMock } from '../../mocks';
+import jwtConfig from 'src/auth/config/jwt.config';
 import {
   jwtServiceMock,
   jwtConfigurationMock,
   generateTokenPayloadDtoMock,
-} from '../auth/mocks';
-import { PaginationDto } from '../common/dto/pagination.dto';
-import { generateFindAllPostsDtoMock } from '../post/mock';
-import { generateFindAllUsersResponseDtoMock } from './mocks';
+} from 'src/auth/mocks';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { generateFindAllPostsDtoMock } from 'src/post/mock';
 
 describe('UserRelationsController', () => {
   let controller: UserRelationsController;
