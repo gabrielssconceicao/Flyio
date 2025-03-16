@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { BcryptService } from './bcrypt.service';
+import { BcryptService } from '../bcrypt.service';
 
 jest.mock('bcryptjs');
 

@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
-import { generateLoginDtoMock } from '../mocks/login.dto.mock';
-import { LoginDto } from './login.dto';
-import { formatErrors } from '../../common/utils/dto-format.errors';
+import { generateLoginDtoMock } from '../mocks';
+import { LoginDto } from '../dto';
+import { formatErrors } from 'src/common/utils/dto-format.errors';
 describe('<LoginDto>', () => {
   let dto: LoginDto;
   beforeEach(() => {
