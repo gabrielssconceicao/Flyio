@@ -12,5 +12,6 @@ export const generatedPostMock = (): PostEntity => {
     images: [],
     likes: 0,
     liked: false,
+    commentsCount: 0,
   };
 };

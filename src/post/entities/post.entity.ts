@@ -43,4 +43,7 @@ export class PostEntity {
 
   @ApiProperty({ example: true, description: 'Whether the post is liked' })
   liked: boolean;
+
+  @ApiProperty({ example: 1, description: 'Number of comments' })
+  commentsCount: number;
 }

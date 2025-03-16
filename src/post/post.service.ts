@@ -65,7 +65,7 @@ export class PostService {
       },
       select: this.selectPostFields,
     });
-    return { ...post, likes: _count.PostLikes, liked: false };
+    return { ...post, likes: _count.PostLikes, liked: false, commentsCount: 0 };
   }
 
   async findAll(
@@ -73,25 +73,28 @@ export class PostService {
     tokenPayload: TokenPayloadDto,
   ): Promise<FindAllPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
-    const posts = await this.prismaService.post.findMany({
-      select: {
-        ...this.selectPostFields,
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.post,
+      {
+        select: {
+          ...this.selectPostFields,
 
-        PostLikes: {
-          where: { userId: tokenPayload.sub },
+          PostLikes: {
+            where: { userId: tokenPayload.sub },
+          },
+        },
+
+        take: limit,
+        skip: offset,
+        orderBy: {
+          createdAt: 'desc',
         },
       },
+    );
 
-      take: limit,
-      skip: offset,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-    const count = await this.prismaService.post.count();
     return {
       count,
-      items: posts.map(({ _count, PostLikes, ...post }) => ({
+      items: items.map(({ _count, PostLikes, ...post }) => ({
         ...post,
         commentsCount: _count.comments,
         likes: _count.PostLikes,
@@ -131,6 +134,7 @@ export class PostService {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
+    console.log(post);
     const { _count, PostLikes, comments, ...rest } = post;
     return {
       ...rest,
