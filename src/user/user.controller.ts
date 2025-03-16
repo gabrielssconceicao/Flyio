@@ -56,11 +56,31 @@ export class UserController {
           format: 'binary',
           description: 'Profile image file (PNG or JPEG)',
         },
-        name: { type: 'string', description: 'Name of the user' },
-        email: { type: 'string', description: 'Email of the user' },
-        password: { type: 'string', description: 'Password of the user' },
-        username: { type: 'string', description: 'Username of the user' },
-        bio: { type: 'string', description: 'Bio of the user' },
+        name: {
+          type: 'string',
+          description: 'Name of the user',
+          example: 'John Doe',
+        },
+        email: {
+          type: 'string',
+          description: 'Email of the user',
+          example: 'jDoe@example.com',
+        },
+        password: {
+          type: 'string',
+          description: 'Password of the user',
+          example: 'password123',
+        },
+        username: {
+          type: 'string',
+          description: 'Username of the user',
+          example: 'jdoe',
+        },
+        bio: {
+          type: 'string',
+          description: 'Bio of the user',
+          example: 'This is my bio',
+        },
       },
       required: ['name', 'email', 'password', 'username'],
     },
@@ -98,7 +118,7 @@ export class UserController {
   @Post()
   @UseInterceptors(
     FileInterceptor('profileImg', {
-      storage: multer.memoryStorage(), // Armazenamento do arquivo na memória
+      storage: multer.memoryStorage(),
     }),
   )
   async create(
@@ -153,16 +173,16 @@ export class UserController {
     example: 'jDoe45',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'User found successfully.',
     type: User,
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatus.NOT_FOUND,
     description: 'User not found.',
     schema: {
       example: {
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         message: 'User not found.',
         error: 'Not Found',
       },
@@ -282,20 +302,31 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'User desactivated successfully.',
+    description: 'User deactivate successfully.',
     schema: {
       example: {
-        message: 'User desactivated successfully.',
+        message: 'User deactivate successfully.',
       },
     },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'User is already deactivated',
+    description: 'User is already deactivate',
     schema: {
       example: {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'User is already deactivated',
+        message: 'User is already deactivate',
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+    schema: {
+      example: {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'User not found',
         error: 'Bad Request',
       },
     },
@@ -316,11 +347,11 @@ export class UserController {
   @UseGuards(AuthTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':username')
-  desactivateUser(
+  deactivate(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
-    return this.userService.desactivateUser(username, tokenPayload);
+    return this.userService.deactivate(username, tokenPayload);
   }
 
   @ApiOperation({ summary: 'Delete user profile picture by username' })
@@ -331,12 +362,8 @@ export class UserController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Profile picture deleted successfully.',
-    type: User,
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'No profile picture to delete.',
+    description:
+      'Profile picture deleted successfully./No profile picture to delete. ',
     type: User,
   })
   @ApiResponse({

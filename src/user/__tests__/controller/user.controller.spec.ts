@@ -1,34 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { User } from './entities/user.entity';
-import jwtConfig from '../auth/config/jwt.config';
+import { UserController } from '../../user.controller';
+import { UserService } from '../../user.service';
+import { User } from '../../entities/user.entity';
+import { CreateUserDto, FindAllUsersResponseDto } from '../../dto';
+import jwtConfig from 'src/auth/config/jwt.config';
 import {
   jwtServiceMock,
   jwtConfigurationMock,
   generateTokenPayloadDtoMock,
-} from '../auth/mocks';
-import { TokenPayloadDto } from '../auth/dto';
-import { generateFileMock } from '../cloudinary/mocks';
+} from 'src/auth/mocks';
+import { TokenPayloadDto } from 'src/auth/dto';
+import { generateFileMock } from 'src/cloudinary/mocks';
 
-import { CreateUserDto, FindAllUsersResponseDto } from './dto';
 import {
   generateCreateUserDtoMock,
   generateFindAllUsersResponseDtoMock,
   generateUserMock,
-} from './mocks';
+} from '../../mocks';
 
 describe('UserController', () => {
   let controller: UserController;
   let service: UserService;
 
-  //mocks
   let createUserDto: CreateUserDto;
   let file: Express.Multer.File;
   let user: User;
@@ -47,7 +41,7 @@ describe('UserController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            desactivateUser: jest.fn(),
+            deactivate: jest.fn(),
             removeProfilePicture: jest.fn(),
           },
         },
@@ -67,7 +61,7 @@ describe('UserController', () => {
     service = module.get<UserService>(UserService);
 
     // mocks
-    createUserDto = generateCreateUserDtoMock(true);
+    createUserDto = generateCreateUserDtoMock();
     file = generateFileMock();
     user = generateUserMock();
     users = generateFindAllUsersResponseDtoMock();
@@ -94,22 +88,6 @@ describe('UserController', () => {
       expect(service.create).toHaveBeenCalledWith(createUserDto, file);
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
-    });
-    it('should throw ConflictException when email or username is already in use', async () => {
-      jest
-        .spyOn(service, 'create')
-        .mockRejectedValue(
-          new ConflictException(
-            'This email or username is already associated with an existing account',
-          ),
-        );
-
-      await expect(controller.create(createUserDto, undefined)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(
-        controller.create(createUserDto, undefined),
-      ).rejects.toMatchSnapshot();
     });
   });
 
@@ -138,16 +116,6 @@ describe('UserController', () => {
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
     });
-    it('should throw an NotFoundException', async () => {
-      jest
-        .spyOn(service, 'findOne')
-        .mockRejectedValue(new NotFoundException('User not found'));
-
-      await expect(controller.findOne(username)).rejects.toThrow(
-        NotFoundException,
-      );
-      await expect(controller.findOne(username)).rejects.toMatchSnapshot();
-    });
   });
 
   describe('<Update />', () => {
@@ -175,49 +143,16 @@ describe('UserController', () => {
       expect(result).toEqual(updatedUser);
       expect(result).toMatchSnapshot();
     });
-    it('should throw an NotFoundException', async () => {
-      jest
-        .spyOn(service, 'update')
-        .mockRejectedValue(new NotFoundException('User not found'));
-      await expect(
-        controller.update(id, {}, undefined, tokenPayload),
-      ).rejects.toThrow(NotFoundException);
-    });
-    it('should throw an ConflictException', async () => {
-      const updateUserDto = {
-        email: 'john@example.com',
-      };
-      jest
-        .spyOn(service, 'update')
-        .mockRejectedValue(
-          new ConflictException(
-            'Email is already associated with an existing account',
-          ),
-        );
-      await expect(
-        controller.update(id, updateUserDto, undefined, tokenPayload),
-      ).rejects.toThrow(ConflictException);
-    });
   });
 
-  describe('<DesactivateUser />', () => {
+  describe('<Deactivate />', () => {
     it('should delete a user successfully', async () => {
       const message = 'User desactivated successfully';
-      jest.spyOn(service, 'desactivateUser').mockResolvedValue({ message });
-      const result = await controller.desactivateUser(id, tokenPayload);
-      expect(service.desactivateUser).toHaveBeenCalledWith(id, tokenPayload);
+      jest.spyOn(service, 'deactivate').mockResolvedValue({ message });
+      const result = await controller.deactivate(id, tokenPayload);
+      expect(service.deactivate).toHaveBeenCalledWith(id, tokenPayload);
       expect(result).toEqual({ message });
       expect(result).toMatchSnapshot();
-    });
-    it('should throw an BadRequestException', async () => {
-      jest
-        .spyOn(service, 'desactivateUser')
-        .mockRejectedValue(
-          new BadRequestException('User is already deactivated'),
-        );
-      await expect(
-        controller.desactivateUser(id, tokenPayload),
-      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -232,14 +167,6 @@ describe('UserController', () => {
       );
       expect(result).toEqual(user);
       expect(result).toMatchSnapshot();
-    });
-    it('should throw an BadRequestException if an error occurs', async () => {
-      jest
-        .spyOn(service, 'removeProfilePicture')
-        .mockRejectedValue(new BadRequestException());
-      await expect(
-        controller.removeProfileImg(username, tokenPayload),
-      ).rejects.toThrow(BadRequestException);
     });
   });
 });

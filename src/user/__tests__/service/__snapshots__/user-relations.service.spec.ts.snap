@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<UserRelationsService /> <GetAllFollowersByUser /> should return all followers of a user 1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
+}
+`;
+
 exports[`<UserRelationsService /> <GetAllLikedPostsByUsername /> should return an array of posts if user is found 1`] = `
 {
   "count": 1,
@@ -20,7 +34,7 @@ exports[`<UserRelationsService /> <GetAllLikedPostsByUsername /> should return a
 }
 `;
 
-exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts if user is found 1`] = `
+exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an array of posts of a user 1`] = `
 {
   "count": 1,
   "items": [
@@ -40,8 +54,16 @@ exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an arr
 }
 `;
 
-exports[`<UserRelationsService /> <Reactivate /> should reactivate a user successfully 1`] = `
+exports[`<UserRelationsService /> <getAllFollowingsByUser /> should return all followings of a user 1`] = `
 {
-  "message": "Account reactivated successfully",
+  "count": 1,
+  "items": [
+    {
+      "id": "42-d-f-df4",
+      "name": "John Doe",
+      "profileImg": "https://example.com/profile.jpg",
+      "username": "jDoe453",
+    },
+  ],
 }
 `;

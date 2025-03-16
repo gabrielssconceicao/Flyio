@@ -4,20 +4,18 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FindAllUsersResponseDto, ReactivateUserDto } from './dto';
+import { FindAllUsersResponseDto } from './dto';
 import { UserRelationsService } from './user-relations.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guard/auth-token.guard';
@@ -28,38 +26,12 @@ import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto';
 
 @ApiTags('Users')
+@ApiAuthResponses()
+@ApiBearerAuth()
+@UseGuards(AuthTokenGuard)
 @Controller('users')
 export class UserRelationsController {
   constructor(private readonly userRelationsService: UserRelationsService) {}
-
-  @ApiOperation({ summary: 'Reactivate user by token' })
-  @ApiBody({
-    type: ReactivateUserDto,
-    description: 'Reactivate user by token',
-  })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Account reactivated successfully.',
-    schema: {
-      example: {
-        message: 'Account reactivated successfully',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Invalid or expired token.',
-    schema: {
-      example: {
-        message: 'Invalid or expired token',
-      },
-    },
-  })
-  @HttpCode(HttpStatus.CREATED)
-  @Patch('reactivate/:token')
-  reactivate(@Param() reactivateUserDto: ReactivateUserDto) {
-    return this.userRelationsService.reactivate(reactivateUserDto);
-  }
 
   @ApiOperation({ summary: 'Get all posts of a user by username' })
   @ApiParam({
@@ -72,10 +44,7 @@ export class UserRelationsController {
     description: 'List of posts of a user with limited details',
     type: FindAllUsersPostsResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthTokenGuard)
   @Get(':username/posts')
   getAllPostsByUsername(
     @Param('username') username: string,
@@ -100,10 +69,7 @@ export class UserRelationsController {
     description: 'List of liked posts of a user',
     type: FindAllLikedPostsResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthTokenGuard)
   @Get(':username/posts/liked')
   getAllLikedPostsByUsername(
     @Param('username') username: string,
@@ -122,7 +88,7 @@ export class UserRelationsController {
     example: 'jDoe453',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'User followed successfully',
   })
   @ApiResponse({
@@ -147,11 +113,8 @@ export class UserRelationsController {
       },
     },
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Post(':username/follow')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   followUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -166,7 +129,7 @@ export class UserRelationsController {
     example: 'jDoe453',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'User unfollowed successfully',
   })
   @ApiResponse({
@@ -193,11 +156,8 @@ export class UserRelationsController {
       },
     },
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Post(':username/unfollow')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   unfollowUser(
     @Param('username') username: string,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -205,32 +165,39 @@ export class UserRelationsController {
     return this.userRelationsService.unfollowUser(username, tokenPayload);
   }
 
-  @ApiOperation({ summary: 'Get all followers' })
+  @ApiOperation({ summary: 'Get all followers by user' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return list of users that user follows',
     type: FindAllUsersResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Get(':username/followers')
-  @HttpCode(HttpStatus.CREATED)
-  getAllFollowersByUser(@Param('username') username: string) {
-    return this.userRelationsService.getAllFollowersByUser(username);
+  @HttpCode(HttpStatus.OK)
+  getAllFollowersByUser(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.userRelationsService.getAllFollowersByUser(
+      username,
+      paginationDto,
+    );
   }
+
   @ApiOperation({ summary: 'Get all followed users' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return list of users that follow the user',
     type: FindAllUsersResponseDto,
   })
-  @ApiAuthResponses()
-  @ApiBearerAuth()
-  @UseGuards(AuthTokenGuard)
   @Get(':username/followings')
-  @HttpCode(HttpStatus.CREATED)
-  getAllFollowingsByUser(@Param('username') username: string) {
-    return this.userRelationsService.getAllFollowingsByUser(username);
+  @HttpCode(HttpStatus.OK)
+  getAllFollowingsByUser(
+    @Param('username') username: string,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.userRelationsService.getAllFollowingsByUser(
+      username,
+      paginationDto,
+    );
   }
 }

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserService - (update) /> should update a user successfully with profile picture 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "followers": 0,
+  "following": 0,
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "password": "new_password",
+  "profileImg": "https://example.com/profile.jpg",
+  "username": "jDoe453",
+}
+`;
+
+exports[`<UserService - (update) /> should update a user successfully without profile picture 1`] = `
+{
+  "active": true,
+  "bio": "This is my bio",
+  "followers": 0,
+  "following": 0,
+  "id": "42-d-f-df4",
+  "name": "John Doe",
+  "password": "new_password",
+  "profileImg": null,
+  "username": "jDoe453",
+}
+`;

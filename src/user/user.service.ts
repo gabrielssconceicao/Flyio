@@ -85,19 +85,22 @@ export class UserService {
           OR: [{ name: { contains: search } }, { email: { contains: search } }],
         }
       : {};
-    const users = await this.prismaService.user.findMany({
-      where: where,
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        profileImg: true,
+
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.user,
+      {
+        where,
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profileImg: true,
+        },
+        take: limit,
+        skip: offset,
       },
-      take: limit,
-      skip: offset,
-    });
-    const count = await this.prismaService.user.count({ where });
-    return { count, items: users };
+    );
+    return { count, items };
   }
 
   async findOne(username: string): Promise<User> {
@@ -174,8 +177,11 @@ export class UserService {
     return this.separateUsersAndCount(updatedUser);
   }
 
-  async desactivateUser(username: string, tokenPayload: TokenPayloadDto) {
+  async deactivate(username: string, tokenPayload: TokenPayloadDto) {
     const user = await this.findOne(username);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     this.permissionService.verifyUserOwnership(tokenPayload.sub, user.id);
     if (!user.active) {
       throw new BadRequestException('User is already deactivated');
@@ -185,7 +191,7 @@ export class UserService {
       where: { username },
       data: { active: false },
     });
-    return { message: 'User desactivated successfully' };
+    return { message: 'User deactivated successfully' };
   }
 
   async removeProfilePicture(
