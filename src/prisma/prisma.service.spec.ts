@@ -28,4 +28,33 @@ describe('<PrismaService />', () => {
     await service.onModuleDestroy();
     expect(disconnectSpy).toHaveBeenCalledTimes(1);
   });
+
+  describe('findAll', () => {
+    it('should return count and items', async () => {
+      const items = [];
+      const count = 0;
+      const mockModel = {
+        count: jest.fn().mockResolvedValue(count),
+        findMany: jest.fn().mockResolvedValue(items),
+      };
+
+      const options = {
+        where: {},
+        select: {},
+        orderBy: {},
+        skip: 0,
+        take: 10,
+      };
+
+      const result = await service.findAll(mockModel, options);
+
+      expect(mockModel.count).toHaveBeenCalledWith({ where: options.where });
+      expect(mockModel.findMany).toHaveBeenCalledWith(options);
+      expect(result).toEqual({
+        count,
+        items,
+      });
+      expect(result).toMatchSnapshot();
+    });
+  });
 });

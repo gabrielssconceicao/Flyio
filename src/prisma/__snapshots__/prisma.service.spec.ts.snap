@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PrismaService /> findAll should return count and items 1`] = `
+{
+  "count": 0,
+  "items": [],
+}
+`;
