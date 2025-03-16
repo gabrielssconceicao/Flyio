@@ -112,7 +112,6 @@ export class PostService {
           where: { userId: tokenPayload.sub },
         },
         comments: {
-          where: { userId: tokenPayload.sub },
           select: {
             id: true,
             content: true,
