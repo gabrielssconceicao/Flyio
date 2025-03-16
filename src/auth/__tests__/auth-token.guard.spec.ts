@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { AuthTokenGuard } from './auth-token.guard';
+import { AuthTokenGuard } from '../guard/auth-token.guard';
 import jwtConfig from '../config/jwt.config';
 import { jwtServiceMock, jwtConfigurationMock } from '../mocks';
 

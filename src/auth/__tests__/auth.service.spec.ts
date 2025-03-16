@@ -2,19 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { userPrismaService } from '../prisma/mock/prisma.service.mock';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 
-import { PrismaService } from '../prisma/prisma.service';
-import jwtConfig from './config/jwt.config';
-import { LoginDto } from './dto/login.dto';
-import { HashingServiceProtocol } from './hashing/hashing.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import jwtConfig from '../config/jwt.config';
+import { LoginDto } from '../dto/login.dto';
+import { HashingServiceProtocol } from '../hashing/hashing.service';
 import {
   hashingServiceMock,
   jwtConfigurationMock,
   jwtServiceMock,
   generateLoginDtoMock,
-} from './mocks';
+} from '../mocks';
 
 describe('<AuthService />', () => {
   let service: AuthService;
@@ -29,7 +28,11 @@ describe('<AuthService />', () => {
         AuthService,
         {
           provide: PrismaService,
-          useValue: userPrismaService,
+          useValue: {
+            user: {
+              findFirst: jest.fn(),
+            },
+          },
         },
         {
           provide: HashingServiceProtocol,
