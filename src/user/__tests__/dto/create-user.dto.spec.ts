@@ -35,7 +35,7 @@ describe('<CreateUserDto>', () => {
       expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if name is too long', async () => {
-      dto.name = 'Jonh'.repeat(100);
+      dto.name = 'Jonh'.repeat(51);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
       expect(errors[0].property).toBe('name');
@@ -59,7 +59,7 @@ describe('<CreateUserDto>', () => {
       expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if username is too long', async () => {
-      dto.username = 'jDoe42'.repeat(100);
+      dto.username = 'jDoe42'.repeat(51);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
       expect(errors[0].property).toBe('username');
@@ -102,7 +102,7 @@ describe('<CreateUserDto>', () => {
       expect(formatErrors(errors)).toMatchSnapshot();
     });
     it('should fail if password is too long', async () => {
-      dto.password = '1'.repeat(101);
+      dto.password = '1'.repeat(51);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
       expect(errors[0].property).toBe('password');
@@ -117,7 +117,7 @@ describe('<CreateUserDto>', () => {
       expect(errors.length).toBe(0);
     });
     it('should validate a DTO if bio too long', async () => {
-      dto.bio = 'b'.repeat(256);
+      dto.bio = 'b'.repeat(101);
       const errors = await validate(dto);
       expect(errors.length).toBe(1);
       expect(errors[0].property).toBe('bio');

@@ -7,7 +7,6 @@ This project involves the development of a social network using the NestJS frame
 
 - [Flyio - Social Network API](#flyio---social-network-api)
 - [Table of Contents](#table-of-contents)
-  - [ER Model](#er-model)
   - [Tech Stack](#tech-stack)
   - [Project Details](#project-details)
   - [Features](#features)
@@ -22,10 +21,6 @@ This project involves the development of a social network using the NestJS frame
   - [How to execute](#how-to-execute)
   - [License](#license)
 
-
-## ER Model
-
-![ER Model](./images/Flyio_er_model.jpg)
 
 ## Tech Stack
 
