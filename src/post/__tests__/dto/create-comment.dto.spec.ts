@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
-import { CreateCommentDto } from './create-comment.dto';
-import { formatErrors } from '../../common/utils/dto-format.errors';
+import { CreateCommentDto } from '../../dto';
+import { formatErrors } from 'src/common/utils/dto-format.errors';
 
 describe('<CreateCommentDto>', () => {
   let dto: CreateCommentDto;

@@ -24,6 +24,7 @@ describe('PostController', () => {
           provide: PostCommentService,
           useValue: {
             create: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
