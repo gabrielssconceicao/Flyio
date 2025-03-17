@@ -4,6 +4,9 @@ export const appEnvValidationSchema = () => {
   return Joi.object({
     NODE_ENV: Joi.string().required(),
     APP_PORT: Joi.number().default(3000),
+    POSTGRES_USER:Joi.string().required(),
+    POSTGRES_PASSWORD:Joi.string().required(),
+    POSTGRES_DB:Joi.string().required(),
     DATABASE_URL: Joi.string().required(),
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
