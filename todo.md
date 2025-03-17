@@ -1,2 +1,0 @@
-- add comment count on get all liked posts
-- add comment count on get all posts

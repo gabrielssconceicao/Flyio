@@ -11,6 +11,7 @@ import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { PermissionService } from '../permission/permission.service';
+import { GetOnePostDto } from './dto/get-one-user.dto';
 
 @Injectable()
 export class PostService {
@@ -103,7 +104,10 @@ export class PostService {
     };
   }
 
-  async findOne(id: string, tokenPayload: TokenPayloadDto) {
+  async findOne(
+    id: string,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<GetOnePostDto> {
     const post = await this.prismaService.post.findUnique({
       where: { id },
       select: {

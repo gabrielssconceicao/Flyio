@@ -77,7 +77,7 @@ describe('<UserRelationsService />', () => {
         count: findAllPostsDto.count,
         items: findAllPostsDto.items.map((item) => ({
           ...item,
-          _count: { PostLikes: 0 },
+          _count: { PostLikes: 0, comments: 0 },
           PostLikes: [],
         })),
       } as any);
@@ -113,7 +113,7 @@ describe('<UserRelationsService />', () => {
         count: findAllPostsDto.count,
         items: findAllPostsDto.items.map((item) => ({
           ...item,
-          _count: { PostLikes: 1 },
+          _count: { PostLikes: 1, comments: 0 },
         })),
       } as any);
       findAllPostsDto.items[0] = {

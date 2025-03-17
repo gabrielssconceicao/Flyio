@@ -33,6 +33,7 @@ import { TokenPayloadDto } from '../auth/dto';
 import { PostEntity } from './entities/post.entity';
 import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { GetOnePostDto } from './dto/get-one-user.dto';
 
 @Controller('post')
 @ApiBearerAuth()
@@ -136,7 +137,7 @@ export class PostController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Post fetched successfully',
-    type: PostEntity,
+    type: GetOnePostDto,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
