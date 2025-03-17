@@ -11,6 +11,13 @@ This project involves the development of a social network using the NestJS frame
   - [Tech Stack](#tech-stack)
   - [Project Details](#project-details)
   - [Features](#features)
+  - [API Routes Functionalities](#api-routes-functionalities)
+    - [Authentication](#authentication)
+    - [Posts](#posts)
+    - [Post Comments](#post-comments)
+    - [User](#user)
+    - [User Relationships](#user-relationships)
+    - [User Reactivation](#user-reactivation)
   - [API Documentation](#api-documentation)
   - [How to execute](#how-to-execute)
   - [License](#license)
@@ -51,6 +58,41 @@ This project involves the development of a social network using the NestJS frame
 - **API Documentation with Swagger**: Automatically generate API documentation for easy consumption
 - **Automated Testing with Jest**: Ensure your code is reliable and stable with Jest's robust testing framework
 - **Image Provider**: Cloudinary
+
+## API Routes Functionalities
+
+### Authentication
+- `POST /auth/login`: Logs in a user.
+- `POST /auth/refresh-token`: Refreshes the authentication token.
+
+### Posts
+- `GET /post/:id`: Retrieves a post by ID.
+- `DELETE /post/:id`: Deletes a post by ID.
+- `POST /post/:id/like`: Likes a post.
+- `POST /post/:id/unlike`: Unlikes a post.
+
+### Post Comments
+- `POST /post/:postId/comment`: Adds a comment to a post.
+- `DELETE /post/:postId/comment/:commentId`: Deletes a comment from a post.
+
+### User
+- `GET /user/:username`: Retrieves user information.
+- `PATCH /user/:username`: Updates user information.
+- `DELETE /user/:username`: Deletes a user.
+- `DELETE /user/:username/profile-image`: Removes a user's profile image.
+
+### User Relationships
+- `GET /user/:username/posts`: Retrieves posts from a user.
+- `GET /user/:username/posts/liked`: Retrieves posts liked by a user.
+- `POST /user/:username/follow`: Follows a user.
+- `POST /user/:username/unfollow`: Unfollows a user.
+- `GET /user/:username/followers`: Retrieves a user's followers.
+- `GET /user/:username/followings`: Retrieves users followed by a user.
+
+### User Reactivation
+- `PATCH /reactivate/:token`: Reactivates a user account with a token.
+
+
 
 ## API Documentation
 

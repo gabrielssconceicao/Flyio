@@ -19,6 +19,7 @@ exports[`<UserRelationsService /> <GetAllLikedPostsByUsername /> should return a
   "count": 1,
   "items": [
     {
+      "commentsCount": 0,
       "content": "Hello world",
       "createdAt": 2023-03-15T17:30:00.000Z,
       "id": "42-d-f-df4",
@@ -39,6 +40,7 @@ exports[`<UserRelationsService /> <GetAllPostsByUsername /> should return an arr
   "count": 1,
   "items": [
     {
+      "commentsCount": 0,
       "content": "Hello world",
       "createdAt": 2023-03-15T17:30:00.000Z,
       "id": "42-d-f-df4",

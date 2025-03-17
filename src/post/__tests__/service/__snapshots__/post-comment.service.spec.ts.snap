@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostCommentService <Create /> should create a post successfully 1`] = `
+{
+  "content": "Hi",
+  "createdAt": 2025-03-16T20:44:43.597Z,
+  "id": "comment-id",
+  "user": {
+    "name": "John Doe",
+    "profileImg": null,
+    "username": "jDoe",
+  },
+}
+`;

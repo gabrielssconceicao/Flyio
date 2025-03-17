@@ -33,6 +33,7 @@ export class UserRelationsService {
     _count: {
       select: {
         PostLikes: true,
+        comments: true,
       },
     },
   };
@@ -66,6 +67,7 @@ export class UserRelationsService {
     const mappedPosts = items.map(({ _count, PostLikes, ...post }) => ({
       ...post,
       likes: _count.PostLikes,
+      commentsCount: _count.comments,
       liked: !!PostLikes.length,
     }));
 
@@ -101,7 +103,12 @@ export class UserRelationsService {
     return {
       count,
       items: items.map(({ _count, ...post }) => {
-        return { ...post, likes: _count.PostLikes, liked: true };
+        return {
+          ...post,
+          likes: _count.PostLikes,
+          liked: true,
+          commentsCount: _count.comments,
+        };
       }),
     };
   }

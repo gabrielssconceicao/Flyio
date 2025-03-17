@@ -33,6 +33,7 @@ import { TokenPayloadDto } from '../auth/dto';
 import { PostEntity } from './entities/post.entity';
 import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { GetOnePostDto } from './dto/get-one-user.dto';
 
 @Controller('post')
 @ApiBearerAuth()
@@ -136,7 +137,7 @@ export class PostController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Post fetched successfully',
-    type: PostEntity,
+    type: GetOnePostDto,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -166,7 +167,7 @@ export class PostController {
     example: '42-d-f-df4',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     description: 'Post deleted successfully',
   })
   @ApiResponse({
@@ -193,7 +194,7 @@ export class PostController {
       },
     },
   })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   remove(
     @Param('id') id: string,
@@ -210,7 +211,7 @@ export class PostController {
     example: '42-d-f-df4',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'Post liked successfully',
   })
   @ApiResponse({
@@ -235,7 +236,7 @@ export class PostController {
       },
     },
   })
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post(':id/like')
   like(
     @Param('id') postId: string,
@@ -252,7 +253,7 @@ export class PostController {
     example: '42-d-f-df4',
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.NO_CONTENT,
     description: 'Post unliked successfully',
   })
   @ApiResponse({
@@ -277,7 +278,7 @@ export class PostController {
       },
     },
   })
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post(':id/unlike')
   unlike(
     @Param('id') postId: string,

@@ -11,6 +11,7 @@ import { FindAllPostsResponseDto } from './dto/find-all-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { PermissionService } from '../permission/permission.service';
+import { GetOnePostDto } from './dto/get-one-user.dto';
 
 @Injectable()
 export class PostService {
@@ -65,7 +66,7 @@ export class PostService {
       },
       select: this.selectPostFields,
     });
-    return { ...post, likes: _count.PostLikes, liked: false };
+    return { ...post, likes: _count.PostLikes, liked: false, commentsCount: 0 };
   }
 
   async findAll(
@@ -73,25 +74,28 @@ export class PostService {
     tokenPayload: TokenPayloadDto,
   ): Promise<FindAllPostsResponseDto> {
     const { limit = 50, offset = 0 } = paginationDto;
-    const posts = await this.prismaService.post.findMany({
-      select: {
-        ...this.selectPostFields,
+    const { count, items } = await this.prismaService.findAll(
+      this.prismaService.post,
+      {
+        select: {
+          ...this.selectPostFields,
 
-        PostLikes: {
-          where: { userId: tokenPayload.sub },
+          PostLikes: {
+            where: { userId: tokenPayload.sub },
+          },
+        },
+
+        take: limit,
+        skip: offset,
+        orderBy: {
+          createdAt: 'desc',
         },
       },
+    );
 
-      take: limit,
-      skip: offset,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-    const count = await this.prismaService.post.count();
     return {
       count,
-      items: posts.map(({ _count, PostLikes, ...post }) => ({
+      items: items.map(({ _count, PostLikes, ...post }) => ({
         ...post,
         commentsCount: _count.comments,
         likes: _count.PostLikes,
@@ -100,7 +104,10 @@ export class PostService {
     };
   }
 
-  async findOne(id: string, tokenPayload: TokenPayloadDto) {
+  async findOne(
+    id: string,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<GetOnePostDto> {
     const post = await this.prismaService.post.findUnique({
       where: { id },
       select: {
@@ -109,7 +116,6 @@ export class PostService {
           where: { userId: tokenPayload.sub },
         },
         comments: {
-          where: { userId: tokenPayload.sub },
           select: {
             id: true,
             content: true,

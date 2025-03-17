@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PostController <Create /> should create a post 1`] = `
+exports[`PostService - (findOne) should return a post 1`] = `
 {
+  "comments": [],
+  "commentsCount": 0,
   "content": "Hello world",
   "createdAt": 2023-03-15T17:30:00.000Z,
   "id": "42-d-f-df4",

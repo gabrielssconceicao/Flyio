@@ -35,6 +35,7 @@ exports[`UserRelationsController <GetAllPostsByUsername /> should get all posts 
   "count": 1,
   "items": [
     {
+      "commentsCount": 0,
       "content": "Hello world",
       "createdAt": 2023-03-15T17:30:00.000Z,
       "id": "42-d-f-df4",

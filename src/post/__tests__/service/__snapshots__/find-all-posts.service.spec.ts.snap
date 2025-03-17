@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostService - (findAll) should find all posts 1`] = `
+{
+  "count": 1,
+  "items": [
+    {
+      "commentsCount": 0,
+      "content": "Hello world",
+      "createdAt": 2023-03-15T17:30:00.000Z,
+      "id": "42-d-f-df4",
+      "images": [],
+      "liked": false,
+      "likes": 0,
+      "user": {
+        "profileImg": "https://example.com/profile.jpg",
+        "username": "jDoe453",
+      },
+    },
+  ],
+}
+`;

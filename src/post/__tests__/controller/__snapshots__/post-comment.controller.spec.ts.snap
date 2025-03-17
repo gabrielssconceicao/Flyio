@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostController <Create /> should create a comment successfully 1`] = `
+{
+  "content": "test",
+  "createdAt": 2023-03-15T17:30:00.000Z,
+  "id": "1",
+  "user": {
+    "name": "test",
+    "profileImg": null,
+    "username": "test",
+  },
+}
+`;
