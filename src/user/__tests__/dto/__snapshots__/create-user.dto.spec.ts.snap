@@ -4,10 +4,10 @@ exports[`<CreateUserDto> <Property: Bio> should validate a DTO if bio too long 1
 [
   {
     "constraints": {
-      "maxLength": "Bio must be at most 255 characters long",
+      "maxLength": "Bio must be at most 100 characters long",
     },
     "property": "bio",
-    "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   },
 ]
 `;
@@ -54,10 +54,10 @@ exports[`<CreateUserDto> <Property: Name> should fail if name is too long 1`] = 
 [
   {
     "constraints": {
-      "maxLength": "Name must be at most 100 characters long",
+      "maxLength": "Name must be at most 50 characters long",
     },
     "property": "name",
-    "value": "JonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonh",
+    "value": "JonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonhJonh",
   },
 ]
 `;
@@ -80,7 +80,7 @@ exports[`<CreateUserDto> <Property: Password> should fail if password is empty 1
     "constraints": {
       "isNotEmpty": "Password is required",
       "isString": "Password must be a string",
-      "maxLength": "Password must be at most 100 characters long",
+      "maxLength": "Password must be at most 50 characters long",
       "minLength": "Password must be at least 6 characters long",
     },
     "property": "password",
@@ -93,10 +93,10 @@ exports[`<CreateUserDto> <Property: Password> should fail if password is too lon
 [
   {
     "constraints": {
-      "maxLength": "Password must be at most 100 characters long",
+      "maxLength": "Password must be at most 50 characters long",
     },
     "property": "password",
-    "value": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "value": "111111111111111111111111111111111111111111111111111",
   },
 ]
 `;
@@ -119,7 +119,7 @@ exports[`<CreateUserDto> <Property: Username> should fail if username is empty 1
     "constraints": {
       "isNotEmpty": "Username is required",
       "isString": "Username must be a string",
-      "maxLength": "Username must be at most 100 characters long",
+      "maxLength": "Username must be at most 50 characters long",
       "minLength": "Username must be at least 3 characters long",
     },
     "property": "username",
@@ -132,10 +132,10 @@ exports[`<CreateUserDto> <Property: Username> should fail if username is too lon
 [
   {
     "constraints": {
-      "maxLength": "Username must be at most 100 characters long",
+      "maxLength": "Username must be at most 50 characters long",
     },
     "property": "username",
-    "value": "jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42",
+    "value": "jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42jDoe42",
   },
 ]
 `;
